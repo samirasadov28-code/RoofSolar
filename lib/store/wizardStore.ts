@@ -1,0 +1,109 @@
+'use client';
+
+import { create } from 'zustand';
+
+export interface WizardInputs {
+  // Step 1 — Address
+  address: string;
+  lat: number | null;
+  lon: number | null;
+  countryCode: string;
+  displayName: string;
+
+  // Step 2 — Roof
+  roofAreaM2: number;
+  azimuthDeg: number;
+  tiltDeg: number;
+  shadingLossPct: number;
+
+  // Step 3 — Consumption
+  annualKwh: number;
+  monthlyBill: number | null;
+  unitPrice: number | null;
+
+  // Step 4 — System
+  panelCount: number;
+  systemKwp: number;
+  hasBattery: boolean;
+  batteryKwh: number;
+  hasEv: boolean;
+  annualMileageKm: number;
+  vehicleEfficiencyKwhPer100km: number;
+  chargingPreference: 'daytime' | 'evening' | 'mixed';
+  publicChargingPct: number;
+
+  // Step 5 — Tariffs
+  importPricePerKwh: number;
+  exportPricePerKwh: number;
+  grant: number;
+  dayPricePerKwh: number;
+  nightPricePerKwh: number;
+  performArbitrage: boolean;
+
+  // Step 6 — Financing
+  financingMode: 'outright' | 'loan' | 'mortgage';
+  loanCoveragePct: number;
+  annualRatePct: number;
+  tenorYears: number;
+
+  // Step 7 — Review / results
+  calculationId: string | null;
+}
+
+interface WizardStore {
+  step: number;
+  inputs: WizardInputs;
+  setStep: (step: number) => void;
+  setInputs: (partial: Partial<WizardInputs>) => void;
+  reset: () => void;
+}
+
+const defaultInputs: WizardInputs = {
+  address: '',
+  lat: null,
+  lon: null,
+  countryCode: '',
+  displayName: '',
+
+  roofAreaM2: 50,
+  azimuthDeg: 180,
+  tiltDeg: 35,
+  shadingLossPct: 5,
+
+  annualKwh: 3100,
+  monthlyBill: null,
+  unitPrice: null,
+
+  panelCount: 12,
+  systemKwp: 4.8,
+  hasBattery: false,
+  batteryKwh: 5,
+  hasEv: false,
+  annualMileageKm: 15000,
+  vehicleEfficiencyKwhPer100km: 18,
+  chargingPreference: 'mixed',
+  publicChargingPct: 0.20,
+
+  importPricePerKwh: 0.245,
+  exportPricePerKwh: 0.15,
+  grant: 0,
+  dayPricePerKwh: 0.245,
+  nightPricePerKwh: 0.10,
+  performArbitrage: false,
+
+  financingMode: 'loan',
+  loanCoveragePct: 1.0,
+  annualRatePct: 0.065,
+  tenorYears: 10,
+
+  calculationId: null,
+};
+
+export const useWizardStore = create<WizardStore>((set) => ({
+  step: 1,
+  inputs: { ...defaultInputs },
+  setStep: (step) => set({ step }),
+  setInputs: (partial) =>
+    set((state) => ({ inputs: { ...state.inputs, ...partial } })),
+  reset: () => set({ step: 1, inputs: { ...defaultInputs } }),
+}));
