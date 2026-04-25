@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
+import { sendLeadConfirmation } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,6 +24,9 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) throw error;
+
+    // Send confirmation email (non-blocking — don't fail the request if email fails)
+    sendLeadConfirmation(email, name).catch(console.error);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err: any) {

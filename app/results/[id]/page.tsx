@@ -10,6 +10,7 @@ import { EvPanel } from '@/components/results/EvPanel';
 import { FinancingTable } from '@/components/results/FinancingTable';
 import { MonthlyExportChart } from '@/components/results/MonthlyExportChart';
 import { LeadModal } from '@/components/results/LeadModal';
+import { AiAdvisor } from '@/components/results/AiAdvisor';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 
 function fmt(countryCode: string) {
@@ -233,6 +234,9 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           onClose={() => setShowLeadModal(false)}
         />
       )}
+
+      {/* Grok-powered AI advisor — floating button */}
+      <AiAdvisor results={data} inputs={inputs} />
     </div>
   );
 }

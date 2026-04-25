@@ -32,10 +32,11 @@ export interface WizardInputs {
   chargingPreference: 'daytime' | 'evening' | 'mixed';
   publicChargingPct: number;
 
-  // Step 5 — Tariffs
+  // Step 5 — Tariffs & cost
   importPricePerKwh: number;
   exportPricePerKwh: number;
   grant: number;
+  systemCostGross: number;   // user-editable gross system cost
   dayPricePerKwh: number;
   nightPricePerKwh: number;
   performArbitrage: boolean;
@@ -87,6 +88,7 @@ const defaultInputs: WizardInputs = {
   importPricePerKwh: 0.245,
   exportPricePerKwh: 0.15,
   grant: 0,
+  systemCostGross: 0,  // 0 = use auto-estimate (panelCount × 900 + battery)
   dayPricePerKwh: 0.245,
   nightPricePerKwh: 0.10,
   performArbitrage: false,

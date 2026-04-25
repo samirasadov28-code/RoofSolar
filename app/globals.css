@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* MapLibre GL — loaded here to avoid SSR import issues in Next.js */
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
 :root {
   --font-inter: 'Inter', sans-serif;
 }

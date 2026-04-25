@@ -24,7 +24,10 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
   const [error, setError] = useState('');
   const symbol = fmt(inputs.countryCode);
 
-  const systemCostGross = inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
+  const systemCostGross =
+    inputs.systemCostGross > 0
+      ? inputs.systemCostGross
+      : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
   const netCapex = Math.max(0, systemCostGross - inputs.grant);
 
   async function calculate() {

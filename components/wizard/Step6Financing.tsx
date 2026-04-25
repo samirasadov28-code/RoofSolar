@@ -13,7 +13,10 @@ export function Step6Financing({ onNext, onBack }: { onNext: () => void; onBack:
   const { inputs, setInputs } = useWizardStore();
   const symbol = fmt(inputs.countryCode);
 
-  const systemCostGross = inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
+  const systemCostGross =
+    inputs.systemCostGross > 0
+      ? inputs.systemCostGross
+      : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
   const netCapex = Math.max(0, systemCostGross - inputs.grant);
 
   const { monthlyPayment, loanAmount, upfrontCash } = calcFinancing({

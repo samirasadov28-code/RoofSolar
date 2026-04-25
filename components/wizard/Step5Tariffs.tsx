@@ -73,18 +73,26 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
 
       {/* System cost */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">System cost (gross, before grant)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          System cost (gross, before grant)
+        </label>
         <div className="relative">
           {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
           <input
             type="number"
             step="100"
-            value={inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)}
-            readOnly
-            className={`w-full border border-gray-200 bg-gray-50 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm`}
+            value={
+              inputs.systemCostGross > 0
+                ? inputs.systemCostGross
+                : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)
+            }
+            onChange={(e) => setInputs({ systemCostGross: Number(e.target.value) })}
+            className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
           />
         </div>
-        <p className="text-xs text-gray-400 mt-1">Estimated at £900/panel + £600/kWh battery</p>
+        <p className="text-xs text-gray-400 mt-1">
+          Auto-estimate: {symbol}{(inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)).toLocaleString()} — edit with your actual quote
+        </p>
       </div>
 
       {/* Advanced */}

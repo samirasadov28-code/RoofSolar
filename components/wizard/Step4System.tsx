@@ -15,10 +15,13 @@ const EV_VEHICLES = [
 export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { inputs, setInputs } = useWizardStore();
 
+  // Only seed panel count from roof area when the user hasn't manually adjusted it.
+  // We detect "never adjusted" by checking if systemCostGross is still 0 (default).
   useEffect(() => {
-    const recommended = Math.floor(inputs.roofAreaM2 / 1.7);
-    const kwp = recommended * 0.4;
-    setInputs({ panelCount: recommended, systemKwp: kwp });
+    if (inputs.systemCostGross > 0) return; // user has edited cost → keep their panel choice
+    const recommended = Math.max(4, Math.floor(inputs.roofAreaM2 / 1.7));
+    setInputs({ panelCount: recommended, systemKwp: +(recommended * 0.4).toFixed(2) });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs.roofAreaM2]);
 
   function adjustPanels(delta: number) {

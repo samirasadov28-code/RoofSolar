@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase-browser';
 
 export default function InstallersPage() {
   const [form, setForm] = useState({
@@ -22,12 +21,18 @@ export default function InstallersPage() {
     setLoading(true);
     setError('');
     try {
-      const supabase = createClient();
-      const { error } = await supabase.from('installer_waitlist').insert({
-        ...form,
-        coverage_regions: form.coverage_regions.split(',').map((s) => s.trim()).filter(Boolean),
+      const res = await fetch('/api/installers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          coverage_regions: form.coverage_regions.split(',').map((s) => s.trim()).filter(Boolean),
+        }),
       });
-      if (error) throw error;
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || 'Failed to submit');
+      }
       setDone(true);
     } catch (err: any) {
       setError(err.message || 'Something went wrong');

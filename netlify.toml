@@ -9,6 +9,19 @@
   NODE_VERSION = "20"
   NEXT_TELEMETRY_DISABLED = "1"
 
+# ── Required env vars — set these in the Netlify dashboard ─────────────────────
+# NEXT_PUBLIC_SUPABASE_URL
+# NEXT_PUBLIC_SUPABASE_ANON_KEY
+# SUPABASE_SERVICE_ROLE_KEY
+# NREL_API_KEY               (optional — PVGIS requires no key)
+# STRIPE_SECRET_KEY
+# NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+# STRIPE_WEBHOOK_SECRET
+# STRIPE_PRO_PRICE_ID
+# RESEND_API_KEY
+# XAI_API_KEY                (Grok AI advisor)
+# NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -16,3 +29,16 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Stripe webhook route must not be buffered
+[[headers]]
+  for = "/api/webhooks/stripe"
+  [headers.values]
+    Cache-Control = "no-store"
+
+# AI chat — prevent caching of streamed responses
+[[headers]]
+  for = "/api/ai-chat"
+  [headers.values]
+    Cache-Control = "no-store"
+    X-Accel-Buffering = "no"
