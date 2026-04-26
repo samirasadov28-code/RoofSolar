@@ -10,7 +10,7 @@ export async function geocodeAddress(address: string): Promise<GeocodeResult | n
   const url = `https://nominatim.openstreetmap.org/search?${params}`;
 
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'RoofSolar/1.0 (contact@roofsolar.io)' },
+    headers: { 'User-Agent': 'RoofSolar/1.0 (contact@roofsolars.netlify.app)' },
     signal: AbortSignal.timeout(10000),
   });
 

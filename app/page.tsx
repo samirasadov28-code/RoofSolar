@@ -114,7 +114,7 @@ export default function HomePage() {
           <p>© 2026 RoofSolar. All rights reserved.</p>
           <div className="flex gap-6">
             <Link href="/installers" className="hover:text-gray-400">For Installers</Link>
-            <a href="mailto:contact@roofsolar.io" className="hover:text-gray-400">Contact</a>
+            <a href="mailto:contact@roofsolars.netlify.app" className="hover:text-gray-400">Contact</a>
           </div>
         </div>
       </footer>
