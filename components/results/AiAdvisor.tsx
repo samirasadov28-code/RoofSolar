@@ -101,7 +101,7 @@ export function AiAdvisor({ results, inputs }: Props) {
           }
         }
       }
-    } catch (err) {
+    } catch {
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' },

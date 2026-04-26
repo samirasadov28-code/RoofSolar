@@ -24,11 +24,11 @@ export async function sendLeadConfirmation(to: string, name: string) {
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
           In the meantime, you can revisit your solar analysis or unlock your full pro report for £3.99.
         </p>
-        <a href="https://roofsolars.netlify.app/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
+        <a href="https://roofsolar.netlify.app/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           New analysis
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolars.netlify.app · You are receiving this because you submitted a quote request.
+          RoofSolar · contact@roofsolar.netlify.app · You are receiving this because you submitted a quote request.
         </p>
       </div>
     `,
@@ -58,7 +58,7 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
           their solar investment.
         </p>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolars.netlify.app
+          RoofSolar · contact@roofsolar.netlify.app
         </p>
       </div>
     `,
@@ -89,12 +89,12 @@ export async function sendProReportEmail(
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
           Your full 10-year solar investment analysis is ready to download. Click below to access it.
         </p>
-        <a href="https://roofsolars.netlify.app/results/${calculationId}?pro=true"
+        <a href="https://roofsolar.netlify.app/results/${calculationId}?pro=true"
            style="display:inline-block;background:#111827;color:#FACC15;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           View &amp; download report
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolars.netlify.app · This email was sent because you purchased a pro report.
+          RoofSolar · contact@roofsolar.netlify.app · This email was sent because you purchased a pro report.
         </p>
       </div>
     `,

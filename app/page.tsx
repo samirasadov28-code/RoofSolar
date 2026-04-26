@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { APP_VERSION } from '@/lib/version';
 
 export default function HomePage() {
   return (
@@ -111,10 +112,10 @@ export default function HomePage() {
 
       <footer className="bg-gray-900 border-t border-gray-800 py-8">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© 2026 RoofSolar. All rights reserved.</p>
+          <p>© 2026 RoofSolar. All rights reserved. · v{APP_VERSION}</p>
           <div className="flex gap-6">
             <Link href="/installers" className="hover:text-gray-400">For Installers</Link>
-            <a href="mailto:contact@roofsolars.netlify.app" className="hover:text-gray-400">Contact</a>
+            <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-400">Contact</a>
           </div>
         </div>
       </footer>

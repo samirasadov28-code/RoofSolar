@@ -70,3 +70,17 @@ create policy "Users can read own pro_purchases"
 create policy "Service role manages leads"
   on leads for all
   using (true); -- enforced via server-side service role key only
+
+create table if not exists feedback (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz default now(),
+  rating smallint not null check (rating between 1 and 5),
+  message text,
+  page text
+);
+
+alter table feedback enable row level security;
+
+create policy "Service role manages feedback"
+  on feedback for all
+  using (true);

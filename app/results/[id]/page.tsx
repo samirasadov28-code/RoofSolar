@@ -17,7 +17,7 @@ function fmt(countryCode: string) {
   return countryCode === 'ie' ? '€' : countryCode === 'gb' ? '£' : '';
 }
 
-function PaybackCard({ months, symbol }: { months: number; symbol: string }) {
+function PaybackCard({ months }: { months: number }) {
   const years = isNaN(months) ? null : months / 12;
   const color = !years ? 'text-red-600' : years < 8 ? 'text-green-600' : years < 12 ? 'text-yellow-600' : 'text-red-600';
   return (
@@ -90,7 +90,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
         {/* Key metric cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <PaybackCard months={data.paybackMonths} symbol={symbol} />
+          <PaybackCard months={data.paybackMonths} />
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">Year 1 savings</p>

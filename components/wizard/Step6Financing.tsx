@@ -27,8 +27,6 @@ export function Step6Financing({ onNext, onBack }: { onNext: () => void; onBack:
     tenorYears: inputs.tenorYears,
   });
 
-  const defaultRate = inputs.financingMode === 'mortgage' ? 0.035 : 0.065;
-
   return (
     <div className="space-y-6">
       <div>

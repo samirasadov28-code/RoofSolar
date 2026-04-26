@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   });
 
   const res = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {
-    headers: { 'User-Agent': 'RoofSolar/1.0 (contact@roofsolars.netlify.app)' },
+    headers: { 'User-Agent': 'RoofSolar/1.0 (contact@roofsolar.netlify.app)' },
     signal: AbortSignal.timeout(8000),
   });
 
