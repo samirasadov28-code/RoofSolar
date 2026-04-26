@@ -63,7 +63,7 @@ const defaultInputs: WizardInputs = {
   address: '',
   lat: null,
   lon: null,
-  countryCode: '',
+  countryCode: 'ie',
   displayName: '',
 
   roofAreaM2: 50,
@@ -71,7 +71,7 @@ const defaultInputs: WizardInputs = {
   tiltDeg: 35,
   shadingLossPct: 5,
 
-  annualKwh: 3100,
+  annualKwh: 4200,
   monthlyBill: null,
   unitPrice: null,
 
@@ -85,12 +85,12 @@ const defaultInputs: WizardInputs = {
   chargingPreference: 'mixed',
   publicChargingPct: 0.20,
 
-  importPricePerKwh: 0.245,
-  exportPricePerKwh: 0.15,
-  grant: 0,
+  importPricePerKwh: 0.433,
+  exportPricePerKwh: 0.21,
+  grant: 3000,
   systemCostGross: 0,  // 0 = use auto-estimate (panelCount × 900 + battery)
-  dayPricePerKwh: 0.245,
-  nightPricePerKwh: 0.10,
+  dayPricePerKwh: 0.433,
+  nightPricePerKwh: 0.15,
   performArbitrage: false,
 
   financingMode: 'loan',
