@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
-const FROM = 'RoofSolar <noreply@roofsolars.netlify.app>';
+const FROM = 'RoofSolar <onboarding@resend.dev>';
 
 export async function sendLeadConfirmation(to: string, name: string) {
   if (!process.env.RESEND_API_KEY) return;
