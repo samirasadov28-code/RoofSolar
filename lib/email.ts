@@ -13,7 +13,7 @@ export async function sendLeadConfirmation(to: string, name: string) {
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <div style="width:32px;height:32px;background:#FACC15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px">RS</div>
+          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Hi ${name},</h1>
@@ -45,7 +45,7 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <div style="width:32px;height:32px;background:#FACC15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px">RS</div>
+          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Thanks, ${companyName}!</h1>
@@ -79,7 +79,7 @@ export async function sendProReportEmail(
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <div style="width:32px;height:32px;background:#FACC15;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px">RS</div>
+          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Your pro report is ready</h1>

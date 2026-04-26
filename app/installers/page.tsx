@@ -45,7 +45,7 @@ export default function InstallersPage() {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-yellow-400 rounded-full flex items-center justify-center font-bold text-xs">RS</div>
+            <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover" />
             <span className="font-bold">RoofSolar</span>
           </Link>
           <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900">For homeowners</Link>

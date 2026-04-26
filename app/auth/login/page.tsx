@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
         <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center font-bold text-sm">RS</div>
+          <img src="/logo-192.png" alt="RoofSolar" width={32} height={32} className="w-8 h-8 rounded-full object-cover" />
           <span className="font-bold text-xl">RoofSolar</span>
         </div>
 

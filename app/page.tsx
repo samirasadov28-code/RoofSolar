@@ -7,9 +7,7 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 font-bold text-sm">
-            RS
-          </div>
+          <img src="/logo-192.png" alt="RoofSolar" width={32} height={32} className="w-8 h-8 rounded-full object-cover" />
           <span className="font-bold text-xl text-gray-900">RoofSolar</span>
         </div>
         <div className="flex items-center gap-4">

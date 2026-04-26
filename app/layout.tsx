@@ -10,6 +10,16 @@ export const metadata: Metadata = {
   title: 'RoofSolar — Solar Investment Analysis',
   description:
     'Get a personalised, financial-grade solar investment analysis in under 3 minutes. 10-year cashflow model, payback analysis, export tariff earnings and EV charging economics.',
+  icons: {
+    icon: '/logo-192.png',
+    apple: '/logo-192.png',
+    shortcut: '/logo-192.png',
+  },
+  openGraph: {
+    title: 'RoofSolar — Solar Investment Analysis',
+    description: 'Financial-grade solar analysis in under 3 minutes.',
+    images: [{ url: '/logo-512.png', width: 512, height: 512 }],
+  },
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;

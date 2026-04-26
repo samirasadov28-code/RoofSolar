@@ -23,7 +23,7 @@ export default function CalculatorPage() {
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-yellow-400 rounded-full flex items-center justify-center text-gray-900 font-bold text-xs">RS</div>
+            <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover" />
             <span className="font-bold text-gray-900">RoofSolar</span>
           </Link>
           <WizardProgress current={step} />
