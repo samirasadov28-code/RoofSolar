@@ -62,7 +62,7 @@ export default function HomePage() {
           {[
             { value: '3 min', label: 'Average analysis time' },
             { value: '10yr', label: 'Cashflow projection' },
-            { value: '£9.99', label: 'Full pro report' },
+            { value: '£3.99', label: 'Full pro report' },
           ].map((s) => (
             <div key={s.label} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <p className="text-3xl font-extrabold text-gray-900">{s.value}</p>
@@ -98,7 +98,7 @@ export default function HomePage() {
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to see your solar potential?</h2>
           <p className="text-gray-400 mb-8">
-            Free analysis in 3 minutes. Upgrade to Pro for £9.99 to download your full report and get installer quotes.
+            Free analysis in 3 minutes. Upgrade to Pro for £3.99 to download your full report and get installer quotes.
           </p>
           <Link
             href="/calculator"

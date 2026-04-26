@@ -89,7 +89,7 @@ export function ProGate({ calculationId, children, preview }: ProGateProps) {
           disabled={checkoutLoading}
           className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-bold px-6 py-2.5 rounded-xl transition-colors"
         >
-          {checkoutLoading ? 'Loading…' : 'Unlock for £9.99'}
+          {checkoutLoading ? 'Loading…' : 'Unlock for £3.99'}
         </button>
       </div>
     </div>

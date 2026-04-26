@@ -22,7 +22,7 @@ export async function sendLeadConfirmation(to: string, name: string) {
           installers in your area within 1–2 business days.
         </p>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
-          In the meantime, you can revisit your solar analysis or unlock your full pro report for £9.99.
+          In the meantime, you can revisit your solar analysis or unlock your full pro report for £3.99.
         </p>
         <a href="https://roofsolar.io/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           New analysis
