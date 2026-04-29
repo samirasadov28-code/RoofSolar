@@ -84,7 +84,14 @@ export async function POST(request: NextRequest) {
 
     // 9. Metrics
     const cfValues = cashflows.map((r) => r.netCashflow);
-    const irr = calcIRR(cfValues);
+    // IRR requires upfront equity to be meaningful. With 100% debt the year-0
+    // outflow is ~0 and IRR is mathematically undefined.
+    const hasEquity = financing.upfrontCash > 1;
+    const rawIrr = hasEquity ? calcIRR(cfValues) : NaN;
+    const irr = Number.isFinite(rawIrr) ? rawIrr : null;
+    const irrUnavailableReason = irr === null
+      ? (hasEquity ? 'unstable' : 'no_equity')
+      : null;
     const npv = calcNPV(cfValues, 0.08);
     const paybackMonths = calcPaybackMonths(cashflows);
     const lifetimeSavings = calcLifetimeSavings(cashflows);
@@ -109,7 +116,7 @@ export async function POST(request: NextRequest) {
       grant, netCapex,
       financing,
       cashflows,
-      irr, npv, paybackMonths, lifetimeSavings,
+      irr, irrUnavailableReason, npv, paybackMonths, lifetimeSavings,
       annualCo2Saved,
       evCharging: evResult,
       batteryResult,

@@ -82,7 +82,11 @@ export function ReportTemplate({ inputs, results }: Props) {
         <View style={styles.metricsRow}>
           {[
             ['Payback period', paybackYrs],
-            ['IRR', results.irr ? `${(results.irr * 100).toFixed(1)}%` : 'N/A'],
+            ['IRR', results.irr != null
+              ? `${(results.irr * 100).toFixed(1)}%`
+              : results.irrUnavailableReason === 'no_equity'
+              ? 'N/A (no equity)'
+              : 'N/A'],
             ['NPV (8%)', `${s}${Math.round(results.npv ?? 0).toLocaleString()}`],
           ].map(([l, v]) => (
             <View key={l} style={styles.metricBox}>

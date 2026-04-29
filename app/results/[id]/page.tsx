@@ -127,13 +127,22 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               { label: 'Battery', value: inputs.hasBattery ? `${inputs.batteryKwh} kWh` : 'None' },
               { label: 'Net cost', value: `${symbol}${(data.netCapex ?? 0).toLocaleString()}` },
               { label: 'Grant', value: `${symbol}${(data.grant ?? 0).toLocaleString()}` },
-              { label: 'IRR', value: data.irr ? `${(data.irr * 100).toFixed(1)}%` : 'N/A' },
+              {
+                label: 'IRR',
+                value: data.irr != null ? `${(data.irr * 100).toFixed(1)}%` : 'N/A',
+                note: data.irrUnavailableReason === 'no_equity'
+                  ? 'no equity (100% financed)'
+                  : data.irrUnavailableReason === 'unstable'
+                  ? 'cashflow not solvable'
+                  : null,
+              },
               { label: 'NPV (8%)', value: `${symbol}${Math.round(data.npv ?? 0).toLocaleString()}` },
               { label: '10yr savings', value: `${symbol}${Math.round(data.lifetimeSavings ?? 0).toLocaleString()}` },
-            ].map((item) => (
+            ].map((item: any) => (
               <div key={item.label} className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">{item.label}</p>
                 <p className="font-bold text-gray-900 mt-0.5">{item.value}</p>
+                {item.note && <p className="text-[10px] text-gray-500 mt-0.5 leading-tight">{item.note}</p>}
               </div>
             ))}
           </div>

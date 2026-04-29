@@ -27,8 +27,11 @@ export function BatteryPanel({ data, inputs, symbol }: Props) {
         <div className="bg-orange-50 rounded-xl p-4 text-center">
           <p className="text-xs text-orange-700 font-medium mb-1">System IRR</p>
           <p className="text-2xl font-bold text-orange-800">
-            {irrWithBattery ? `${(irrWithBattery * 100).toFixed(1)}%` : '—'}
+            {irrWithBattery != null ? `${(irrWithBattery * 100).toFixed(1)}%` : 'N/A'}
           </p>
+          {irrWithBattery == null && data.irrUnavailableReason === 'no_equity' && (
+            <p className="text-[10px] text-orange-600 mt-0.5 leading-tight">no equity (100% financed)</p>
+          )}
         </div>
       </div>
 
