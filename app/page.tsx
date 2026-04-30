@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { APP_VERSION } from '@/lib/version';
-import { ForceUpdateButton } from '@/components/ForceUpdateButton';
 
 function EnergyChainIllustration() {
   return (
@@ -437,7 +436,6 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Link href="/installers" className="hover:text-gray-700 transition-colors">For Installers</Link>
             <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">Contact</a>
-            <ForceUpdateButton />
           </div>
         </div>
       </footer>

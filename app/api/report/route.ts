@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase';
+import { isEarlyAccess } from '@/lib/earlyAccess';
 
 export async function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('id');
@@ -14,15 +15,21 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    const { data: purchase } = await supabase
-      .from('pro_purchases')
-      .select('id')
-      .eq('user_id', session.user.id)
-      .eq('calculation_id', id)
-      .maybeSingle();
+    const earlyAccess = isEarlyAccess(session.user.email);
 
-    if (!purchase) {
-      return NextResponse.json({ error: 'Pro purchase required' }, { status: 403 });
+    let purchase: { id: string } | null = null;
+    if (!earlyAccess) {
+      const { data } = await supabase
+        .from('pro_purchases')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .eq('calculation_id', id)
+        .maybeSingle();
+
+      if (!data) {
+        return NextResponse.json({ error: 'Pro purchase required' }, { status: 403 });
+      }
+      purchase = data;
     }
 
     // Fetch calculation
@@ -46,11 +53,13 @@ export async function GET(request: NextRequest) {
       }) as any
     );
 
-    // Mark PDF as sent
-    await supabase
-      .from('pro_purchases')
-      .update({ pdf_sent: true })
-      .eq('id', purchase.id);
+    // Mark PDF as sent (only for actual purchases — early-access has no row)
+    if (purchase) {
+      await supabase
+        .from('pro_purchases')
+        .update({ pdf_sent: true })
+        .eq('id', purchase.id);
+    }
 
     return new NextResponse(buffer as unknown as BodyInit, {
       headers: {

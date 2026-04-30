@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase-browser';
+import { isEarlyAccess } from '@/lib/earlyAccess';
 
 interface ProGateProps {
   calculationId: string;
@@ -28,6 +29,13 @@ export function ProGate({ calculationId, children, preview }: ProGateProps) {
         const supabase = createClient();
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { setLoading(false); return; }
+
+        // Early-access allowlist bypasses the paywall.
+        if (isEarlyAccess(session.user.email)) {
+          setIsPro(true);
+          setLoading(false);
+          return;
+        }
 
         const { data } = await supabase
           .from('pro_purchases')

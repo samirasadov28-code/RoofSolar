@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase-browser';
+import { isEarlyAccess } from '@/lib/earlyAccess';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -60,7 +61,14 @@ export default function AccountPage() {
 
       <main className="max-w-4xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">My account</h1>
-        <p className="text-gray-500 text-sm mb-8">{user?.email}</p>
+        <div className="flex flex-wrap items-center gap-2 mb-8">
+          <p className="text-gray-500 text-sm">{user?.email}</p>
+          {isEarlyAccess(user?.email) && (
+            <span className="inline-flex items-center gap-1 bg-amber-100 border border-amber-300 text-amber-700 text-xs font-bold rounded-full px-2.5 py-0.5">
+              ✨ Early access — Pro unlocked
+            </span>
+          )}
+        </div>
 
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Saved analyses</h2>
 
