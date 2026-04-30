@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { APP_VERSION } from '@/lib/version';
+import { ForceUpdateButton } from '@/components/ForceUpdateButton';
 
 function EnergyChainIllustration() {
   return (
@@ -408,9 +409,10 @@ export default function HomePage() {
       <footer className="border-t border-gray-200 py-8 bg-white/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <p>© 2026 RoofSolar. All rights reserved. · v{APP_VERSION}</p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Link href="/installers" className="hover:text-gray-700 transition-colors">For Installers</Link>
             <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">Contact</a>
+            <ForceUpdateButton />
           </div>
         </div>
       </footer>
