@@ -4,7 +4,7 @@ import { ForceUpdateButton } from '@/components/ForceUpdateButton';
 
 function EnergyChainIllustration() {
   return (
-    <svg viewBox="0 0 600 380" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-w-2xl mx-auto drop-shadow-2xl">
+    <svg viewBox="0 0 600 380" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-w-none mx-auto drop-shadow-2xl">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#fef3c7" />
@@ -69,7 +69,7 @@ function EnergyChainIllustration() {
       </g>
 
       {/* Sun */}
-      <circle cx="80" cy="60" r="44" fill="#fde68a" opacity="0.45" />
+      <circle cx="80" cy="60" r="44" fill="#fde68a" opacity="0.45" className="sun-halo" />
       <circle cx="80" cy="60" r="32" fill="#fcd34d" opacity="0.6" />
       <circle cx="80" cy="60" r="22" fill="url(#sun)" filter="url(#glow)" />
       {[0,45,90,135,180,225,270,315].map((angle, i) => {
@@ -137,7 +137,7 @@ function EnergyChainIllustration() {
 
       {/* Flow: panels → inverter */}
       <g>
-        <path d="M 168 235 L 210 235" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <path d="M 168 235 L 210 235" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" opacity="0.95" fill="none" className="flow-line" />
         <polygon points="208,229 220,235 208,241" fill="#ea580c" />
       </g>
 
@@ -162,7 +162,7 @@ function EnergyChainIllustration() {
 
       {/* Flow: inverter → battery */}
       <g>
-        <path d="M 298 240 L 340 240" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <path d="M 298 240 L 340 240" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" opacity="0.95" fill="none" className="flow-line" />
         <polygon points="338,234 350,240 338,246" fill="#ea580c" />
       </g>
 
@@ -188,13 +188,13 @@ function EnergyChainIllustration() {
 
       {/* Flow: battery → house (up) */}
       <g>
-        <path d="M 415 215 Q 445 175 475 165" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <path d="M 415 215 Q 445 175 475 165" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" opacity="0.95" fill="none" className="flow-line" />
         <polygon points="471,160 482,164 475,173" fill="#ea580c" />
       </g>
 
       {/* Flow: battery → car (down) */}
       <g>
-        <path d="M 415 265 Q 445 290 475 295" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <path d="M 415 265 Q 445 290 475 295" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" opacity="0.95" fill="none" className="flow-line" />
         <polygon points="471,290 482,295 472,302" fill="#ea580c" />
       </g>
 
@@ -260,33 +260,34 @@ export default function HomePage() {
     <main className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-sky-50">
 
       {/* Nav */}
-      <nav className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 max-w-7xl mx-auto">
-        <Link href="/" className="flex items-center gap-2 min-w-0">
+      <nav className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-5 max-w-7xl mx-auto">
+        <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
-          <span className="font-bold text-base sm:text-xl text-gray-900">RoofSolar</span>
+          <span className="font-bold text-base sm:text-xl text-gray-900 truncate">RoofSolar</span>
         </Link>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="/installers" className="hidden sm:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
+        <div className="flex items-center gap-2 sm:gap-5 flex-shrink-0">
+          <Link href="/installers" className="hidden md:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
             For Installers
           </Link>
-          <Link href="/auth/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+          <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap">
             Sign in
           </Link>
           <Link
             href="/calculator"
             className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors whitespace-nowrap shadow-sm"
           >
-            Get my analysis
+            <span className="sm:hidden">Free analysis</span>
+            <span className="hidden sm:inline">Get my analysis</span>
           </Link>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-10">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-12 pb-10">
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-10">
 
           {/* Left — copy */}
-          <div className="flex-1 text-center lg:text-left">
+          <div className="flex-1 lg:flex-[0.95] text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
               ☀️ Financial-grade solar analysis — free in 3 minutes
             </div>
@@ -328,9 +329,26 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right — illustration */}
-          <div className="flex-1 w-full">
+          {/* Right (mobile: top) — illustration */}
+          <div className="flex-1 lg:flex-[1.15] w-full relative">
+            {/* Soft radial glow behind the SVG */}
+            <div
+              aria-hidden
+              className="absolute inset-0 -z-10 pointer-events-none"
+              style={{
+                background:
+                  'radial-gradient(ellipse at 50% 50%, rgba(251,191,36,0.30) 0%, rgba(56,189,248,0.18) 45%, transparent 75%)',
+              }}
+            />
+            {/* Caption ribbon — mobile only */}
+            <p className="lg:hidden text-center text-xs font-bold tracking-widest text-amber-700 uppercase mb-2">
+              Solar · Inverter · Battery · Home · EV
+            </p>
             <EnergyChainIllustration />
+            {/* Caption ribbon — desktop */}
+            <p className="hidden lg:block text-center text-sm font-bold tracking-widest text-amber-700 uppercase mt-3">
+              Solar &rarr; Inverter &rarr; Battery &rarr; Home &amp; EV
+            </p>
           </div>
         </div>
       </section>
