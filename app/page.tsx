@@ -7,8 +7,9 @@ function EnergyChainIllustration() {
     <svg viewBox="0 0 600 380" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto max-w-2xl mx-auto drop-shadow-2xl">
       <defs>
         <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1e3a8a" />
-          <stop offset="100%" stopColor="#3b82f6" />
+          <stop offset="0%" stopColor="#fef3c7" />
+          <stop offset="55%" stopColor="#e0f2fe" />
+          <stop offset="100%" stopColor="#dbeafe" />
         </linearGradient>
         <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#4ade80" />
@@ -56,22 +57,28 @@ function EnergyChainIllustration() {
       {/* Sky background */}
       <rect width="600" height="380" fill="url(#sky)" rx="20" />
 
-      {/* Stars */}
-      {[[60,30],[180,18],[330,25],[450,18],[540,40],[260,12]].map(([x,y],i) => (
-        <circle key={i} cx={x} cy={y} r="1.5" fill="white" opacity="0.6" />
-      ))}
+      {/* Soft cloud */}
+      <g opacity="0.7">
+        <ellipse cx="430" cy="55" rx="34" ry="11" fill="white" />
+        <ellipse cx="450" cy="48" rx="22" ry="14" fill="white" />
+        <ellipse cx="408" cy="52" rx="18" ry="10" fill="white" />
+      </g>
+      <g opacity="0.55">
+        <ellipse cx="220" cy="35" rx="26" ry="8" fill="white" />
+        <ellipse cx="236" cy="30" rx="16" ry="11" fill="white" />
+      </g>
 
       {/* Sun */}
-      <circle cx="80" cy="60" r="42" fill="#fde68a" opacity="0.15" />
-      <circle cx="80" cy="60" r="30" fill="#fde68a" opacity="0.25" />
+      <circle cx="80" cy="60" r="44" fill="#fde68a" opacity="0.45" />
+      <circle cx="80" cy="60" r="32" fill="#fcd34d" opacity="0.6" />
       <circle cx="80" cy="60" r="22" fill="url(#sun)" filter="url(#glow)" />
       {[0,45,90,135,180,225,270,315].map((angle, i) => {
         const r = Math.PI * angle / 180;
         return (
           <line key={i}
             x1={80 + Math.cos(r) * 28} y1={60 + Math.sin(r) * 28}
-            x2={80 + Math.cos(r) * 40} y2={60 + Math.sin(r) * 40}
-            stroke="#fde68a" strokeWidth="2.5" strokeLinecap="round" opacity="0.8"
+            x2={80 + Math.cos(r) * 42} y2={60 + Math.sin(r) * 42}
+            stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" opacity="0.85"
           />
         );
       })}
@@ -81,8 +88,8 @@ function EnergyChainIllustration() {
         <line key={`ray-${i}`}
           x1={95 + i * 8} y1={88 + i * 2}
           x2={55 + i * 22} y2={170}
-          stroke="#fde68a" strokeWidth="1.5" strokeLinecap="round"
-          strokeDasharray="3,3" opacity="0.55"
+          stroke="#f59e0b" strokeWidth="1.5" strokeLinecap="round"
+          strokeDasharray="3,3" opacity="0.5"
         />
       ))}
 
@@ -125,13 +132,13 @@ function EnergyChainIllustration() {
           })
         )).flat()}
         {/* Label */}
-        <text x="86" y="328" textAnchor="middle" fontSize="11" fill="#fbbf24" fontWeight="bold" letterSpacing="0.5">SOLAR</text>
+        <text x="86" y="328" textAnchor="middle" fontSize="11" fill="#ffffff" fontWeight="bold" letterSpacing="0.5">SOLAR</text>
       </g>
 
       {/* Flow: panels → inverter */}
       <g>
-        <path d="M 168 235 L 210 235" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="5,4" opacity="0.85" fill="none" />
-        <polygon points="208,229 220,235 208,241" fill="#fbbf24" />
+        <path d="M 168 235 L 210 235" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <polygon points="208,229 220,235 208,241" fill="#ea580c" />
       </g>
 
       {/* ── 2. Inverter ── */}
@@ -150,13 +157,13 @@ function EnergyChainIllustration() {
           <line key={i} x1="234" y1={252 + i*5} x2="284" y2={252 + i*5} stroke="#0f172a" strokeWidth="1" />
         ))}
         {/* Label */}
-        <text x="259" y="328" textAnchor="middle" fontSize="11" fill="#fbbf24" fontWeight="bold" letterSpacing="0.5">INVERTER</text>
+        <text x="259" y="328" textAnchor="middle" fontSize="11" fill="#ffffff" fontWeight="bold" letterSpacing="0.5">INVERTER</text>
       </g>
 
       {/* Flow: inverter → battery */}
       <g>
-        <path d="M 298 240 L 340 240" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="5,4" opacity="0.85" fill="none" />
-        <polygon points="338,234 350,240 338,246" fill="#fbbf24" />
+        <path d="M 298 240 L 340 240" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <polygon points="338,234 350,240 338,246" fill="#ea580c" />
       </g>
 
       {/* ── 3. Battery ── */}
@@ -176,19 +183,19 @@ function EnergyChainIllustration() {
         {/* Bolt */}
         <text x="383" y="245" textAnchor="middle" fontSize="22" fill="white" opacity="0.55">⚡</text>
         {/* Label */}
-        <text x="383" y="328" textAnchor="middle" fontSize="11" fill="#fbbf24" fontWeight="bold" letterSpacing="0.5">BATTERY</text>
+        <text x="383" y="328" textAnchor="middle" fontSize="11" fill="#ffffff" fontWeight="bold" letterSpacing="0.5">BATTERY</text>
       </g>
 
       {/* Flow: battery → house (up) */}
       <g>
-        <path d="M 415 215 Q 445 175 475 165" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="5,4" opacity="0.85" fill="none" />
-        <polygon points="471,160 482,164 475,173" fill="#fbbf24" />
+        <path d="M 415 215 Q 445 175 475 165" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <polygon points="471,160 482,164 475,173" fill="#ea580c" />
       </g>
 
       {/* Flow: battery → car (down) */}
       <g>
-        <path d="M 415 265 Q 445 290 475 295" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="5,4" opacity="0.85" fill="none" />
-        <polygon points="471,290 482,295 472,302" fill="#fbbf24" />
+        <path d="M 415 265 Q 445 290 475 295" stroke="#ea580c" strokeWidth="3" strokeLinecap="round" strokeDasharray="5,4" opacity="0.95" fill="none" />
+        <polygon points="471,290 482,295 472,302" fill="#ea580c" />
       </g>
 
       {/* ── 4. House ── */}
@@ -242,7 +249,7 @@ function EnergyChainIllustration() {
         <circle cx="528" cy="287" r="3.5" fill="#fbbf24" opacity="0.9" />
         <text x="528" y="290" textAnchor="middle" fontSize="6" fill="#1e3a8a" fontWeight="bold">⚡</text>
         {/* Label */}
-        <text x="528" y="345" textAnchor="middle" fontSize="11" fill="#fbbf24" fontWeight="bold" letterSpacing="0.5">EV</text>
+        <text x="528" y="345" textAnchor="middle" fontSize="11" fill="#ffffff" fontWeight="bold" letterSpacing="0.5">EV</text>
       </g>
     </svg>
   );
@@ -250,7 +257,7 @@ function EnergyChainIllustration() {
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-sky-50 via-blue-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-sky-50">
 
       {/* Nav */}
       <nav className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 sm:py-5 max-w-7xl mx-auto">
@@ -346,12 +353,12 @@ export default function HomePage() {
 
       {/* Solar panel visual divider */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="grid grid-cols-8 md:grid-cols-16 gap-1.5 opacity-40">
+        <div className="grid grid-cols-8 md:grid-cols-16 gap-1.5 opacity-25">
           {Array.from({ length: 32 }).map((_, i) => (
-            <div key={i} className="aspect-[4/3] bg-blue-500 rounded border border-blue-300 relative overflow-hidden">
+            <div key={i} className="aspect-[4/3] bg-sky-300 rounded border border-sky-200 relative overflow-hidden">
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-px p-px">
                 {Array.from({ length: 4 }).map((_, j) => (
-                  <div key={j} className="bg-blue-600 rounded-sm" />
+                  <div key={j} className="bg-sky-400 rounded-sm" />
                 ))}
               </div>
             </div>

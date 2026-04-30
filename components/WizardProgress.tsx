@@ -19,9 +19,9 @@ export function WizardProgress({ current }: { current: number }) {
   return (
     <>
       {/* Mobile: compact progress bar with current step label */}
-      <div className="sm:hidden flex-1 ml-3 max-w-[55%]">
-        <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[11px] font-bold text-gray-700 truncate">
+      <div className="sm:hidden flex-1 min-w-0 ml-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[11px] font-bold truncate min-w-0">
             <span className="text-amber-600">{safeCurrent}/{total}</span>
             <span className="ml-1.5 text-gray-900">{currentLabel}</span>
           </span>
