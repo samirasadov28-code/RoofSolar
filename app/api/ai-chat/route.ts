@@ -22,22 +22,22 @@ BATTERY: ${inputs.hasBattery ? `${inputs.batteryKwh} kWh` : 'None'}
 EV: ${inputs.hasEv ? `Yes (${inputs.annualMileageKm?.toLocaleString()} km/yr)` : 'No'}
 
 FINANCIAL RESULTS:
-- Annual production: ${results.annualProductionKwh?.toFixed(0)} kWh
-- Self-consumed: ${results.selfConsumedKwh?.toFixed(0)} kWh/yr
-- Exported: ${results.exportedKwh?.toFixed(0)} kWh/yr
-- Year 1 solar savings: ${symbol}${Math.round(results.solarSavingsYear1 ?? 0)}
-- Year 1 export income: ${symbol}${Math.round(results.exportIncomeYear1 ?? 0)}
+- Annual production: ${Math.round(results.annualProductionKwh ?? 0).toLocaleString()} kWh
+- Self-consumed: ${Math.round(results.selfConsumedKwh ?? 0).toLocaleString()} kWh/yr
+- Exported: ${Math.round(results.exportedKwh ?? 0).toLocaleString()} kWh/yr
+- Year 1 solar savings: ${symbol}${Math.round(results.solarSavingsYear1 ?? 0).toLocaleString()}
+- Year 1 export income: ${symbol}${Math.round(results.exportIncomeYear1 ?? 0).toLocaleString()}
 - Payback period: ${paybackYrs}
 - IRR: ${results.irr ? `${(results.irr * 100).toFixed(1)}%` : 'N/A'}
-- NPV (8% discount): ${symbol}${Math.round(results.npv ?? 0)}
-- 10-year gross savings: ${symbol}${Math.round(results.lifetimeSavings ?? 0)}
-- CO₂ saved/year: ${Math.round(results.annualCo2Saved ?? 0)} kg
+- NPV (8% discount): ${symbol}${Math.round(results.npv ?? 0).toLocaleString()}
+- 10-year gross savings: ${symbol}${Math.round(results.lifetimeSavings ?? 0).toLocaleString()}
+- CO₂ saved/year: ${Math.round(results.annualCo2Saved ?? 0).toLocaleString()} kg
 
 TARIFFS:
 - Import: ${symbol}${inputs.importPricePerKwh}/kWh
 - Export (${inputs.countryCode === 'ie' ? 'MSS' : 'SEG'}): ${symbol}${inputs.exportPricePerKwh}/kWh
-- Grant: ${symbol}${results.grant ?? 0}
-- Net cost: ${symbol}${results.netCapex ?? 0}
+- Grant: ${symbol}${(results.grant ?? 0).toLocaleString()}
+- Net cost: ${symbol}${(results.netCapex ?? 0).toLocaleString()}
 
 FINANCING: ${inputs.financingMode} — ${inputs.financingMode !== 'outright' ? `${Math.round((inputs.loanCoveragePct ?? 1) * 100)}% financed at ${((inputs.annualRatePct ?? 0.065) * 100).toFixed(2)}% over ${inputs.tenorYears} years` : 'paid in full'}
 

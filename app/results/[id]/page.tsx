@@ -12,6 +12,7 @@ import { MonthlyExportChart } from '@/components/results/MonthlyExportChart';
 import { LeadModal } from '@/components/results/LeadModal';
 import { AiAdvisor } from '@/components/results/AiAdvisor';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
+import { fmtInt, fmtMoney } from '@/lib/format';
 
 function fmt(countryCode: string) {
   return countryCode === 'ie' ? '€' : countryCode === 'gb' ? '£' : '';
@@ -84,7 +85,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Your solar analysis</h1>
           <p className="text-gray-500 text-sm">
-            {inputs.systemKwp.toFixed(1)} kWp system · {data.annualProductionKwh?.toFixed(0)} kWh/yr · Source: {data.dataSource}
+            {inputs.systemKwp.toFixed(1)} kWp system · {fmtInt(data.annualProductionKwh)} kWh/yr · Source: {data.dataSource}
           </p>
         </div>
 
@@ -103,7 +104,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">CO₂ saved/yr</p>
             <p className="text-4xl font-extrabold text-green-600">
-              {Math.round(data.annualCo2Saved)}
+              {fmtInt(data.annualCo2Saved)}
             </p>
             <p className="text-xs text-gray-400 mt-1">kg CO₂/year</p>
           </div>

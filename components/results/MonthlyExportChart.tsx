@@ -22,10 +22,10 @@ export function MonthlyExportChart({ monthlyExportKwh, exportRate, symbol }: Pro
       <BarChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
         <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${symbol}${v}`} />
+        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${symbol}${Number(v).toLocaleString()}`} />
         <Tooltip
           formatter={(v: any, name: any) => [
-            name === 'exportIncome' ? `${symbol}${v}` : `${v} kWh`,
+            name === 'exportIncome' ? `${symbol}${Number(v).toLocaleString()}` : `${Number(v).toLocaleString()} kWh`,
             name === 'exportIncome' ? 'Income' : 'Export kWh',
           ]}
         />

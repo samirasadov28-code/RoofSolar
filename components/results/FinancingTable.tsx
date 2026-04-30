@@ -50,7 +50,7 @@ export function FinancingTable({ data, inputs, symbol }: Props) {
             },
             {
               label: 'Monthly payment',
-              values: rows.map((r) => r.fin.monthlyPayment > 0 ? `${symbol}${r.fin.monthlyPayment.toFixed(2)}` : '—'),
+              values: rows.map((r) => r.fin.monthlyPayment > 0 ? `${symbol}${r.fin.monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'),
             },
             {
               label: '10-yr total cost',

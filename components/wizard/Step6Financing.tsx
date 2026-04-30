@@ -124,7 +124,7 @@ export function Step6Financing({ onNext, onBack }: { onNext: () => void; onBack:
             </div>
             <div className="flex justify-between border-t border-gray-100 pt-1 mt-1">
               <span className="text-gray-900 font-medium">Monthly payment</span>
-              <span className="text-yellow-700 font-bold">{symbol}{monthlyPayment.toFixed(2)}</span>
+              <span className="text-yellow-700 font-bold">{symbol}{monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
           </div>
         </div>

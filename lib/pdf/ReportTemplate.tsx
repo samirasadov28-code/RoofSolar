@@ -98,7 +98,7 @@ export function ReportTemplate({ inputs, results }: Props) {
         <View style={styles.metricsRow}>
           {[
             ['10yr gross savings', `${s}${Math.round(results.lifetimeSavings ?? 0).toLocaleString()}`],
-            ['Annual CO₂ saved', `${Math.round(results.annualCo2Saved)} kg`],
+            ['Annual CO₂ saved', `${Math.round(results.annualCo2Saved).toLocaleString()} kg`],
             ['Year 1 net saving', `${s}${Math.round(results.netSavingsYear1 ?? 0).toLocaleString()}`],
           ].map(([l, v]) => (
             <View key={l} style={styles.metricBox}>
