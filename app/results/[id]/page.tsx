@@ -12,7 +12,7 @@ import { MonthlyExportChart } from '@/components/results/MonthlyExportChart';
 import { LeadModal } from '@/components/results/LeadModal';
 import { AiAdvisor } from '@/components/results/AiAdvisor';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
-import { fmtInt, fmtMoney } from '@/lib/format';
+import { fmtInt } from '@/lib/format';
 
 function fmt(countryCode: string) {
   return countryCode === 'ie' ? '€' : countryCode === 'gb' ? '£' : '';
