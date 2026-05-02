@@ -25,6 +25,8 @@ export interface CashflowParams {
   evCharging?: EvChargingResult;
   energyPriceEscalationPct: number;
   batteryRuntimeParams?: BatteryRuntimeParams;
+  /** Optional time-of-day cap on self-consumption. 1.0 = no cap. */
+  profileCap?: number;
 }
 
 export interface AnnualCashflow {
@@ -52,6 +54,7 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     evCharging,
     energyPriceEscalationPct,
     batteryRuntimeParams,
+    profileCap = 1.0,
   } = params;
 
   const rows: AnnualCashflow[] = [];
@@ -78,7 +81,7 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     const exportPrice = exportPricePerKwh * priceScale;
 
     const degradedProduction = applyDegradation(monthlyProduction, yr);
-    const sc = calcSelfConsumption(degradedProduction, monthlyConsumption);
+    const sc = calcSelfConsumption(degradedProduction, monthlyConsumption, profileCap);
 
     const solarSavings = sc.selfConsumedKwh.reduce((a, b) => a + b, 0) * importPrice;
     const exportIncome = sc.exportedKwh.reduce((a, b) => a + b, 0) * exportPrice;

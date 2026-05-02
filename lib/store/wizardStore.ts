@@ -21,9 +21,13 @@ export interface WizardInputs {
   monthlyBill: number | null;
   unitPrice: number | null;
 
+  // Step 3 — Consumption
+  consumptionProfile: 'daytime' | 'mixed' | 'evening';
+
   // Step 4 — System
   panelCount: number;
   systemKwp: number;
+  inverterType: 'standard' | 'hybrid';
   hasBattery: boolean;
   batteryKwh: number;
   hasEv: boolean;
@@ -33,6 +37,7 @@ export interface WizardInputs {
   publicChargingPct: number;
 
   // Step 5 — Tariffs & cost
+  tariffType: 'fixed' | 'tou';
   importPricePerKwh: number;
   exportPricePerKwh: number;
   grant: number;
@@ -74,9 +79,11 @@ const defaultInputs: WizardInputs = {
   annualKwh: 4200,
   monthlyBill: null,
   unitPrice: null,
+  consumptionProfile: 'mixed',
 
   panelCount: 12,
   systemKwp: 4.8,
+  inverterType: 'standard',
   hasBattery: false,
   batteryKwh: 5,
   hasEv: false,
@@ -85,6 +92,7 @@ const defaultInputs: WizardInputs = {
   chargingPreference: 'mixed',
   publicChargingPct: 0.20,
 
+  tariffType: 'fixed',
   importPricePerKwh: 0.433,
   exportPricePerKwh: 0.21,
   grant: 3000,

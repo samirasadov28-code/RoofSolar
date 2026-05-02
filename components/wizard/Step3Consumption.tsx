@@ -19,7 +19,7 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
   }
 
   const cc = inputs.countryCode;
-  const avgLabel = cc === 'ie' ? 'Ireland average: ~4,200 kWh/yr' : 'UK average 3-bed: ~3,100 kWh/yr';
+  const avgLabel = `Country average: ~${inputs.annualKwh.toLocaleString()} kWh/yr (auto-set from your address)`;
 
   return (
     <div className="space-y-6">
@@ -96,6 +96,38 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
           )}
         </div>
       )}
+
+      {/* When are appliances used? */}
+      <div>
+        <p className="text-sm font-medium text-gray-900 mb-1">When do most appliances run?</p>
+        <p className="text-xs text-gray-500 mb-2">
+          Solar produces midday — the more your demand overlaps, the more you self-consume
+          (and the less you have to buy back from the grid). This biases the cashflow model.
+        </p>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            { value: 'daytime', title: 'Daytime',  desc: 'WFH, AC, pool',     pct: '~55%' },
+            { value: 'mixed',   title: 'Mixed',    desc: 'typical household', pct: '~40%' },
+            { value: 'evening', title: 'Evening',  desc: 'cook + TV after work', pct: '~25%' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setInputs({ consumptionProfile: opt.value })}
+              className={`text-left p-3 rounded-xl border transition-colors ${
+                inputs.consumptionProfile === opt.value
+                  ? 'bg-yellow-50 border-yellow-400 ring-2 ring-yellow-300'
+                  : 'bg-white border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <p className="text-sm font-semibold text-gray-900">{opt.title}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{opt.desc}</p>
+              <p className="text-[10px] text-amber-700 mt-1 font-bold uppercase tracking-wider">
+                self-use {opt.pct}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="flex gap-3">
         <button onClick={onBack} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors">

@@ -1,7 +1,9 @@
 import { NextRequest } from 'next/server';
 
 const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
-const MODEL = 'grok-3-mini';
+// Configurable so we can switch models without a redeploy. Default to a
+// widely-available Grok model. Set XAI_MODEL on Netlify to override.
+const MODEL = process.env.XAI_MODEL || 'grok-3';
 
 function buildSystemPrompt(results: any, inputs: any): string {
   if (!results || !inputs) {
@@ -91,10 +93,21 @@ export async function POST(request: NextRequest) {
   });
 
   if (!grokResponse.ok) {
-    const err = await grokResponse.text();
+    const errText = await grokResponse.text();
+    // Surface the upstream message so the client can show something useful
+    // (e.g. "model not found", "invalid API key").
+    let detail = errText;
+    try {
+      const parsed = JSON.parse(errText);
+      detail = parsed?.error?.message || parsed?.error || errText;
+    } catch {}
     return new Response(
-      JSON.stringify({ error: `Grok API error: ${grokResponse.status}`, detail: err }),
-      { status: 502 }
+      JSON.stringify({
+        error: `Grok API error (HTTP ${grokResponse.status})`,
+        detail,
+        model: MODEL,
+      }),
+      { status: 502, headers: { 'Content-Type': 'application/json' } }
     );
   }
 

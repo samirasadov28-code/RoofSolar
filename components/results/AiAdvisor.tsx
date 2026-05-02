@@ -56,15 +56,33 @@ export function AiAdvisor({ results, inputs }: Props) {
         setConfigured(false);
         setMessages((prev) => [
           ...prev,
-          { role: 'assistant', content: 'AI advisor is not available right now.' },
+          {
+            role: 'assistant',
+            content:
+              'AI advisor is not configured. The XAI_API_KEY environment variable is missing. Set it in your Netlify env vars and redeploy to enable.',
+          },
         ]);
         setLoading(false);
         return;
       }
 
-      if (!res.ok || !res.body) {
-        throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        let errBody: any = null;
+        try { errBody = await res.json(); } catch {}
+        const detail = errBody?.detail || errBody?.error || `HTTP ${res.status}`;
+        const model = errBody?.model ? ` (model: ${errBody.model})` : '';
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: 'assistant',
+            content: `AI advisor error${model}: ${detail}`,
+          },
+        ]);
+        setLoading(false);
+        return;
       }
+
+      if (!res.body) throw new Error('Empty stream');
 
       // Stream SSE
       const reader = res.body.getReader();
@@ -101,10 +119,13 @@ export function AiAdvisor({ results, inputs }: Props) {
           }
         }
       }
-    } catch {
+    } catch (err: any) {
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Sorry, something went wrong. Please try again.' },
+        {
+          role: 'assistant',
+          content: `Sorry, something went wrong (${err?.message || 'unknown error'}). Please try again.`,
+        },
       ]);
     }
 

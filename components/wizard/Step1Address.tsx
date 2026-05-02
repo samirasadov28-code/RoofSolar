@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 import dynamic from 'next/dynamic';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false });
@@ -21,16 +22,6 @@ interface Preview {
   capacityFactorPct: number;
   sunnyDaysEquivalent: number;
   dataSource: 'pvgis' | 'nrel' | 'manual';
-}
-
-function getDefaults(countryCode: string) {
-  if (countryCode === 'ie') {
-    return { importPricePerKwh: 0.433, exportPricePerKwh: 0.21, annualKwh: 4200 };
-  }
-  if (countryCode === 'gb') {
-    return { importPricePerKwh: 0.245, exportPricePerKwh: 0.15, annualKwh: 3100 };
-  }
-  return {};
 }
 
 export function Step1Address({ onNext }: { onNext: () => void }) {
@@ -77,16 +68,19 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
   }, []);
 
   function selectSuggestion(s: Suggestion) {
-    const defaults = getDefaults(s.countryCode);
-    const grantDefault = s.countryCode === 'ie' ? 3000 : 0;
+    const defaults = getCountryDefaults(s.countryCode);
     setInputs({
       address: s.displayName,
       lat: s.lat,
       lon: s.lon,
       countryCode: s.countryCode,
       displayName: s.displayName,
-      grant: grantDefault,
-      ...defaults,
+      grant: defaults.grant,
+      annualKwh: defaults.annualKwh,
+      importPricePerKwh: defaults.importPricePerKwh,
+      exportPricePerKwh: defaults.exportPricePerKwh,
+      dayPricePerKwh: defaults.dayPricePerKwh,
+      nightPricePerKwh: defaults.nightPricePerKwh,
     });
     setQuery(s.displayName);
     setSuggestions([]);

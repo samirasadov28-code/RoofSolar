@@ -27,7 +27,9 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
   const systemCostGross =
     inputs.systemCostGross > 0
       ? inputs.systemCostGross
-      : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
+      : inputs.panelCount * 900
+          + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)
+          + (inputs.inverterType === 'hybrid' ? 500 : 0);
   const netCapex = Math.max(0, systemCostGross - inputs.grant);
 
   async function calculate() {
@@ -54,10 +56,13 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
         vehicleEfficiencyKwhPer100km: inputs.vehicleEfficiencyKwhPer100km,
         chargingPreference: inputs.chargingPreference,
         publicChargingPct: inputs.publicChargingPct,
+        consumptionProfile: inputs.consumptionProfile,
+        tariffType: inputs.tariffType,
+        inverterType: inputs.inverterType,
         importPricePerKwh: inputs.importPricePerKwh,
         exportPricePerKwh: inputs.exportPricePerKwh,
-        dayPricePerKwh: inputs.dayPricePerKwh,
-        nightPricePerKwh: inputs.nightPricePerKwh,
+        dayPricePerKwh: inputs.tariffType === 'tou' ? inputs.dayPricePerKwh : inputs.importPricePerKwh,
+        nightPricePerKwh: inputs.tariffType === 'tou' ? inputs.nightPricePerKwh : inputs.importPricePerKwh,
         systemCostGross,
         financingMode: inputs.financingMode,
         loanCoveragePct: inputs.loanCoveragePct,

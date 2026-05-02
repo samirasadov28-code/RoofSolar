@@ -51,15 +51,49 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
         </div>
       </div>
 
+      {/* Inverter type */}
+      <div>
+        <p className="text-sm font-medium text-gray-900 mb-1">Inverter type</p>
+        <p className="text-xs text-gray-500 mb-3">
+          A hybrid (smart) inverter is required to add a battery later or to use
+          dynamic export. Adds ~€500 to the system cost.
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { value: 'standard', title: 'Standard string', desc: 'PV-only, lowest cost' },
+            { value: 'hybrid',   title: 'Hybrid (smart)',  desc: 'PV + battery-ready' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setInputs({ inverterType: opt.value })}
+              className={`text-left p-3 rounded-xl border transition-colors ${
+                inputs.inverterType === opt.value
+                  ? 'bg-yellow-50 border-yellow-400 ring-2 ring-yellow-300'
+                  : 'bg-white border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <p className="text-sm font-semibold text-gray-900">{opt.title}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{opt.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Battery */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-sm font-medium text-gray-900">Battery storage</p>
-            <p className="text-xs text-gray-500">Store surplus solar for evening use</p>
+            <p className="text-xs text-gray-500">
+              Store surplus solar for evening use{inputs.inverterType !== 'hybrid' && ' (auto-switches to hybrid inverter)'}
+            </p>
           </div>
           <button
-            onClick={() => setInputs({ hasBattery: !inputs.hasBattery })}
+            onClick={() => setInputs({
+              hasBattery: !inputs.hasBattery,
+              // A battery only makes sense with a hybrid inverter — auto-flip.
+              ...(!inputs.hasBattery && inputs.inverterType !== 'hybrid' ? { inverterType: 'hybrid' as const } : {}),
+            })}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${inputs.hasBattery ? 'bg-yellow-400' : 'bg-gray-200'}`}
           >
             <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${inputs.hasBattery ? 'translate-x-6' : 'translate-x-1'}`} />

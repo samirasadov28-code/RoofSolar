@@ -170,6 +170,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         {/* Pro content */}
         <ProGate
           calculationId={id}
+          priceLabel={`${symbol || '£'}3.99`}
           preview={
             <div className="space-y-8 p-6">
               <div className="h-64 bg-gray-100 rounded-xl" />

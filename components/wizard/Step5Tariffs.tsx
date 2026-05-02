@@ -24,9 +24,39 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         <p className="text-gray-500">Pre-filled based on your location. Adjust as needed.</p>
       </div>
 
+      {/* Tariff type */}
+      <div>
+        <p className="text-sm font-medium text-gray-900 mb-1">Tariff structure</p>
+        <p className="text-xs text-gray-500 mb-2">
+          Pick fixed if you pay one rate all day. Pick day/night if your contract has different
+          peak and off-peak rates (e.g. Smart, EcoTracker, Economy 7).
+        </p>
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { value: 'fixed', title: 'Fixed rate', desc: 'one price all day' },
+            { value: 'tou',   title: 'Day / Night',  desc: 'time-of-use bands' },
+          ] as const).map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setInputs({ tariffType: opt.value })}
+              className={`text-left p-3 rounded-xl border transition-colors ${
+                inputs.tariffType === opt.value
+                  ? 'bg-yellow-50 border-yellow-400 ring-2 ring-yellow-300'
+                  : 'bg-white border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <p className="text-sm font-semibold text-gray-900">{opt.title}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{opt.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Import price (per kWh)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            {inputs.tariffType === 'tou' ? 'Average / day rate (per kWh)' : 'Import price (per kWh)'}
+          </label>
           <div className="relative">
             {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
             <input
@@ -84,16 +114,42 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
             value={
               inputs.systemCostGross > 0
                 ? inputs.systemCostGross
-                : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)
+                : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0) + (inputs.inverterType === 'hybrid' ? 500 : 0)
             }
             onChange={(e) => setInputs({ systemCostGross: Number(e.target.value) })}
             className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
           />
         </div>
         <p className="text-xs text-gray-400 mt-1">
-          Auto-estimate: {symbol}{(inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0)).toLocaleString()} — edit with your actual quote
+          Auto-estimate: {symbol}{(inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0) + (inputs.inverterType === 'hybrid' ? 500 : 0)).toLocaleString()} — edit with your actual quote
         </p>
       </div>
+
+      {/* Day/Night rates — visible whenever Time-of-Use tariff is picked */}
+      {inputs.tariffType === 'tou' && (
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Day rate (per kWh)</label>
+            <input
+              type="number"
+              step="0.001"
+              value={inputs.dayPricePerKwh}
+              onChange={(e) => setInputs({ dayPricePerKwh: Number(e.target.value) })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Night rate (per kWh)</label>
+            <input
+              type="number"
+              step="0.001"
+              value={inputs.nightPricePerKwh}
+              onChange={(e) => setInputs({ nightPricePerKwh: Number(e.target.value) })}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+        </div>
+      )}
 
       {/* Advanced */}
       <div>
@@ -109,28 +165,6 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
 
         {showAdvanced && (
           <div className="mt-4 space-y-4 border-l-2 border-yellow-200 pl-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Day rate (per kWh)</label>
-                <input
-                  type="number"
-                  step="0.001"
-                  value={inputs.dayPricePerKwh}
-                  onChange={(e) => setInputs({ dayPricePerKwh: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Night rate (per kWh)</label>
-                <input
-                  type="number"
-                  step="0.001"
-                  value={inputs.nightPricePerKwh}
-                  onChange={(e) => setInputs({ nightPricePerKwh: Number(e.target.value) })}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-              </div>
-            </div>
             {inputs.hasBattery && (
               <div className="flex items-center justify-between">
                 <div>

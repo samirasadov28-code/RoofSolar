@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSolarYield } from '@/lib/engine/solarYield';
 import { distributeConsumption } from '@/lib/engine/consumption';
-import { calcSelfConsumption } from '@/lib/engine/selfConsumption';
+import { calcSelfConsumption, profileCapFor } from '@/lib/engine/selfConsumption';
 import { calcBattery } from '@/lib/engine/battery';
 import { getGrant } from '@/lib/engine/grants';
 import { calcEvCharging } from '@/lib/engine/evCharging';
@@ -10,9 +10,14 @@ import { buildCashflow } from '@/lib/engine/cashflow';
 import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from '@/lib/engine/metrics';
 import { runSensitivity } from '@/lib/engine/sensitivity';
 
+// Grid CO2 intensity (kg CO2 per kWh) by ISO country code. Rough 2023-24
+// averages from EEA / IEA / Our World in Data. Used for CO2-saved metric only.
 const CO2_KG_PER_KWH: Record<string, number> = {
-  gb: 0.233,
-  ie: 0.295,
+  gb: 0.233, ie: 0.295,
+  fr: 0.058, de: 0.380, es: 0.190, it: 0.290, nl: 0.330,
+  be: 0.165, pt: 0.180, at: 0.140, ch: 0.040, dk: 0.140,
+  no: 0.020, se: 0.040, fi: 0.090, pl: 0.660, cz: 0.420,
+  us: 0.380, ca: 0.130, au: 0.560, nz: 0.110,
 };
 
 export async function POST(request: NextRequest) {
@@ -30,6 +35,7 @@ export async function POST(request: NextRequest) {
       financingMode, loanCoveragePct, annualRatePct, tenorYears,
       energyPriceEscalationPct = 0.03,
       panelCount,
+      consumptionProfile,
     } = body;
 
     // 1. Solar yield
@@ -41,8 +47,14 @@ export async function POST(request: NextRequest) {
     // 2. Consumption
     const monthlyConsumption = distributeConsumption(annualKwh);
 
-    // 3. Self-consumption
-    const sc = calcSelfConsumption(yieldResult.monthlyKwh, monthlyConsumption);
+    // 3. Self-consumption — capped by the appliance time-of-day profile.
+    // A battery effectively time-shifts midday surplus into the evening, so
+    // when one is present we relax the cap toward the naive 1.0 ceiling.
+    const baseProfileCap = profileCapFor(consumptionProfile);
+    const profileCap = hasBattery && batteryKwh > 0
+      ? Math.min(1.0, baseProfileCap + 0.25)
+      : baseProfileCap;
+    const sc = calcSelfConsumption(yieldResult.monthlyKwh, monthlyConsumption, profileCap);
 
     // 4. Grant and net capex
     const grant = getGrant(countryCode, systemKwp);
@@ -78,7 +90,7 @@ export async function POST(request: NextRequest) {
       netCapex, monthlyProduction: yieldResult.monthlyKwh, monthlyConsumption,
       importPricePerKwh, exportPricePerKwh, battery: batteryResult, financing,
       loanTenorYears: tenorYears, evCharging: evResult, energyPriceEscalationPct,
-      batteryRuntimeParams,
+      batteryRuntimeParams, profileCap,
     };
     const cashflows = buildCashflow(cashflowParams);
 
