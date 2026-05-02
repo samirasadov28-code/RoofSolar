@@ -205,9 +205,10 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
               <p className="text-[11px] text-gray-600 mt-3 leading-relaxed">
                 A reference {preview.sampleSystemKwp} kWp south-facing system at this site
                 would generate ~<strong>{preview.sampleAnnualKwh.toLocaleString()} kWh</strong> per year.
-                <span className="text-gray-500"> Availability % is the share of the year-long
-                8,760-hour window when your panels are effectively producing at full rated
-                power.</span>
+                <span className="text-gray-500"> Peak sun is the location&apos;s raw solar
+                resource; net capacity is what your panels actually deliver after typical
+                system losses (~14% inverter, wiring, soiling, temperature). Availability is
+                the share of the 8,760-hour year that equates to full-rated output.</span>
               </p>
             </>
           )}

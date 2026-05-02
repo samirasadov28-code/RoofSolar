@@ -30,16 +30,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'no_yield_data' }, { status: 502 });
   }
 
-  // Specific yield (kWh per kWp per year). PVGIS already accounts for
-  // typical system losses (~14%) and average weather.
+  // Specific yield (kWh AC delivered per kWp installed, per year). PVGIS
+  // already nets out typical system losses (~14%: inverter, wiring,
+  // soiling, temperature, mismatch).
   const specificYield = yieldResult.annualKwh / sampleSystemKwp;
 
-  // 1 peak sun hour = 1 kWh produced per 1 kWp installed in ideal
-  // conditions. So peak sun hours ≈ specific yield.
-  const peakSunHoursPerYear = specificYield;
+  // Peak sun hours measure the plane-of-array solar resource BEFORE those
+  // system losses (1 PSH = 1 kWh/m² of irradiation). To recover them from
+  // the loss-netted specific yield we divide by the loss factor used in
+  // getSolarYield (PVGIS loss=14 → 0.86 throughput).
+  const SYSTEM_LOSS_FACTOR = 0.14;
+  const peakSunHoursPerYear = specificYield / (1 - SYSTEM_LOSS_FACTOR);
 
-  // Capacity factor = actual output / theoretical 24/7 output
-  // = annualKwh / (kWp × 8760).
+  // Capacity factor = actual AC output / nameplate × 8,760.
   const capacityFactorPct = (specificYield / 8760) * 100;
 
   // "Sunny day equivalent" — how many full 8-hour blue-sky days the
