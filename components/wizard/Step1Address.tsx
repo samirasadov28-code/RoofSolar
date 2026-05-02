@@ -13,6 +13,16 @@ interface Suggestion {
   displayName: string;
 }
 
+interface Preview {
+  sampleSystemKwp: number;
+  sampleAnnualKwh: number;
+  annualKwhPerKwp: number;
+  peakSunHoursPerYear: number;
+  capacityFactorPct: number;
+  sunnyDaysEquivalent: number;
+  dataSource: 'pvgis' | 'nrel' | 'manual';
+}
+
 function getDefaults(countryCode: string) {
   if (countryCode === 'ie') {
     return { importPricePerKwh: 0.433, exportPricePerKwh: 0.21, annualKwh: 4200 };
@@ -28,6 +38,8 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
   const [query, setQuery] = useState(inputs.address);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState<Preview | null>(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchSuggestions = useCallback(async (q: string) => {
@@ -46,6 +58,24 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [query, fetchSuggestions]);
 
+  const fetchPreview = useCallback(async (lat: number, lon: number) => {
+    setPreviewLoading(true);
+    setPreview(null);
+    try {
+      const res = await fetch(`/api/preview?lat=${lat}&lon=${lon}`);
+      if (res.ok) setPreview(await res.json());
+    } catch {}
+    setPreviewLoading(false);
+  }, []);
+
+  // Auto-fetch preview if we already have a saved location (returning user)
+  useEffect(() => {
+    if (inputs.lat && inputs.lon && !preview && !previewLoading) {
+      fetchPreview(inputs.lat, inputs.lon);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function selectSuggestion(s: Suggestion) {
     const defaults = getDefaults(s.countryCode);
     const grantDefault = s.countryCode === 'ie' ? 3000 : 0;
@@ -60,6 +90,7 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     });
     setQuery(s.displayName);
     setSuggestions([]);
+    fetchPreview(s.lat, s.lon);
   }
 
   const canProceed = inputs.lat !== null && inputs.lon !== null;
@@ -103,6 +134,83 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
       {inputs.lat && inputs.lon && (
         <div className="rounded-xl overflow-hidden border border-gray-200 h-48">
           <MapView lat={inputs.lat} lon={inputs.lon} />
+        </div>
+      )}
+
+      {/* Live solar preview based on the picked location */}
+      {(previewLoading || preview) && (
+        <div className="bg-gradient-to-br from-amber-50 to-sky-50 border border-amber-200 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-gray-900 text-sm">
+              ☀️ Solar potential at this location
+            </h3>
+            {preview?.dataSource && (
+              <span className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+                {preview.dataSource}
+              </span>
+            )}
+          </div>
+
+          {previewLoading && !preview && (
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="w-3.5 h-3.5 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+              Fetching irradiance data…
+            </div>
+          )}
+
+          {preview && (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
+                  <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
+                    Sunny days
+                  </p>
+                  <p className="text-xl font-extrabold text-gray-900">
+                    {preview.sunnyDaysEquivalent.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-gray-500">equivalent / yr</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
+                  <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
+                    Net capacity
+                  </p>
+                  <p className="text-xl font-extrabold text-gray-900">
+                    {preview.annualKwhPerKwp.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-gray-500">kWh / kWp / yr</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
+                  <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
+                    Availability
+                  </p>
+                  <p className="text-xl font-extrabold text-gray-900">
+                    {preview.capacityFactorPct.toFixed(1)}%
+                  </p>
+                  <p className="text-[10px] text-gray-500">capacity factor</p>
+                </div>
+
+                <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
+                  <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
+                    Peak sun
+                  </p>
+                  <p className="text-xl font-extrabold text-gray-900">
+                    {preview.peakSunHoursPerYear.toLocaleString()}
+                  </p>
+                  <p className="text-[10px] text-gray-500">hours / yr</p>
+                </div>
+              </div>
+
+              <p className="text-[11px] text-gray-600 mt-3 leading-relaxed">
+                A reference {preview.sampleSystemKwp} kWp south-facing system at this site
+                would generate ~<strong>{preview.sampleAnnualKwh.toLocaleString()} kWh</strong> per year.
+                <span className="text-gray-500"> Availability % is the share of the year-long
+                8,760-hour window when your panels are effectively producing at full rated
+                power.</span>
+              </p>
+            </>
+          )}
         </div>
       )}
 

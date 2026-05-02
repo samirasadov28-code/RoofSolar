@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ProGate } from '@/components/ProGate';
+import { CalculationBreakdown } from '@/components/results/CalculationBreakdown';
 import { CashflowChart } from '@/components/results/CashflowChart';
 import { SensitivityMatrix } from '@/components/results/SensitivityMatrix';
 import { BatteryPanel } from '@/components/results/BatteryPanel';
@@ -148,6 +149,9 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             ))}
           </div>
         </div>
+
+        {/* Calculation breakdown — visible to free + Pro alike */}
+        <CalculationBreakdown data={data} inputs={inputs} symbol={symbol} />
 
         {/* Get quotes CTA */}
         <div className="bg-blue-900 text-white rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
