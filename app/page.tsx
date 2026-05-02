@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { APP_VERSION } from '@/lib/version';
+import { ForceUpdateButton } from '@/components/ForceUpdateButton';
 
 function EnergyChainIllustration() {
   return (
@@ -439,6 +440,9 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Force-update widget — landing page only */}
+      <ForceUpdateButton />
     </main>
   );
 }

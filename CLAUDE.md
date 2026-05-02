@@ -25,5 +25,6 @@ force-push only after explicit user authorization.
 ## Versioning
 
 `lib/version.ts` exports `APP_VERSION`. Bump it whenever shipping a visible
-change so the floating Force-update widget (bottom-right of every page)
-reflects the live build. Users use it as a cache-bust + visual confirmation.
+change so the floating Force-update widget (bottom-right of the **landing
+page only**) reflects the live build. Users use it as a cache-bust + visual
+confirmation.
