@@ -1,9 +1,18 @@
 import { NextRequest } from 'next/server';
 
-const XAI_API_URL = 'https://api.x.ai/v1/chat/completions';
-// Configurable so we can switch models without a redeploy. Default to a
-// widely-available Grok model. Set XAI_MODEL on Netlify to override.
-const MODEL = process.env.XAI_MODEL || 'grok-3';
+/**
+ * Solar AI Advisor — backed by Groq's OpenAI-compatible inference API.
+ *
+ * Env vars:
+ *   - GROQ_API_KEY  (required)  — your key from https://console.groq.com/keys
+ *   - GROQ_MODEL    (optional)  — defaults to llama-3.3-70b-versatile
+ */
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+
+function getApiKey(): string | undefined {
+  return process.env.GROQ_API_KEY;
+}
 
 function buildSystemPrompt(results: any, inputs: any): string {
   if (!results || !inputs) {
@@ -51,10 +60,12 @@ Focus on actionable insights. Use ${symbol} for currency. Be friendly but profes
 }
 
 export async function POST(request: NextRequest) {
-  const apiKey = process.env.XAI_API_KEY;
+  const apiKey = getApiKey();
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: 'AI advisor not configured — XAI_API_KEY missing' }),
+      JSON.stringify({
+        error: 'AI advisor not configured — set GROQ_API_KEY on Netlify',
+      }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
     );
   }
@@ -74,7 +85,7 @@ export async function POST(request: NextRequest) {
 
   const systemPrompt = buildSystemPrompt(results, inputs);
 
-  const grokResponse = await fetch(XAI_API_URL, {
+  const upstream = await fetch(GROQ_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -92,8 +103,8 @@ export async function POST(request: NextRequest) {
     }),
   });
 
-  if (!grokResponse.ok) {
-    const errText = await grokResponse.text();
+  if (!upstream.ok) {
+    const errText = await upstream.text();
     // Surface the upstream message so the client can show something useful
     // (e.g. "model not found", "invalid API key").
     let detail = errText;
@@ -103,7 +114,7 @@ export async function POST(request: NextRequest) {
     } catch {}
     return new Response(
       JSON.stringify({
-        error: `Grok API error (HTTP ${grokResponse.status})`,
+        error: `Groq API error (HTTP ${upstream.status})`,
         detail,
         model: MODEL,
       }),
@@ -112,7 +123,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Stream the SSE response straight through to the client
-  return new Response(grokResponse.body, {
+  return new Response(upstream.body, {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',

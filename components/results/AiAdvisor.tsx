@@ -161,7 +161,7 @@ export function AiAdvisor({ results, inputs }: Props) {
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">Solar AI Advisor</p>
-                <p className="text-xs text-gray-400">Powered by Grok</p>
+                <p className="text-xs text-gray-400">Powered by Groq · Llama 3.3</p>
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 p-1">

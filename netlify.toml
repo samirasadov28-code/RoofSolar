@@ -19,7 +19,8 @@
 # STRIPE_WEBHOOK_SECRET
 # STRIPE_PRO_PRICE_ID
 # RESEND_API_KEY
-# XAI_API_KEY                (Grok AI advisor)
+# GROQ_API_KEY               (AI advisor — get one at https://console.groq.com/keys)
+# GROQ_MODEL                 (optional, defaults to llama-3.3-70b-versatile)
 # NEXT_PUBLIC_PLAUSIBLE_DOMAIN
 
 [[headers]]
