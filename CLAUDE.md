@@ -11,15 +11,17 @@
 
 ### To ship work to production
 
-The deploy branch is currently a strict ancestor of the feature branch, so a
-fast-forward is sufficient — no force-push needed. Always confirm with the
-user before pushing to the production branch.
+The user has standing authorisation: **every time work lands on the feature
+branch, immediately fast-forward the production branch and push it without
+re-asking.** The deploy branch is currently a strict ancestor of the feature
+branch, so a fast-forward is sufficient — no force-push needed.
 
 ```sh
 git push origin claude/enable-google-login-rr2DS:claude/build-roofsolar-app-2sFmG
 ```
 
-If history has diverged later, fall back to opening a PR or a deliberate
+If history has diverged later (rare — it shouldn't, since all work goes
+through the feature branch), fall back to opening a PR or a deliberate
 force-push only after explicit user authorization.
 
 ## Versioning
