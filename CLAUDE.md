@@ -28,3 +28,9 @@ force-push only after explicit user authorization.
 change so the floating Force-update widget (bottom-right of the **landing
 page only**) reflects the live build. Users use it as a cache-bust + visual
 confirmation.
+
+## Communication preferences
+
+- **Do not tell the user to click the Force-update widget after a deploy.**
+  They know about it and will use it themselves. End-of-turn summaries
+  should just state what shipped and the new version, not how to verify.
