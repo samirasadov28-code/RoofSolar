@@ -296,7 +296,7 @@ export default function HomePage() {
               <span className="text-amber-500"> power station.</span>
             </h1>
             <p className="text-base sm:text-lg text-gray-600 max-w-xl mb-10 leading-relaxed">
-              Enter your address and get a 10-year cashflow model, payback analysis,
+              Enter your address and get a 25-year cashflow model, payback analysis,
               export tariff earnings, battery economics, and EV savings — tailored to your home.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -358,7 +358,7 @@ export default function HomePage() {
         <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
           {[
             { value: '3 min', label: 'Average analysis time' },
-            { value: '10yr', label: 'Cashflow projection' },
+            { value: '25yr', label: 'Cashflow projection' },
             { value: '€3.99', label: 'Full pro report' },
           ].map((s) => (
             <div key={s.label} className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6">
@@ -393,7 +393,7 @@ export default function HomePage() {
             { step: '1', icon: '📍', title: 'Your address', desc: 'We fetch live solar irradiance data for your exact location from PVGIS.' },
             { step: '2', icon: '🏠', title: 'Roof details', desc: 'Orientation, pitch and shading loss — we calculate optimal panel placement.' },
             { step: '3', icon: '💶', title: 'Your numbers', desc: 'Irish tariffs, SEAI grants, consumption and financing — all pre-filled.' },
-            { step: '4', icon: '📊', title: 'Your report', desc: '10-year cashflow, IRR, payback period, battery and EV economics.' },
+            { step: '4', icon: '📊', title: 'Your report', desc: '25-year cashflow, IRR, payback period, battery and EV economics.' },
           ].map((item) => (
             <div key={item.step} className="text-center group">
               <div className="w-14 h-14 bg-amber-100 border border-amber-300 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-amber-200 transition-colors">

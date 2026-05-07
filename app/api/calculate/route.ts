@@ -9,6 +9,7 @@ import { calcFinancing } from '@/lib/engine/financing';
 import { buildCashflow } from '@/lib/engine/cashflow';
 import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from '@/lib/engine/metrics';
 import { runSensitivity } from '@/lib/engine/sensitivity';
+import { runExtendedSensitivity } from '@/lib/engine/extendedSensitivity';
 
 // Grid CO2 intensity (kg CO2 per kWh) by ISO country code. Rough 2023-24
 // averages from EEA / IEA / Our World in Data. Used for CO2-saved metric only.
@@ -36,7 +37,14 @@ export async function POST(request: NextRequest) {
       energyPriceEscalationPct = 0.03,
       panelCount,
       consumptionProfile,
+      inverterType = 'standard',
     } = body;
+
+    // Lifetime horizon used by the cashflow model (panel warranty period).
+    // The inverter is typically replaced once around year 12.
+    const HORIZON_YEARS = 25;
+    const INVERTER_REPLACEMENT_YEAR = 12;
+    const INVERTER_REPLACEMENT_COST = inverterType === 'hybrid' ? 1800 : 1200;
 
     // 1. Solar yield
     const yieldResult = await getSolarYield({ lat, lon, systemKwp, tiltDeg, azimuthDeg, shadingLossPct });
@@ -91,6 +99,9 @@ export async function POST(request: NextRequest) {
       importPricePerKwh, exportPricePerKwh, battery: batteryResult, financing,
       loanTenorYears: tenorYears, evCharging: evResult, energyPriceEscalationPct,
       batteryRuntimeParams, profileCap,
+      horizonYears: HORIZON_YEARS,
+      inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
+      inverterReplacementCost: INVERTER_REPLACEMENT_COST,
     };
     const cashflows = buildCashflow(cashflowParams);
 
@@ -111,6 +122,46 @@ export async function POST(request: NextRequest) {
 
     // 10. Sensitivity
     const sensitivity = runSensitivity(cashflowParams);
+
+    // 10b. Extended sensitivity sweeps — vary one input at a time
+    const PANEL_UNIT_COST = 900;
+    const BATTERY_UNIT_COST = 600;
+    const HYBRID_INVERTER_COST = 500;
+    const baselineGross = (systemCostGross || 0);
+    const extendedSensitivity = runExtendedSensitivity({
+      monthlyProduction: yieldResult.monthlyKwh,
+      baselineKwp: systemKwp,
+      baselineNetCapex: netCapex,
+      panelUnitCost: PANEL_UNIT_COST,
+      batteryUnitCost: BATTERY_UNIT_COST,
+      hybridInverterCost: HYBRID_INVERTER_COST,
+      inverterType,
+      hasBattery: !!hasBattery,
+      batteryKwh,
+      panelCount,
+      grant,
+      baseParams: {
+        monthlyConsumption,
+        importPricePerKwh,
+        exportPricePerKwh,
+        battery: batteryResult,
+        loanTenorYears: tenorYears,
+        evCharging: evResult,
+        energyPriceEscalationPct,
+        batteryRuntimeParams,
+        profileCap,
+        horizonYears: HORIZON_YEARS,
+        inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
+        inverterReplacementCost: INVERTER_REPLACEMENT_COST,
+      },
+      baseFinancing: {
+        annualRatePct,
+        tenorYears,
+        loanCoveragePct,
+        financingMode,
+      },
+    });
+    void baselineGross;
 
     // 11. Year 1 totals
     const yr1 = cashflows[1];
@@ -136,7 +187,11 @@ export async function POST(request: NextRequest) {
       evCharging: evResult,
       batteryResult,
       sensitivity,
+      extendedSensitivity,
       monthlyExportKwh: sc.exportedKwh,
+      horizonYears: HORIZON_YEARS,
+      inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
+      inverterReplacementCost: INVERTER_REPLACEMENT_COST,
     };
 
     // Save to Supabase (non-blocking; skip if DB not configured)

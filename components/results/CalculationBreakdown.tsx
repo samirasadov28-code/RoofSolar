@@ -198,10 +198,10 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
         )}
       </Section>
 
-      <Section title="5. 10-year financial metrics">
+      <Section title="5. Lifetime financial metrics">
         <Row
           label="Lifetime gross savings"
-          formula="Σ year-1..10 (solar + export + battery + EV)"
+          formula="Σ year-1..N (solar + export + battery + EV) — N is the panel warranty horizon"
           result={fmtMoney(lifetime)}
         />
         <Row

@@ -162,7 +162,7 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
           </div>
           <h3 className="font-bold text-gray-900 mb-1">Unlock full analysis</h3>
           <p className="text-sm text-gray-500 mb-4 text-center">
-            10-year cashflow, sensitivity matrix, battery economics and PDF report
+            25-year cashflow, dynamic stress-tester, battery economics and PDF report
           </p>
 
           {isPro ? (

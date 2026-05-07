@@ -23,6 +23,10 @@ export interface WizardInputs {
 
   // Step 3 — Consumption
   consumptionProfile: 'daytime' | 'mixed' | 'evening';
+  /** Heated floor area in square metres. */
+  houseAreaSqM: number;
+  /** Number of people permanently living in the household. */
+  householdSize: number;
 
   // Step 4 — System
   panelCount: number;
@@ -80,6 +84,8 @@ const defaultInputs: WizardInputs = {
   monthlyBill: null,
   unitPrice: null,
   consumptionProfile: 'mixed',
+  houseAreaSqM: 100,
+  householdSize: 3,
 
   panelCount: 12,
   systemKwp: 4.8,

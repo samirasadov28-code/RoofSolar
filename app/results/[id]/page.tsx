@@ -11,6 +11,9 @@ import { EvPanel } from '@/components/results/EvPanel';
 import { FinancingTable } from '@/components/results/FinancingTable';
 import { MonthlyExportChart } from '@/components/results/MonthlyExportChart';
 import { MonthlyUsageVsGeneration } from '@/components/results/MonthlyUsageVsGeneration';
+import { BillComparisonChart } from '@/components/results/BillComparisonChart';
+import { LifetimeImpact } from '@/components/results/LifetimeImpact';
+import { ExtendedSensitivityPanel } from '@/components/results/ExtendedSensitivityPanel';
 import { LeadModal } from '@/components/results/LeadModal';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
@@ -139,7 +142,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                   : null,
               },
               { label: 'NPV (8%)', value: `${symbol}${Math.round(data.npv ?? 0).toLocaleString()}` },
-              { label: '10yr savings', value: `${symbol}${Math.round(data.lifetimeSavings ?? 0).toLocaleString()}` },
+              { label: `${data.horizonYears ?? 25}yr savings`, value: `${symbol}${Math.round(data.lifetimeSavings ?? 0).toLocaleString()}` },
             ].map((item: any) => (
               <div key={item.label} className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-500">{item.label}</p>
@@ -149,6 +152,14 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             ))}
           </div>
         </div>
+
+        {/* Lifetime CO₂ + savings impact — free for everyone */}
+        <LifetimeImpact
+          annualCo2Saved={data.annualCo2Saved ?? 0}
+          horizonYears={data.horizonYears ?? 25}
+          lifetimeSavings={data.lifetimeSavings ?? 0}
+          symbol={symbol}
+        />
 
         {/* Calculation breakdown — visible to free + Pro alike */}
         <CalculationBreakdown data={data} inputs={inputs} symbol={symbol} />
@@ -193,16 +204,61 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               />
             </div>
 
-            {/* 10-year cashflow chart */}
+            {/* Bill pre-vs-post */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h2 className="font-bold text-gray-900 mb-4">10-year cashflow</h2>
+              <h2 className="font-bold text-gray-900 mb-1">Your bill — before vs after solar</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                What a typical month looks like on the bill, year 1.
+              </p>
+              <BillComparisonChart
+                monthlyConsumptionKwh={data.monthlyConsumptionKwh ?? []}
+                monthlyGridImportKwh={data.monthlyGridImportKwh ?? []}
+                monthlyExportKwh={data.monthlyExportKwh ?? []}
+                importPricePerKwh={inputs.importPricePerKwh}
+                exportPricePerKwh={inputs.exportPricePerKwh}
+                symbol={symbol}
+                monthlyDebtService={data.financing?.monthlyPayment ?? 0}
+              />
+            </div>
+
+            {/* Lifetime cashflow chart */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h2 className="font-bold text-gray-900 mb-1">
+                Lifetime cashflow ({data.horizonYears ?? 25} years)
+              </h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Bars show year-by-year solar savings, export income, battery and EV value;
+                the line is your cumulative position.{' '}
+                {data.inverterReplacementCost > 0 && (
+                  <>An inverter replacement of {symbol}{Math.round(data.inverterReplacementCost).toLocaleString()} is
+                  modelled in year {data.inverterReplacementYear}.</>
+                )}
+              </p>
               <CashflowChart cashflows={cashflows} symbol={symbol} />
             </div>
 
-            {/* Sensitivity matrix */}
+            {/* Stress-test sensitivity sweeps */}
+            {data.extendedSensitivity && (
+              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                <h2 className="font-bold text-gray-900 mb-1">Dynamic stress-tester</h2>
+                <p className="text-sm text-gray-500 mb-4">
+                  Move one variable at a time — system size, battery, equity invested, loan
+                  rate — and see how payback, IRR and lifetime savings respond.
+                </p>
+                <ExtendedSensitivityPanel
+                  systemSize={data.extendedSensitivity.systemSize ?? []}
+                  battery={data.extendedSensitivity.battery ?? []}
+                  equity={data.extendedSensitivity.equity ?? []}
+                  interestRate={data.extendedSensitivity.interestRate ?? []}
+                  symbol={symbol}
+                />
+              </div>
+            )}
+
+            {/* Sensitivity matrix — payback by price scenario */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
-              <h2 className="font-bold text-gray-900 mb-1">Sensitivity analysis</h2>
-              <p className="text-sm text-gray-500 mb-4">Payback period (years) under different energy price scenarios</p>
+              <h2 className="font-bold text-gray-900 mb-1">Sensitivity to energy prices</h2>
+              <p className="text-sm text-gray-500 mb-4">Payback period (years) under different import / export price scenarios</p>
               <SensitivityMatrix grid={data.sensitivity?.grid ?? []} />
             </div>
 

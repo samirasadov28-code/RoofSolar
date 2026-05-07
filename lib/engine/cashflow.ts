@@ -27,6 +27,13 @@ export interface CashflowParams {
   batteryRuntimeParams?: BatteryRuntimeParams;
   /** Optional time-of-day cap on self-consumption. 1.0 = no cap. */
   profileCap?: number;
+  /** Project horizon in years. Defaults to 10 to keep historic
+   *  unit-tests stable; production callers pass 25. */
+  horizonYears?: number;
+  /** Year at which the inverter is replaced (additional capex). */
+  inverterReplacementYear?: number;
+  /** Cost of the inverter replacement (local currency). 0 = none. */
+  inverterReplacementCost?: number;
 }
 
 export interface AnnualCashflow {
@@ -55,6 +62,9 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     energyPriceEscalationPct,
     batteryRuntimeParams,
     profileCap = 1.0,
+    horizonYears = 10,
+    inverterReplacementYear = 0,
+    inverterReplacementCost = 0,
   } = params;
 
   const rows: AnnualCashflow[] = [];
@@ -75,7 +85,7 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     cumulativeCashflow: cumulative,
   });
 
-  for (let yr = 1; yr <= 10; yr++) {
+  for (let yr = 1; yr <= horizonYears; yr++) {
     const priceScale = Math.pow(1 + energyPriceEscalationPct, yr - 1);
     const importPrice = importPricePerKwh * priceScale;
     const exportPrice = exportPricePerKwh * priceScale;
@@ -113,12 +123,19 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
       ? -(financing.monthlyPayment * 12)
       : 0;
 
-    const netCashflow = solarSavings + exportIncome + batteryValue + evSavings + debtService;
+    // One-off inverter replacement (treated as negative capex)
+    const replacementCapex =
+      inverterReplacementYear > 0 && yr === inverterReplacementYear && inverterReplacementCost > 0
+        ? -inverterReplacementCost
+        : 0;
+
+    const netCashflow =
+      solarSavings + exportIncome + batteryValue + evSavings + debtService + replacementCapex;
     cumulative += netCashflow;
 
     rows.push({
       year: yr,
-      capex: 0,
+      capex: replacementCapex,
       solarSavings,
       exportIncome,
       batteryValue,

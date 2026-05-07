@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
 import { NumericInput } from '@/components/ui/NumericInput';
+import { estimateAnnualKwh } from '@/lib/engine/householdEstimator';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 
 export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { inputs, setInputs } = useWizardStore();
@@ -18,13 +20,67 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
   }
 
   const cc = inputs.countryCode;
-  const avgLabel = `Country average: ~${inputs.annualKwh.toLocaleString()} kWh/yr (auto-set from your address)`;
+  const countryAvg = useMemo(() => getCountryDefaults(cc).annualKwh, [cc]);
+  const householdEstimate = useMemo(
+    () => estimateAnnualKwh(inputs.houseAreaSqM, inputs.householdSize, countryAvg),
+    [inputs.houseAreaSqM, inputs.householdSize, countryAvg]
+  );
+  const avgLabel = `Country average: ~${countryAvg.toLocaleString()} kWh/yr (auto-set from your address)`;
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Electricity consumption</h2>
         <p className="text-gray-500">We use this to calculate your self-consumption rate.</p>
+      </div>
+
+      {/* Household profile estimator */}
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 space-y-3">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-gray-900">Don&apos;t know your annual kWh?</p>
+            <p className="text-xs text-gray-600">
+              Tell us about the home and we&apos;ll estimate it for you.
+            </p>
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-white border border-amber-300 rounded-full px-2 py-0.5 whitespace-nowrap">
+            Optional
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">Floor area (m²)</label>
+            <NumericInput
+              min={20}
+              max={500}
+              value={inputs.houseAreaSqM}
+              onChange={(n) => setInputs({ houseAreaSqM: n })}
+              className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">People in household</label>
+            <NumericInput
+              min={1}
+              max={10}
+              value={inputs.householdSize}
+              onChange={(n) => setInputs({ householdSize: n })}
+              className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-gray-700">
+            Estimate: <strong>{householdEstimate.toLocaleString()} kWh/yr</strong>
+            <span className="text-gray-500"> ({inputs.householdSize} ppl, {inputs.houseAreaSqM} m²)</span>
+          </p>
+          <button
+            onClick={() => setInputs({ annualKwh: householdEstimate })}
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+          >
+            Use this estimate
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2">
