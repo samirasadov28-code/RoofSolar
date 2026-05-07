@@ -26,8 +26,9 @@ export function ForceUpdateButton() {
     window.location.replace(url.toString());
   }
 
+  // Positioned above the global AI advisor button so the two don't overlap.
   return (
-    <div className="fixed bottom-1.5 right-2 sm:bottom-6 sm:right-6 z-40">
+    <div className="fixed bottom-[68px] right-2 sm:bottom-24 sm:right-6 z-40">
       <button
         onClick={forceUpdate}
         disabled={busy}

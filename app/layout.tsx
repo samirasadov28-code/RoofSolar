@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
 import { FeedbackWidget } from '@/components/FeedbackWidget';
+import { AiAdvisor } from '@/components/results/AiAdvisor';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-gray-50 font-sans antialiased">
         {children}
         <FeedbackWidget />
+        <AiAdvisor />
       </body>
     </html>
   );

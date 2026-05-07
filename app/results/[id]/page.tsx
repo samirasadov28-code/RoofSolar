@@ -10,8 +10,8 @@ import { BatteryPanel } from '@/components/results/BatteryPanel';
 import { EvPanel } from '@/components/results/EvPanel';
 import { FinancingTable } from '@/components/results/FinancingTable';
 import { MonthlyExportChart } from '@/components/results/MonthlyExportChart';
+import { MonthlyUsageVsGeneration } from '@/components/results/MonthlyUsageVsGeneration';
 import { LeadModal } from '@/components/results/LeadModal';
-import { AiAdvisor } from '@/components/results/AiAdvisor';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
 
@@ -179,6 +179,20 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           }
         >
           <div className="space-y-8">
+            {/* Monthly usage vs generation */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h2 className="font-bold text-gray-900 mb-1">Monthly usage vs generation</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Where does your solar surplus go each month, and where does your demand still
+                outrun the panels?
+              </p>
+              <MonthlyUsageVsGeneration
+                monthlyProductionKwh={data.monthlyProductionKwh ?? []}
+                monthlyConsumptionKwh={data.monthlyConsumptionKwh ?? []}
+                monthlySelfConsumedKwh={data.monthlySelfConsumedKwh ?? []}
+              />
+            </div>
+
             {/* 10-year cashflow chart */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <h2 className="font-bold text-gray-900 mb-4">10-year cashflow</h2>
@@ -249,9 +263,6 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           onClose={() => setShowLeadModal(false)}
         />
       )}
-
-      {/* Grok-powered AI advisor — floating button */}
-      <AiAdvisor results={data} inputs={inputs} />
     </div>
   );
 }

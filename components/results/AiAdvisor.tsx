@@ -8,25 +8,56 @@ interface Message {
 }
 
 interface Props {
-  results: any;
-  inputs: any;
+  results?: any;
+  inputs?: any;
 }
 
-const STARTER_QUESTIONS = [
+const STARTER_QUESTIONS_WITH_CONTEXT = [
   'Is my payback period good?',
   'Should I add a battery?',
   'How does the export tariff affect my return?',
   'What size system is best for my roof?',
 ];
 
-export function AiAdvisor({ results, inputs }: Props) {
+const STARTER_QUESTIONS_GENERIC = [
+  'How does residential solar work?',
+  'Is a hybrid inverter worth the extra cost?',
+  'When does a battery make financial sense?',
+  'What grants are available in my country?',
+];
+
+export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = {}) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [configured, setConfigured] = useState(true);
+  // When the advisor is mounted globally we fall back to the latest
+  // calculation cached in sessionStorage by Step 7. Lets the user keep
+  // chatting about their numbers after navigating away from /results.
+  const [resolvedResults, setResolvedResults] = useState<any>(resultsProp);
+  const [resolvedInputs, setResolvedInputs] = useState<any>(inputsProp);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (resultsProp || inputsProp) {
+      setResolvedResults(resultsProp);
+      setResolvedInputs(inputsProp);
+      return;
+    }
+    try {
+      const stored = sessionStorage.getItem('roofsolar_results');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.results) setResolvedResults(parsed.results);
+        if (parsed?.inputs) setResolvedInputs(parsed.inputs);
+      }
+    } catch {}
+  }, [resultsProp, inputsProp]);
+
+  const hasContext = !!(resolvedResults && resolvedInputs);
+  const starters = hasContext ? STARTER_QUESTIONS_WITH_CONTEXT : STARTER_QUESTIONS_GENERIC;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -49,7 +80,7 @@ export function AiAdvisor({ results, inputs }: Props) {
       const res = await fetch('/api/ai-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: updated, results, inputs }),
+        body: JSON.stringify({ messages: updated, results: resolvedResults, inputs: resolvedInputs }),
       });
 
       if (res.status === 503) {
@@ -134,17 +165,17 @@ export function AiAdvisor({ results, inputs }: Props) {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — icon-only on mobile, icon + label from sm up */}
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold px-4 py-3 rounded-full shadow-xl transition-all"
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold p-3 sm:px-4 sm:py-3 rounded-full shadow-xl transition-all"
         aria-label="Open AI advisor"
       >
         <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
-        <span className="text-sm">Ask AI advisor</span>
+        <span className="hidden sm:inline text-sm">Ask AI advisor</span>
       </button>
 
       {/* Chat drawer */}
@@ -176,10 +207,12 @@ export function AiAdvisor({ results, inputs }: Props) {
             {messages.length === 0 && (
               <div className="space-y-3">
                 <p className="text-sm text-gray-500 text-center">
-                  Ask me anything about your solar analysis.
+                  {hasContext
+                    ? 'Ask me anything about your solar analysis.'
+                    : 'Ask me anything about residential solar.'}
                 </p>
                 <div className="grid grid-cols-1 gap-2">
-                  {STARTER_QUESTIONS.map((q) => (
+                  {starters.map((q) => (
                     <button
                       key={q}
                       onClick={() => send(q)}
@@ -226,7 +259,7 @@ export function AiAdvisor({ results, inputs }: Props) {
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about your analysis…"
+                placeholder={hasContext ? 'Ask about your analysis…' : 'Ask about residential solar…'}
                 disabled={loading || !configured}
                 className="flex-1 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
               />

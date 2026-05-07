@@ -1,6 +1,7 @@
 'use client';
 
 import { useWizardStore } from '@/lib/store/wizardStore';
+import { NumericInput } from '@/components/ui/NumericInput';
 
 const COMPASS_DIRECTIONS = [
   { label: 'N', deg: 0 },
@@ -42,12 +43,11 @@ export function Step2Roof({ onNext, onBack }: { onNext: () => void; onBack: () =
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Usable roof area (m²)
         </label>
-        <input
-          type="number"
+        <NumericInput
           min={10}
           max={300}
           value={inputs.roofAreaM2}
-          onChange={(e) => setInputs({ roofAreaM2: Number(e.target.value) })}
+          onChange={(n) => setInputs({ roofAreaM2: n })}
           className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <p className="text-xs text-gray-400 mt-1">Typical 3-bed semi = 40–60 m²</p>

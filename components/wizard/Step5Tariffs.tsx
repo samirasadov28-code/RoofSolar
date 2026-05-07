@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
 import { getGrant } from '@/lib/engine/grants';
+import { NumericInput } from '@/components/ui/NumericInput';
 
 function fmt(cc: string) {
   return cc === 'ie' ? '€' : cc === 'gb' ? '£' : '';
@@ -59,11 +60,10 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
           </label>
           <div className="relative">
             {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
-            <input
-              type="number"
-              step="0.001"
+            <NumericInput
+              step={0.001}
               value={inputs.importPricePerKwh}
-              onChange={(e) => setInputs({ importPricePerKwh: Number(e.target.value) })}
+              onChange={(n) => setInputs({ importPricePerKwh: n })}
               className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
             />
           </div>
@@ -72,11 +72,10 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
           <label className="block text-sm font-medium text-gray-700 mb-1">Export rate (per kWh)</label>
           <div className="relative">
             {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
-            <input
-              type="number"
-              step="0.001"
+            <NumericInput
+              step={0.001}
               value={inputs.exportPricePerKwh}
-              onChange={(e) => setInputs({ exportPricePerKwh: Number(e.target.value) })}
+              onChange={(n) => setInputs({ exportPricePerKwh: n })}
               className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
             />
           </div>
@@ -87,10 +86,9 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         <label className="block text-sm font-medium text-gray-700 mb-1">Government grant</label>
         <div className="relative">
           {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
-          <input
-            type="number"
+          <NumericInput
             value={inputs.grant}
-            onChange={(e) => setInputs({ grant: Number(e.target.value) })}
+            onChange={(n) => setInputs({ grant: n })}
             className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
           />
         </div>
@@ -108,15 +106,14 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         </label>
         <div className="relative">
           {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
-          <input
-            type="number"
-            step="100"
+          <NumericInput
+            step={100}
             value={
               inputs.systemCostGross > 0
                 ? inputs.systemCostGross
                 : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0) + (inputs.inverterType === 'hybrid' ? 500 : 0)
             }
-            onChange={(e) => setInputs({ systemCostGross: Number(e.target.value) })}
+            onChange={(n) => setInputs({ systemCostGross: n })}
             className={`w-full border border-gray-300 rounded-lg ${symbol ? 'pl-6' : 'pl-3'} pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400`}
           />
         </div>
@@ -130,21 +127,19 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Day rate (per kWh)</label>
-            <input
-              type="number"
-              step="0.001"
+            <NumericInput
+              step={0.001}
               value={inputs.dayPricePerKwh}
-              onChange={(e) => setInputs({ dayPricePerKwh: Number(e.target.value) })}
+              onChange={(n) => setInputs({ dayPricePerKwh: n })}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Night rate (per kWh)</label>
-            <input
-              type="number"
-              step="0.001"
+            <NumericInput
+              step={0.001}
               value={inputs.nightPricePerKwh}
-              onChange={(e) => setInputs({ nightPricePerKwh: Number(e.target.value) })}
+              onChange={(n) => setInputs({ nightPricePerKwh: n })}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>

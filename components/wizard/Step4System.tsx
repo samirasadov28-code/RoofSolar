@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
+import { NumericInput } from '@/components/ui/NumericInput';
 
 const EV_VEHICLES = [
   { label: 'Tesla Model 3', efficiency: 15 },
@@ -140,10 +141,9 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
           <div className="space-y-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Annual mileage (km)</label>
-              <input
-                type="number"
+              <NumericInput
                 value={inputs.annualMileageKm}
-                onChange={(e) => setInputs({ annualMileageKm: Number(e.target.value) })}
+                onChange={(n) => setInputs({ annualMileageKm: n })}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
               />
             </div>

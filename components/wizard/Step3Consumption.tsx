@@ -2,18 +2,17 @@
 
 import { useState } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
+import { NumericInput } from '@/components/ui/NumericInput';
 
 export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { inputs, setInputs } = useWizardStore();
   const [useBill, setUseBill] = useState(false);
-  const [monthlyBill, setMonthlyBill] = useState('');
-  const [unitPrice, setUnitPrice] = useState(String(inputs.importPricePerKwh));
+  const [monthlyBill, setMonthlyBill] = useState(0);
+  const [unitPrice, setUnitPrice] = useState(inputs.importPricePerKwh);
 
   function calcFromBill() {
-    const bill = parseFloat(monthlyBill);
-    const price = parseFloat(unitPrice);
-    if (bill > 0 && price > 0) {
-      const annual = (bill / price) * 12;
+    if (monthlyBill > 0 && unitPrice > 0) {
+      const annual = (monthlyBill / unitPrice) * 12;
       setInputs({ annualKwh: Math.round(annual) });
     }
   }
@@ -46,12 +45,11 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
       {!useBill ? (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Annual electricity use (kWh)</label>
-          <input
-            type="number"
+          <NumericInput
             min={500}
             max={50000}
             value={inputs.annualKwh}
-            onChange={(e) => setInputs({ annualKwh: Number(e.target.value) })}
+            onChange={(n) => setInputs({ annualKwh: n })}
             className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <p className="text-xs text-gray-400 mt-1">{avgLabel}</p>
@@ -64,10 +62,9 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
               <span className="absolute left-3 top-2.5 text-gray-500 text-sm">
                 {cc === 'ie' ? '€' : '£'}
               </span>
-              <input
-                type="number"
+              <NumericInput
                 value={monthlyBill}
-                onChange={(e) => setMonthlyBill(e.target.value)}
+                onChange={(n) => setMonthlyBill(n)}
                 className="w-full border border-gray-300 rounded-lg pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 placeholder="120"
               />
@@ -75,11 +72,10 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Unit price (per kWh)</label>
-            <input
-              type="number"
-              step="0.001"
+            <NumericInput
+              step={0.001}
               value={unitPrice}
-              onChange={(e) => setUnitPrice(e.target.value)}
+              onChange={(n) => setUnitPrice(n)}
               className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
