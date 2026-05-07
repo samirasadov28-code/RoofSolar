@@ -89,7 +89,15 @@ export function Step2Roof({ onNext, onBack }: { onNext: () => void; onBack: () =
           onChange={(e) => setInputs({ tiltDeg: Number(e.target.value) })}
           className="w-full accent-yellow-400"
         />
-        <p className="text-xs text-gray-400 mt-1">Most UK/IE roofs are 30–40°</p>
+        <p className="text-xs text-gray-400 mt-1">
+          {(() => {
+            const lat = Math.abs(inputs.lat ?? 50);
+            // Heuristic: optimal tilt ≈ |latitude| × 0.85 (within a few degrees)
+            const lo = Math.max(15, Math.round(lat * 0.85 - 5));
+            const hi = Math.min(55, Math.round(lat * 0.85 + 5));
+            return `Optimal tilt at your latitude is around ${lo}–${hi}°; typical residential roofs are 25–45°.`;
+          })()}
+        </p>
       </div>
 
       {/* Shading */}

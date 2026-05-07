@@ -125,10 +125,10 @@ export function EquipmentShortlist({ inputs }: Props) {
   return (
     <div className="space-y-6">
       <p className="text-sm text-gray-600 leading-relaxed">
-        A shortlist of widely-available kit that matches your design, drawn from current
-        installer guides and manufacturer datasheets ({region}, May 2026). Use this as a
-        sanity-check when you receive an installer quote — anything wildly different in
-        price or spec is worth a question.
+        A shortlist of widely-available, tier-1 kit that matches your design
+        ({region} availability, May 2026). All brands shown are sold globally
+        unless noted; prices are indicative — your local installer quote is
+        the source of truth.
       </p>
 
       {/* Panels */}

@@ -13,14 +13,25 @@ import { runExtendedSensitivity } from '@/lib/engine/extendedSensitivity';
 import { runHourlySimulator } from '@/lib/engine/hourlySimulator';
 
 // Grid CO2 intensity (kg CO2 per kWh) by ISO country code. Rough 2023-24
-// averages from EEA / IEA / Our World in Data. Used for CO2-saved metric only.
+// averages from EEA / IEA / EmberClimate / Our World in Data.
+// Used for CO2-saved metric only.
 const CO2_KG_PER_KWH: Record<string, number> = {
-  gb: 0.233, ie: 0.295,
-  fr: 0.058, de: 0.380, es: 0.190, it: 0.290, nl: 0.330,
-  be: 0.165, pt: 0.180, at: 0.140, ch: 0.040, dk: 0.140,
+  // Europe
+  gb: 0.233, ie: 0.295, fr: 0.058, de: 0.380, es: 0.190, it: 0.290,
+  nl: 0.330, be: 0.165, pt: 0.180, at: 0.140, ch: 0.040, dk: 0.140,
   no: 0.020, se: 0.040, fi: 0.090, pl: 0.660, cz: 0.420,
-  us: 0.380, ca: 0.130, au: 0.560, nz: 0.110,
+  // North America
+  us: 0.380, ca: 0.130, mx: 0.430,
+  // Oceania
+  au: 0.560, nz: 0.110,
+  // Asia
+  jp: 0.470, kr: 0.430, in: 0.713, cn: 0.582,
+  // South America
+  br: 0.090, cl: 0.310,
+  // Africa
+  za: 0.910,
 };
+const GLOBAL_AVG_CO2 = 0.475; // 2024 IEA world avg
 
 export async function POST(request: NextRequest) {
   try {
@@ -119,7 +130,8 @@ export async function POST(request: NextRequest) {
     const npv = calcNPV(cfValues, 0.08);
     const paybackMonths = calcPaybackMonths(cashflows);
     const lifetimeSavings = calcLifetimeSavings(cashflows);
-    const annualCo2Saved = (yieldResult.annualKwh! * (CO2_KG_PER_KWH[countryCode] ?? 0.4));
+    const co2Factor = CO2_KG_PER_KWH[countryCode] ?? GLOBAL_AVG_CO2;
+    const annualCo2Saved = yieldResult.annualKwh! * co2Factor;
 
     // 10. Hourly battery simulator (representative day per month)
     const hourlySimResult = runHourlySimulator({
@@ -196,6 +208,7 @@ export async function POST(request: NextRequest) {
       cashflows,
       irr, irrUnavailableReason, npv, paybackMonths, lifetimeSavings,
       annualCo2Saved,
+      co2FactorKgPerKwh: co2Factor,
       evCharging: evResult,
       batteryResult,
       sensitivity,

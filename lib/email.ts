@@ -18,11 +18,11 @@ export async function sendLeadConfirmation(to: string, name: string) {
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Hi ${name},</h1>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 16px">
-          We've received your request for installer quotes. We'll connect you with certified solar
+          We've received your request for installer quotes. We'll connect you with qualified solar
           installers in your area within 1–2 business days.
         </p>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
-          In the meantime, you can revisit your solar analysis or unlock your full pro report for £3.99.
+          In the meantime, you can revisit your solar analysis or unlock your full pro report at the price shown on your results page.
         </p>
         <a href="https://roofsolar.netlify.app/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           New analysis
@@ -87,7 +87,7 @@ export async function sendProReportEmail(
           <strong>Property:</strong> ${address}
         </p>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
-          Your full 10-year solar investment analysis is ready to download. Click below to access it.
+          Your full 25-year solar investment analysis is ready to download. Click below to access it.
         </p>
         <a href="https://roofsolar.netlify.app/results/${calculationId}?pro=true"
            style="display:inline-block;background:#111827;color:#FACC15;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">

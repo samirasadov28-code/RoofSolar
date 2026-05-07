@@ -28,7 +28,10 @@ create table if not exists leads (
   phone text,
   address text,
   system_kwp numeric,
-  budget_gbp numeric,
+  budget_gbp numeric,                         -- legacy, no longer written
+  budget_local numeric,                       -- in local currency
+  currency_code text,                         -- ISO-4217, e.g. 'EUR', 'USD'
+  country_code text,                          -- ISO-3166-1 alpha-2 lower-case
   finance_preference text,
   calculation_id uuid references calculations(id),
   distributed boolean default false

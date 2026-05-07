@@ -319,7 +319,7 @@ export default function HomePage() {
               {[
                 { icon: '🔒', text: 'No account required' },
                 { icon: '⚡', text: 'Live PVGIS data' },
-                { icon: '🇮🇪', text: 'Ireland & UK grants' },
+                { icon: '🌍', text: 'Works worldwide' },
               ].map(b => (
                 <div key={b.text} className="flex items-center gap-2 text-sm text-gray-600">
                   <span>{b.icon}</span>
@@ -392,7 +392,7 @@ export default function HomePage() {
           {[
             { step: '1', icon: '📍', title: 'Your address', desc: 'We fetch live solar irradiance data for your exact location from PVGIS.' },
             { step: '2', icon: '🏠', title: 'Roof details', desc: 'Orientation, pitch and shading loss — we calculate optimal panel placement.' },
-            { step: '3', icon: '💶', title: 'Your numbers', desc: 'Irish tariffs, SEAI grants, consumption and financing — all pre-filled.' },
+            { step: '3', icon: '💶', title: 'Your numbers', desc: 'Local tariffs, grants, consumption and financing — all pre-filled for your country.' },
             { step: '4', icon: '📊', title: 'Your report', desc: '25-year cashflow, IRR, payback period, battery and EV economics.' },
           ].map((item) => (
             <div key={item.step} className="text-center group">

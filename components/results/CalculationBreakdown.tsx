@@ -1,5 +1,7 @@
 'use client';
 
+import { getGrantSchemeName } from '@/lib/engine/grants';
+
 interface Props {
   data: any;
   inputs: any;
@@ -169,7 +171,7 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
         />
         <Row
           label="Grant"
-          formula={`${inputs.countryCode === 'ie' ? 'SEAI' : 'UK scheme'} for ${fmt1(inputs.systemKwp)} kWp`}
+          formula={`${getGrantSchemeName(inputs.countryCode)} for ${fmt1(inputs.systemKwp)} kWp`}
           result={`− ${fmtMoney(grant)}`}
         />
         <Row

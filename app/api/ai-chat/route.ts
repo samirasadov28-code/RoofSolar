@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 
 /**
  * Solar AI Advisor — backed by Groq's OpenAI-compatible inference API.
@@ -18,21 +19,25 @@ function buildSystemPrompt(results: any, inputs: any): string {
   if (!results || !inputs) {
     return `You are an expert solar energy financial advisor for RoofSolar.
 Answer questions about solar panels, battery storage, export tariffs, financing options,
-and ROI calculations. Be concise, helpful, and UK/Ireland focused.`;
+and ROI calculations. Adapt your advice to the user's country — local grants, feed-in
+schemes, net-metering rules, and tariff structures vary widely. Be concise and helpful.`;
   }
 
-  const symbol = inputs.countryCode === 'ie' ? '€' : inputs.countryCode === 'gb' ? '£' : '';
+  const cd = getCountryDefaults(inputs.countryCode || '');
+  const symbol = cd.symbol || '';
   const paybackYrs = isNaN(results.paybackMonths) ? 'N/A' : `${(results.paybackMonths / 12).toFixed(1)} years`;
 
   return `You are an expert solar energy financial advisor for RoofSolar.
-The user has just completed a solar investment analysis for their home. Here is their analysis:
+The user has just completed a solar investment analysis for their home. Tailor every
+answer to their country (${cd.countryName}) — reference local incentive schemes, grid
+rules and tariffs that actually apply there, not other markets.
 
-LOCATION: ${inputs.displayName || 'Unknown'}
+LOCATION: ${inputs.displayName || 'Unknown'} (${cd.countryName})
 SYSTEM: ${inputs.systemKwp?.toFixed(1)} kWp (${inputs.panelCount} × 400W panels)
 BATTERY: ${inputs.hasBattery ? `${inputs.batteryKwh} kWh` : 'None'}
 EV: ${inputs.hasEv ? `Yes (${inputs.annualMileageKm?.toLocaleString()} km/yr)` : 'No'}
 
-FINANCIAL RESULTS:
+FINANCIAL RESULTS (currency: ${cd.currencyCode}):
 - Annual production: ${Math.round(results.annualProductionKwh ?? 0).toLocaleString()} kWh
 - Self-consumed: ${Math.round(results.selfConsumedKwh ?? 0).toLocaleString()} kWh/yr
 - Exported: ${Math.round(results.exportedKwh ?? 0).toLocaleString()} kWh/yr
@@ -41,13 +46,13 @@ FINANCIAL RESULTS:
 - Payback period: ${paybackYrs}
 - IRR: ${results.irr ? `${(results.irr * 100).toFixed(1)}%` : 'N/A'}
 - NPV (8% discount): ${symbol}${Math.round(results.npv ?? 0).toLocaleString()}
-- 10-year gross savings: ${symbol}${Math.round(results.lifetimeSavings ?? 0).toLocaleString()}
+- ${results.horizonYears ?? 25}-year gross savings: ${symbol}${Math.round(results.lifetimeSavings ?? 0).toLocaleString()}
 - CO₂ saved/year: ${Math.round(results.annualCo2Saved ?? 0).toLocaleString()} kg
 
 TARIFFS:
 - Import: ${symbol}${inputs.importPricePerKwh}/kWh
-- Export (${inputs.countryCode === 'ie' ? 'MSS' : 'SEG'}): ${symbol}${inputs.exportPricePerKwh}/kWh
-- Grant: ${symbol}${(results.grant ?? 0).toLocaleString()}
+- Export: ${symbol}${inputs.exportPricePerKwh}/kWh
+- Grant scheme (${cd.grantSchemeName}): ${symbol}${(results.grant ?? 0).toLocaleString()}
 - Net cost: ${symbol}${(results.netCapex ?? 0).toLocaleString()}
 
 FINANCING: ${inputs.financingMode} — ${inputs.financingMode !== 'outright' ? `${Math.round((inputs.loanCoveragePct ?? 1) * 100)}% financed at ${((inputs.annualRatePct ?? 0.065) * 100).toFixed(2)}% over ${inputs.tenorYears} years` : 'paid in full'}
@@ -55,8 +60,8 @@ FINANCING: ${inputs.financingMode} — ${inputs.financingMode !== 'outright' ? `
 DATA SOURCE: ${results.dataSource} (solar irradiance)
 
 Answer the user's questions about their specific analysis. Be concise, financially precise,
-and proactive about explaining what the numbers mean for them.
-Focus on actionable insights. Use ${symbol} for currency. Be friendly but professional.`;
+and proactive about explaining what the numbers mean for them in their local context.
+Focus on actionable insights. Use ${symbol || cd.currencyCode} for currency. Be friendly but professional.`;
 }
 
 export async function POST(request: NextRequest) {

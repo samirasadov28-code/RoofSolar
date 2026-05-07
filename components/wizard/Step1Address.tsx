@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
-import { getCountryDefaults } from '@/lib/countryDefaults';
+import { getCountryDefaults, listSupportedCountries } from '@/lib/countryDefaults';
 import dynamic from 'next/dynamic';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false });
@@ -102,7 +102,7 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="14 Griffith Ave, Dublin 9"
+          placeholder="Start typing your address…"
           className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         {loading && (
@@ -128,6 +128,45 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
       {inputs.lat && inputs.lon && (
         <div className="rounded-xl overflow-hidden border border-gray-200 h-48">
           <MapView lat={inputs.lat} lon={inputs.lon} />
+        </div>
+      )}
+
+      {/* Country override — surfaces if geocode missed, or for unsupported regions */}
+      {inputs.lat && inputs.lon && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Country
+            <span className="text-xs font-normal text-gray-400 ml-1">
+              — override if the auto-detected country is wrong
+            </span>
+          </label>
+          <select
+            value={inputs.countryCode || ''}
+            onChange={(e) => {
+              const cc = e.target.value;
+              const defaults = getCountryDefaults(cc);
+              setInputs({
+                countryCode: cc,
+                grant: defaults.grant,
+                annualKwh: defaults.annualKwh,
+                importPricePerKwh: defaults.importPricePerKwh,
+                exportPricePerKwh: defaults.exportPricePerKwh,
+                dayPricePerKwh: defaults.dayPricePerKwh,
+                nightPricePerKwh: defaults.nightPricePerKwh,
+              });
+            }}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
+          >
+            <option value="">— Select country —</option>
+            {listSupportedCountries().map((c) => (
+              <option key={c.code} value={c.code}>{c.name}</option>
+            ))}
+          </select>
+          {!inputs.countryCode && (
+            <p className="text-xs text-amber-600 mt-1">
+              We couldn&apos;t auto-detect your country — please pick one so tariffs and grants are sensible.
+            </p>
+          )}
         </div>
       )}
 

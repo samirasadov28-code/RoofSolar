@@ -1,15 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
 import { sendLeadConfirmation } from '@/lib/email';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, address, systemKwp, budget, financePreference, calculationId } = body;
+    const {
+      name, email, phone, address,
+      systemKwp, budget, financePreference,
+      calculationId, countryCode,
+    } = body;
 
     if (!name || !email) {
       return NextResponse.json({ error: 'name and email are required' }, { status: 400 });
     }
+
+    const cd = getCountryDefaults(countryCode || '');
 
     const supabase = createServiceClient();
     const { error } = await supabase.from('leads').insert({
@@ -18,14 +25,15 @@ export async function POST(request: NextRequest) {
       phone,
       address,
       system_kwp: systemKwp,
-      budget_gbp: budget,
+      budget_local: budget ?? null,
+      currency_code: cd.currencyCode,
+      country_code: cd.countryCode || null,
       finance_preference: financePreference,
       calculation_id: calculationId,
     });
 
     if (error) throw error;
 
-    // Send confirmation email (non-blocking — don't fail the request if email fails)
     sendLeadConfirmation(email, name).catch(console.error);
 
     return NextResponse.json({ ok: true }, { status: 201 });

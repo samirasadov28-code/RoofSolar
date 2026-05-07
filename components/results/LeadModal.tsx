@@ -4,10 +4,11 @@ import { useState } from 'react';
 
 interface Props {
   calculationId: string;
+  countryCode?: string;
   onClose: () => void;
 }
 
-export function LeadModal({ calculationId, onClose }: Props) {
+export function LeadModal({ calculationId, countryCode, onClose }: Props) {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -18,7 +19,7 @@ export function LeadModal({ calculationId, onClose }: Props) {
     await fetch('/api/leads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, calculationId }),
+      body: JSON.stringify({ ...form, calculationId, countryCode }),
     });
     setDone(true);
     setLoading(false);

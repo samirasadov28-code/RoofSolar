@@ -1,10 +1,11 @@
 /**
- * Curated residential solar equipment shortlist for Ireland & UK.
+ * Curated residential solar equipment shortlist.
  *
- * Hand-picked from current installer guides & manufacturer datasheets
- * (May 2026). Prices are typical retail-installed ranges; everything
- * here is widely stocked by SEAI-registered installers in IE and MCS-
- * certified installers in the UK. Update as the market moves.
+ * Hand-picked from manufacturer datasheets & installer guides (May 2026).
+ * Most brands here (Jinko, JA, Trina, LONGi, Sungrow, Solis, Huawei,
+ * Fronius, BYD, Tesla, Pylontech) are sold globally; a few items are
+ * tagged as UK-only (region: 'UK') and only surface for UK users.
+ * Prices are indicative; local installer quotes are the source of truth.
  *
  * Source notes:
  *   - Panels: solarinfo.ie, balconysolar.uk, photovoltaics.co.uk
@@ -93,7 +94,7 @@ export const PANELS: SolarPanel[] = [
     efficiencyPct: 21.3,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Reliable Tier-1 workhorse, popular in SEAI installer kits.',
+    notes: 'Reliable Tier-1 workhorse — widely stocked by global installer kits.',
     retailPrice: { currency: 'EUR', min: 260, max: 290, unit: 'per panel' },
   },
   {
@@ -327,35 +328,42 @@ export function recommendFor(
   inverterType: 'standard' | 'hybrid'
 ) {
   const cc = (countryCode || '').toLowerCase();
-  const region: 'IE' | 'UK' = cc === 'gb' ? 'UK' : 'IE';
+  // Treat IE / GB as their explicit regions; everything else gets the
+  // globally-available 'IE+UK' brands (Sungrow, Solis, Huawei, Fronius,
+  // Pylontech, BYD, Tesla — all sold worldwide). UK-only brands like
+  // GivEnergy and Fox ESS are filtered out for non-UK users.
+  const isUk = cc === 'gb';
+  const isIe = cc === 'ie';
 
   // Match inverter rated kW to system size (4 panels × 0.4 kW = 1.6 kWp etc.)
   const systemKwp = panelCount * 0.4;
   const wantHybrid = hasBattery || inverterType === 'hybrid';
 
-  const inverterCandidates = INVERTERS.filter(
-    (i) => i.region === 'IE+UK' || i.region === region
-  );
-  const inverterPicks = inverterCandidates
-    .map((i) => ({
-      i,
-      sizeFit: Math.abs(i.ratedKw - Math.max(3, Math.min(10, systemKwp))),
-    }))
+  const matchesRegion = (r: 'IE' | 'UK' | 'IE+UK') => {
+    if (r === 'IE+UK') return true;          // global brands always pass
+    if (r === 'UK')    return isUk;           // UK-only items only for UK
+    if (r === 'IE')    return isIe;           // IE-only items only for IE
+    return false;
+  };
+
+  const inverterPicks = INVERTERS
+    .filter((i) => matchesRegion(i.region))
+    .map((i) => ({ i, sizeFit: Math.abs(i.ratedKw - Math.max(3, Math.min(10, systemKwp))) }))
     .sort((a, b) => a.sizeFit - b.sizeFit)
     .slice(0, 3)
     .map((x) => x.i);
   void wantHybrid;
 
-  const batteryCandidates = BATTERIES.filter(
-    (b) => b.region === 'IE+UK' || b.region === region
-  );
   const batteryPicks = hasBattery
-    ? batteryCandidates
+    ? BATTERIES
+        .filter((b) => matchesRegion(b.region))
         .map((b) => ({ b, fit: Math.abs(b.kwh - batteryKwh) }))
         .sort((a, b) => a.fit - b.fit)
         .slice(0, 3)
         .map((x) => x.b)
     : [];
+
+  const region = isUk ? 'UK' : isIe ? 'IE' : 'Global';
 
   return {
     panels: PANELS.slice(0, 4),

@@ -11,6 +11,7 @@ import {
   G,
 } from '@react-pdf/renderer';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 
 const AMBER = '#fbbf24';
 const DARK = '#111827';
@@ -65,7 +66,10 @@ function MetricRow({ items }: { items: [string, string][] }) {
   );
 }
 
-function sym(cc: string) { return cc === 'ie' ? '€' : cc === 'gb' ? '£' : ''; }
+function sym(cc: string) {
+  const s = getCountryDefaults(cc).symbol;
+  return s ? s.trim() : '';
+}
 
 // SVG bar chart — draws horizontal bars with labels
 interface BarChartProps {
@@ -498,10 +502,10 @@ export function ReportTemplate({ inputs, results }: Props) {
           ['System losses (inverter + wiring)', '14% (baked into PVGIS/NREL request)'],
           ['Self-consumption model', 'Monthly balance with time-of-day cap (profileCap parameter)'],
           ['Battery arbitrage', 'Pre-charges to (capacity − expected solar surplus) each night'],
-          ['Hourly simulation', 'Gaussian solar bell curve (σ = 2.5–3.2 h) + UK/IE residential load shape'],
+          ['Hourly simulation', 'Gaussian solar bell curve (σ = 2.5–3.2 h) + standard residential load shape (morning + evening peaks)'],
           ['IRR', 'Internal rate of return on equity invested; undefined when equity = 0'],
           ['NPV discount rate', '8% real (roughly in-line with 10-yr equity market returns)'],
-          ['CO₂ factor', inputs.countryCode === 'gb' ? '0.233 kg/kWh (UK, 2024)' : inputs.countryCode === 'ie' ? '0.295 kg/kWh (IE, 2024)' : '0.4 kg/kWh (estimate)'],
+          ['CO₂ factor', `${(results.co2FactorKgPerKwh ?? 0.475).toFixed(3)} kg/kWh (grid mix for ${inputs.countryCode?.toUpperCase() || 'your region'})`],
           ['Inverter replacement', `Year ${results.inverterReplacementYear ?? 12}, ${s}${(results.inverterReplacementCost ?? 1200).toLocaleString()}`],
         ].map(([k, v]) => (
           <View key={k} style={styles.row}>
@@ -513,7 +517,7 @@ export function ReportTemplate({ inputs, results }: Props) {
         <Text style={{ ...styles.small, marginTop: 14 }}>
           This report is for informational purposes only. Actual results depend on installer quality,
           panel orientation, shading, grid connection terms, and future energy prices. Consult a
-          qualified MCS/SEAI-registered installer before making investment decisions.
+          qualified, locally-accredited solar installer before making investment decisions.
         </Text>
 
         <Footer page={7} total={7} />

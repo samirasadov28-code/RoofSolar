@@ -3,17 +3,15 @@
 import { useState } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
 import { getGrant } from '@/lib/engine/grants';
+import { getCountryDefaults } from '@/lib/countryDefaults';
 import { NumericInput } from '@/components/ui/NumericInput';
-
-function fmt(cc: string) {
-  return cc === 'ie' ? '€' : cc === 'gb' ? '£' : '';
-}
 
 export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const { inputs, setInputs } = useWizardStore();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const cc = inputs.countryCode;
-  const symbol = fmt(cc);
+  const cd = getCountryDefaults(cc);
+  const symbol = cd.symbol;
 
   // Auto-update grant when system size changes
   const grantAmount = getGrant(cc, inputs.systemKwp);
@@ -30,7 +28,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         <p className="text-sm font-medium text-gray-900 mb-1">Tariff structure</p>
         <p className="text-xs text-gray-500 mb-2">
           Pick fixed if you pay one rate all day. Pick day/night if your contract has different
-          peak and off-peak rates (e.g. Smart, EcoTracker, Economy 7).
+          peak and off-peak rates (e.g. {cd.touTariffExamples}).
         </p>
         <div className="grid grid-cols-2 gap-2">
           {([

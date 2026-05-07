@@ -368,6 +368,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
       {showLeadModal && (
         <LeadModal
           calculationId={id}
+          countryCode={inputs.countryCode}
           onClose={() => setShowLeadModal(false)}
         />
       )}
