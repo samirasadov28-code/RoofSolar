@@ -14,6 +14,7 @@ import { MonthlyUsageVsGeneration } from '@/components/results/MonthlyUsageVsGen
 import { BillComparisonChart } from '@/components/results/BillComparisonChart';
 import { LifetimeImpact } from '@/components/results/LifetimeImpact';
 import { ExtendedSensitivityPanel } from '@/components/results/ExtendedSensitivityPanel';
+import { LiveStressTester } from '@/components/results/LiveStressTester';
 import { EquipmentShortlist } from '@/components/results/EquipmentShortlist';
 import { DailyBatteryChart } from '@/components/results/DailyBatteryChart';
 import { LeadModal } from '@/components/results/LeadModal';
@@ -254,13 +255,37 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
               <CashflowChart cashflows={cashflows} symbol={symbol} />
             </div>
 
-            {/* Stress-test sensitivity sweeps */}
+            {/* Live slider stress-tester */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h2 className="font-bold text-gray-900 mb-1">Live stress-tester</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Move any slider and watch payback, IRR, NPV and lifetime savings update
+                instantly — fully computed in your browser, no server round-trip.
+              </p>
+              <LiveStressTester
+                netCapex={data.netCapex ?? 0}
+                currentEquityPct={1 - (inputs.loanCoveragePct ?? 0)}
+                currentAnnualRate={inputs.annualRatePct ?? 0.07}
+                tenorYears={inputs.tenorYears ?? 10}
+                horizonYears={data.horizonYears ?? 25}
+                year1SolarSavings={data.solarSavingsYear1 ?? 0}
+                year1ExportIncome={data.exportIncomeYear1 ?? 0}
+                year1BatteryValue={(data.batteryResult?.arbitrageProfit ?? []).reduce((a: number, b: number) => a + b, 0) / (data.horizonYears ?? 25)}
+                year1EvSavings={data.evCharging?.annualSavingVsGrid ?? 0}
+                inverterReplacementYear={data.inverterReplacementYear ?? 12}
+                inverterReplacementCost={data.inverterReplacementCost ?? 1200}
+                financingMode={inputs.financingMode ?? 'outright'}
+                symbol={symbol}
+              />
+            </div>
+
+            {/* Sweep charts — pre-computed sensitivity across the full range */}
             {data.extendedSensitivity && (
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
-                <h2 className="font-bold text-gray-900 mb-1">Dynamic stress-tester</h2>
+                <h2 className="font-bold text-gray-900 mb-1">Sensitivity sweeps</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                  Move one variable at a time — system size, battery, equity invested, loan
-                  rate — and see how payback, IRR and lifetime savings respond.
+                  Pre-computed sweeps — each chart varies one input across its full range
+                  while holding everything else constant. Yellow dot = your scenario.
                 </p>
                 <ExtendedSensitivityPanel
                   systemSize={data.extendedSensitivity.systemSize ?? []}
