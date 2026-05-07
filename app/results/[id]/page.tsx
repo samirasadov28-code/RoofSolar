@@ -15,6 +15,7 @@ import { BillComparisonChart } from '@/components/results/BillComparisonChart';
 import { LifetimeImpact } from '@/components/results/LifetimeImpact';
 import { ExtendedSensitivityPanel } from '@/components/results/ExtendedSensitivityPanel';
 import { EquipmentShortlist } from '@/components/results/EquipmentShortlist';
+import { DailyBatteryChart } from '@/components/results/DailyBatteryChart';
 import { LeadModal } from '@/components/results/LeadModal';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
@@ -204,6 +205,21 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                 monthlySelfConsumedKwh={data.monthlySelfConsumedKwh ?? []}
               />
             </div>
+
+            {/* Hourly battery simulator */}
+            {data.hourlySimulation && (
+              <div className="bg-white rounded-2xl border border-gray-200 p-6">
+                <h2 className="font-bold text-gray-900 mb-1">Hourly energy flows &amp; battery arbitrage</h2>
+                <DailyBatteryChart
+                  months={data.hourlySimulation.months}
+                  batteryKwh={inputs.hasBattery ? (inputs.batteryKwh ?? 0) : 0}
+                  symbol={symbol}
+                  annualArbitrageSavings={data.hourlySimulation.annualArbitrageSavings ?? 0}
+                  importPricePerKwh={inputs.importPricePerKwh}
+                  performArbitrage={!!inputs.performArbitrage}
+                />
+              </div>
+            )}
 
             {/* Bill pre-vs-post */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">

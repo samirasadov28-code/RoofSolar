@@ -10,6 +10,7 @@ import { buildCashflow } from '@/lib/engine/cashflow';
 import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from '@/lib/engine/metrics';
 import { runSensitivity } from '@/lib/engine/sensitivity';
 import { runExtendedSensitivity } from '@/lib/engine/extendedSensitivity';
+import { runHourlySimulator } from '@/lib/engine/hourlySimulator';
 
 // Grid CO2 intensity (kg CO2 per kWh) by ISO country code. Rough 2023-24
 // averages from EEA / IEA / Our World in Data. Used for CO2-saved metric only.
@@ -120,7 +121,18 @@ export async function POST(request: NextRequest) {
     const lifetimeSavings = calcLifetimeSavings(cashflows);
     const annualCo2Saved = (yieldResult.annualKwh! * (CO2_KG_PER_KWH[countryCode] ?? 0.4));
 
-    // 10. Sensitivity
+    // 10. Hourly battery simulator (representative day per month)
+    const hourlySimResult = runHourlySimulator({
+      monthlyProductionKwh: yieldResult.monthlyKwh!,
+      monthlyConsumptionKwh: monthlyConsumption,
+      batteryKwh: hasBattery && batteryKwh > 0 ? batteryKwh : 0,
+      importPricePerKwh,
+      exportPricePerKwh,
+      nightPricePerKwh: nightPricePerKwh ?? importPricePerKwh,
+      performArbitrage: !!(hasBattery && batteryKwh > 0 && performArbitrage),
+    });
+
+    // 10a. Sensitivity
     const sensitivity = runSensitivity(cashflowParams);
 
     // 10b. Extended sensitivity sweeps — vary one input at a time
@@ -192,6 +204,7 @@ export async function POST(request: NextRequest) {
       horizonYears: HORIZON_YEARS,
       inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
       inverterReplacementCost: INVERTER_REPLACEMENT_COST,
+      hourlySimulation: hourlySimResult,
     };
 
     // Save to Supabase (non-blocking; skip if DB not configured)
