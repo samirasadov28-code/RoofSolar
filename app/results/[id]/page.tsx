@@ -14,6 +14,7 @@ import { MonthlyUsageVsGeneration } from '@/components/results/MonthlyUsageVsGen
 import { BillComparisonChart } from '@/components/results/BillComparisonChart';
 import { LifetimeImpact } from '@/components/results/LifetimeImpact';
 import { ExtendedSensitivityPanel } from '@/components/results/ExtendedSensitivityPanel';
+import { EquipmentShortlist } from '@/components/results/EquipmentShortlist';
 import { LeadModal } from '@/components/results/LeadModal';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
@@ -277,6 +278,16 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                 <EvPanel ev={data.evCharging} symbol={symbol} />
               </div>
             )}
+
+            {/* Equipment shortlist */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6">
+              <h2 className="font-bold text-gray-900 mb-1">Recommended equipment</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                Curated panels, inverters, and batteries that match your design — sized
+                from your inputs, sourced from current installer guides.
+              </p>
+              <EquipmentShortlist inputs={inputs} />
+            </div>
 
             {/* Financing comparison */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
