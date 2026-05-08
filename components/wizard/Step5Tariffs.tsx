@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
 import { getGrant } from '@/lib/engine/grants';
-import { getCountryDefaults } from '@/lib/countryDefaults';
+import { getCountryDefaults, TARIFF_DATA_AS_OF } from '@/lib/countryDefaults';
 import { NumericInput } from '@/components/ui/NumericInput';
 
 export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
@@ -13,14 +13,24 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
   const cd = getCountryDefaults(cc);
   const symbol = cd.symbol;
 
-  // Auto-update grant when system size changes
-  const grantAmount = getGrant(cc, inputs.systemKwp);
+  // Auto-update grant when system size or cost changes. Tax-credit / VAT-refund
+  // countries (US, IT, NL, ES, PT) need the gross cost to compute their %-based
+  // incentive — fall back to the auto-estimate (panels × 900 + battery × 600)
+  // when the user hasn't manually entered a quote.
+  const autoGross =
+    inputs.systemCostGross > 0
+      ? inputs.systemCostGross
+      : inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0);
+  const grantAmount = getGrant(cc, inputs.systemKwp, autoGross);
 
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-1">Tariffs & grants</h2>
-        <p className="text-gray-500">Pre-filled based on your location. Adjust as needed.</p>
+        <p className="text-gray-500">
+          Pre-filled for {cd.countryName} (data as of {TARIFF_DATA_AS_OF}).
+          Override anything that doesn&apos;t match your contract.
+        </p>
       </div>
 
       {/* Tariff type */}

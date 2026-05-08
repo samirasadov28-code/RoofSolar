@@ -33,6 +33,13 @@ export interface CountryDefaults {
   touTariffExamples: string;
 }
 
+/**
+ * Snapshot date for the tariff defaults below.
+ * Bump this whenever you refresh the price data so the wizard can
+ * show "data as of …" and let users decide whether to override.
+ */
+export const TARIFF_DATA_AS_OF = '2026-05';
+
 // Lookup keyed by ISO-3166-1 alpha-2 lowercase (matches Nominatim's
 // `country_code` field).
 const COUNTRY_DEFAULTS: Record<string, CountryDefaults> = {

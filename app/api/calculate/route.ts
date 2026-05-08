@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     const sc = calcSelfConsumption(yieldResult.monthlyKwh, monthlyConsumption, profileCap);
 
     // 4. Grant and net capex
-    const grant = getGrant(countryCode, systemKwp);
+    const grant = getGrant(countryCode, systemKwp, systemCostGross || 0);
     const netCapex = Math.max(0, (systemCostGross || 0) - grant);
 
     // 5. Battery

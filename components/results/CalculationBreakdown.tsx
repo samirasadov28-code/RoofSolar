@@ -1,6 +1,6 @@
 'use client';
 
-import { getGrantSchemeName } from '@/lib/engine/grants';
+import { getGrantSchemeName, getGrantMechanism } from '@/lib/engine/grants';
 
 interface Props {
   data: any;
@@ -170,8 +170,8 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
           result={fmtMoney(grossCost)}
         />
         <Row
-          label="Grant"
-          formula={`${getGrantSchemeName(inputs.countryCode)} for ${fmt1(inputs.systemKwp)} kWp`}
+          label="Grant / incentive"
+          formula={`${getGrantSchemeName(inputs.countryCode)} — ${getGrantMechanism(inputs.countryCode)}`}
           result={`− ${fmtMoney(grant)}`}
         />
         <Row

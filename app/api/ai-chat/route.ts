@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getCountryDefaults } from '@/lib/countryDefaults';
+import { getGrantMechanism } from '@/lib/engine/grants';
 
 /**
  * Solar AI Advisor — backed by Groq's OpenAI-compatible inference API.
@@ -52,7 +53,7 @@ FINANCIAL RESULTS (currency: ${cd.currencyCode}):
 TARIFFS:
 - Import: ${symbol}${inputs.importPricePerKwh}/kWh
 - Export: ${symbol}${inputs.exportPricePerKwh}/kWh
-- Grant scheme (${cd.grantSchemeName}): ${symbol}${(results.grant ?? 0).toLocaleString()}
+- Grant scheme (${cd.grantSchemeName}, ${getGrantMechanism(inputs.countryCode)}): ${symbol}${(results.grant ?? 0).toLocaleString()}
 - Net cost: ${symbol}${(results.netCapex ?? 0).toLocaleString()}
 
 FINANCING: ${inputs.financingMode} — ${inputs.financingMode !== 'outright' ? `${Math.round((inputs.loanCoveragePct ?? 1) * 100)}% financed at ${((inputs.annualRatePct ?? 0.065) * 100).toFixed(2)}% over ${inputs.tenorYears} years` : 'paid in full'}
