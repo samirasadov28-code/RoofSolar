@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
       hasBattery: !!hasBattery,
       batteryKwh,
       panelCount,
-      grant,
+      countryCode,
       baseParams: {
         monthlyConsumption,
         importPricePerKwh,

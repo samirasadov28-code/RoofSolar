@@ -13,6 +13,7 @@ import type { AnnualCashflow, CashflowParams } from './cashflow';
 import { buildCashflow } from './cashflow';
 import { calcFinancing } from './financing';
 import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from './metrics';
+import { getGrant } from './grants';
 
 export interface SweepPoint {
   /** The variable parameter for this point (panels / kWh / % / etc). */
@@ -37,7 +38,13 @@ export interface BaselineContext {
   hasBattery: boolean;
   batteryKwh: number;
   panelCount: number;
-  grant: number;                 // applies the same across sweeps for fairness
+  /** ISO country code — needed to recompute size-banded / %-based grants
+   *  per sweep point. Without this, small-system variants would get a grant
+   *  sized for the user's actual (often larger) system, producing absurd IRRs. */
+  countryCode: string;
+  /** @deprecated Grant is now recomputed per-size from countryCode. Kept on
+   *  the type so old callers don't break; the value is ignored. */
+  grant?: number;
   baseParams: Omit<CashflowParams, 'netCapex' | 'monthlyProduction' | 'financing'>;
   baseFinancing: {
     annualRatePct: number;
@@ -77,12 +84,21 @@ function scaleProduction(monthly: number[], baselineKwp: number, newKwp: number)
   return monthly.map((m) => m * factor);
 }
 
+/**
+ * Net capex for a given configuration, recomputing the country-appropriate
+ * grant for THIS configuration (not the baseline). Critical for sweeps —
+ * a 1.6 kWp system in IE qualifies for the smaller €2,400 grant band, not
+ * the €3,000 band; a halved-size system in the US should get half the
+ * 30% ITC; etc.
+ */
 function netCapexFor(panelCount: number, hasBattery: boolean, batteryKwh: number, ctx: BaselineContext): number {
   const gross =
     panelCount * ctx.panelUnitCost
     + (hasBattery ? batteryKwh * ctx.batteryUnitCost : 0)
     + (ctx.inverterType === 'hybrid' ? ctx.hybridInverterCost : 0);
-  return Math.max(0, gross - ctx.grant);
+  const kwp = panelCount * 0.4;
+  const grant = getGrant(ctx.countryCode, kwp, gross);
+  return Math.max(0, gross - grant);
 }
 
 /** Sweep across panel counts (scaled yield + cost). */

@@ -50,7 +50,9 @@ function SweepChart({
     x: p.variable,
     xLabel: formatX(p.variable),
     payback: p.paybackYears != null ? Math.round(p.paybackYears * 10) / 10 : null,
-    irrPct: p.irr != null ? Math.round(p.irr * 1000) / 10 : null,
+    // Cap plotted IRR at 100% so an unusually small / heavily-subsidised
+    // configuration doesn't blow out the right-axis scale.
+    irrPct: p.irr != null ? Math.min(100, Math.round(p.irr * 1000) / 10) : null,
     npv: Math.round(p.npv),
     lifetime: Math.round(p.lifetimeSavings),
     capex: Math.round(p.netCapex),
@@ -143,7 +145,11 @@ function SizingTable({ points, symbol }: { points: SweepPoint[]; symbol: string 
                     {p.paybackYears == null ? '—' : `${p.paybackYears.toFixed(1)} yr`}
                   </td>
                   <td className="py-2 px-2 text-right">
-                    {p.irr == null ? '—' : `${(p.irr * 100).toFixed(1)} %`}
+                    {p.irr == null
+                      ? '—'
+                      : p.irr > 1
+                        ? '> 100 %'
+                        : `${(p.irr * 100).toFixed(1)} %`}
                   </td>
                   <td className="py-2 px-2 text-right">
                     {symbol}{Math.round(p.lifetimeSavings).toLocaleString()}
