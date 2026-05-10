@@ -369,10 +369,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Solar panel visual divider */}
+      {/* Solar panel visual divider — single row */}
       <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="grid grid-cols-8 md:grid-cols-16 gap-1.5 opacity-25">
-          {Array.from({ length: 32 }).map((_, i) => (
+        <div className="grid grid-cols-8 gap-1.5 opacity-25">
+          {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="aspect-[4/3] bg-sky-300 rounded border border-sky-200 relative overflow-hidden">
               <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-px p-px">
                 {Array.from({ length: 4 }).map((_, j) => (

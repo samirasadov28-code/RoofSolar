@@ -26,14 +26,15 @@ export function ForceUpdateButton() {
     window.location.replace(url.toString());
   }
 
-  // Positioned above the global AI advisor button so the two don't overlap.
+  // Sits at the bottom of the landing page in normal page flow — scrolls
+  // away with the rest of the content rather than floating above it.
   return (
-    <div className="fixed bottom-[68px] right-2 sm:bottom-24 sm:right-6 z-40">
+    <div className="w-full flex justify-center py-8">
       <button
         onClick={forceUpdate}
         disabled={busy}
         title={`Clear cached data and reload — currently on v${APP_VERSION}`}
-        className="inline-flex items-center gap-2 bg-white border border-gray-200 shadow-lg hover:shadow-xl text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-medium px-3 sm:px-4 py-2 rounded-full transition-all disabled:opacity-60"
+        className="inline-flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:shadow-md text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-medium px-4 py-2 rounded-full transition-all disabled:opacity-60"
       >
         <svg
           className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${busy ? 'animate-spin' : ''}`}
