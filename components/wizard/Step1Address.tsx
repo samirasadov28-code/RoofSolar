@@ -24,7 +24,33 @@ interface Preview {
   typicalCapacityFactorLo: number;
   typicalCapacityFactorHi: number;
   sunnyDaysEquivalent: number;
+  bestMonth: { name: string; kwh: number };
+  worstMonth: { name: string; kwh: number };
+  seasonalSwing: number | null;
+  daylightSummer: number;
+  daylightWinter: number;
+  currencySymbol: string;
+  currencyCode: string;
+  estimatedAnnualSavings: number;
+  annualCo2SavedKg: number;
+  co2FactorKgPerKwh: number;
+  localImportPrice: number;
+  localExportPrice: number;
+  localGrant: number;
+  localGrantSchemeName: string;
+  countryName: string;
   dataSource: 'pvgis' | 'nrel' | 'manual';
+}
+
+// ISO-3166-1 alpha-2 → flag emoji. Two regional-indicator code points
+// per country, computed at runtime so we don't ship 200 hardcoded strings.
+function flagEmoji(cc: string): string {
+  const code = (cc || '').toUpperCase();
+  if (code.length !== 2) return '';
+  return String.fromCodePoint(
+    0x1f1e6 - 65 + code.charCodeAt(0),
+    0x1f1e6 - 65 + code.charCodeAt(1),
+  );
 }
 
 export function Step1Address({ onNext }: { onNext: () => void }) {
@@ -52,11 +78,12 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [query, fetchSuggestions]);
 
-  const fetchPreview = useCallback(async (lat: number, lon: number) => {
+  const fetchPreview = useCallback(async (lat: number, lon: number, cc?: string) => {
     setPreviewLoading(true);
     setPreview(null);
     try {
-      const res = await fetch(`/api/preview?lat=${lat}&lon=${lon}`);
+      const qs = `lat=${lat}&lon=${lon}${cc ? `&cc=${cc}` : ''}`;
+      const res = await fetch(`/api/preview?${qs}`);
       if (res.ok) setPreview(await res.json());
     } catch {}
     setPreviewLoading(false);
@@ -65,7 +92,7 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
   // Auto-fetch preview if we already have a saved location (returning user)
   useEffect(() => {
     if (inputs.lat && inputs.lon && !preview && !previewLoading) {
-      fetchPreview(inputs.lat, inputs.lon);
+      fetchPreview(inputs.lat, inputs.lon, inputs.countryCode);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -87,7 +114,7 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     });
     setQuery(s.displayName);
     setSuggestions([]);
-    fetchPreview(s.lat, s.lon);
+    fetchPreview(s.lat, s.lon, s.countryCode);
   }
 
   const canProceed = inputs.lat !== null && inputs.lon !== null;
@@ -157,6 +184,9 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
                 dayPricePerKwh: defaults.dayPricePerKwh,
                 nightPricePerKwh: defaults.nightPricePerKwh,
               });
+              // Re-fetch preview so the savings/CO₂/tariff snapshot reflects
+              // the user's overridden country, not the geocoded one.
+              if (inputs.lat && inputs.lon) fetchPreview(inputs.lat, inputs.lon, cc);
             }}
             className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-white"
           >
@@ -177,8 +207,18 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
       {(previewLoading || preview) && (
         <div className="bg-gradient-to-br from-amber-50 to-sky-50 border border-amber-200 rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-gray-900 text-sm">
-              ☀️ Solar potential at this location
+            <h3 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
+              <span>☀️ Solar potential</span>
+              {inputs.countryCode && (
+                <span className="text-base leading-none" aria-hidden>
+                  {flagEmoji(inputs.countryCode)}
+                </span>
+              )}
+              {preview?.countryName && (
+                <span className="text-xs font-normal text-gray-500">
+                  {preview.countryName}
+                </span>
+              )}
             </h3>
             {preview?.dataSource && (
               <span className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
@@ -250,6 +290,86 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
                 to full-rated output — the &quot;typical&quot; band is a latitude-based reference, so
                 you can see if your spot sits above or below the norm.</span>
               </p>
+
+              {/* What this means for the home — money, climate, seasons */}
+              <div className="mt-4 pt-4 border-t border-amber-200/60 space-y-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                  What this means for your home
+                </p>
+
+                {/* Headline money + CO₂ */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white rounded-lg p-3 border border-amber-100">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+                      Year-1 savings (est.)
+                    </p>
+                    <p className="text-lg font-extrabold text-green-700 mt-0.5">
+                      {preview.currencySymbol}{preview.estimatedAnnualSavings.toLocaleString()}
+                    </p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">
+                      for a {preview.sampleSystemKwp} kWp system, ~35% self-consumed
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-amber-100">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+                      CO₂ avoided / yr
+                    </p>
+                    <p className="text-lg font-extrabold text-green-700 mt-0.5">
+                      {preview.annualCo2SavedKg.toLocaleString()} kg
+                    </p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">
+                      using local grid factor {preview.co2FactorKgPerKwh.toFixed(3)} kg/kWh
+                    </p>
+                  </div>
+                </div>
+
+                {/* Seasonal swing + daylight */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white rounded-lg p-3 border border-amber-100">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+                      Best / worst month
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                      <span className="text-amber-600">{preview.bestMonth.name}</span>: {preview.bestMonth.kwh.toLocaleString()} kWh
+                      <span className="text-gray-400"> · </span>
+                      <span className="text-sky-600">{preview.worstMonth.name}</span>: {preview.worstMonth.kwh.toLocaleString()} kWh
+                    </p>
+                    {preview.seasonalSwing && (
+                      <p className="text-[10px] text-gray-500 mt-0.5">
+                        {preview.seasonalSwing.toFixed(1)}× swing across the year
+                      </p>
+                    )}
+                  </div>
+                  <div className="bg-white rounded-lg p-3 border border-amber-100">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold">
+                      Daylight hours
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 mt-0.5">
+                      Dec: {preview.daylightWinter.toFixed(1)} hr → Jun: {preview.daylightSummer.toFixed(1)} hr
+                    </p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">at your latitude</p>
+                  </div>
+                </div>
+
+                {/* Local tariff & grant snapshot */}
+                {preview.currencyCode && (
+                  <div className="bg-white rounded-lg p-3 border border-amber-100">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-bold mb-1">
+                      Pre-filled for {preview.countryName}
+                    </p>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
+                      <span><span className="text-gray-500">Import</span> <strong className="text-gray-900">{preview.currencySymbol}{preview.localImportPrice}/kWh</strong></span>
+                      <span><span className="text-gray-500">Export</span> <strong className="text-gray-900">{preview.currencySymbol}{preview.localExportPrice}/kWh</strong></span>
+                      {preview.localGrant > 0 && (
+                        <span><span className="text-gray-500">{preview.localGrantSchemeName}</span> <strong className="text-gray-900">up to {preview.currencySymbol}{preview.localGrant.toLocaleString()}</strong></span>
+                      )}
+                      {preview.localGrant === 0 && preview.localGrantSchemeName !== 'Local incentives may apply' && (
+                        <span className="text-gray-500">{preview.localGrantSchemeName}</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>

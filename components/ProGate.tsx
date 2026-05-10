@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase-browser';
+import { useState } from 'react';
 import { isEarlyAccess } from '@/lib/earlyAccess';
+import { useProStatus } from '@/lib/hooks/useProStatus';
+import { useViewMode } from '@/lib/hooks/useViewMode';
 
 const EARLY_ACCESS_LS_KEY = 'roofsolar_early_access_email';
 
@@ -15,59 +16,16 @@ interface ProGateProps {
 }
 
 export function ProGate({ calculationId, children, preview, priceLabel = '£3.99' }: ProGateProps) {
-  const [isPro, setIsPro] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { isPro: detectedPro, loading } = useProStatus(calculationId);
+  const [overrideIsPro, setOverrideIsPro] = useState(false);
+  const isPro = detectedPro || overrideIsPro;
+  const [viewMode, setViewMode] = useViewMode();
+  const showFreeView = viewMode === 'free';
+  const setShowFreeView = (v: boolean) => setViewMode(v ? 'free' : 'pro');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [showFreeView, setShowFreeView] = useState(false);
   const [showEarlyAccessForm, setShowEarlyAccessForm] = useState(false);
   const [earlyAccessEmail, setEarlyAccessEmail] = useState('');
   const [earlyAccessError, setEarlyAccessError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Check URL param first (post-Stripe redirect)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('pro') === 'true') {
-      setIsPro(true);
-      setLoading(false);
-      return;
-    }
-
-    // Locally-saved early-access email (entered via the form below)
-    try {
-      const saved = localStorage.getItem(EARLY_ACCESS_LS_KEY);
-      if (saved && isEarlyAccess(saved)) {
-        setIsPro(true);
-        setLoading(false);
-        return;
-      }
-    } catch {}
-
-    async function check() {
-      try {
-        const supabase = createClient();
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) { setLoading(false); return; }
-
-        if (isEarlyAccess(session.user.email)) {
-          setIsPro(true);
-          setLoading(false);
-          return;
-        }
-
-        const { data } = await supabase
-          .from('pro_purchases')
-          .select('id')
-          .eq('user_id', session.user.id)
-          .eq('calculation_id', calculationId)
-          .maybeSingle();
-
-        setIsPro(!!data);
-      } catch {}
-      setLoading(false);
-    }
-
-    check();
-  }, [calculationId]);
 
   async function handleUpgrade() {
     setCheckoutLoading(true);
@@ -92,7 +50,7 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
       return;
     }
     try { localStorage.setItem(EARLY_ACCESS_LS_KEY, email); } catch {}
-    setIsPro(true);
+    setOverrideIsPro(true);
     setShowEarlyAccessForm(false);
     setEarlyAccessEmail('');
   }

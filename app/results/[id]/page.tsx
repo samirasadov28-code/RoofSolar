@@ -18,6 +18,7 @@ import { LiveStressTester } from '@/components/results/LiveStressTester';
 import { EquipmentShortlist } from '@/components/results/EquipmentShortlist';
 import { DailyBatteryChart } from '@/components/results/DailyBatteryChart';
 import { LeadModal } from '@/components/results/LeadModal';
+import { ViewModeToggle } from '@/components/results/ViewModeToggle';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
 
@@ -100,9 +101,12 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           >
             {shortAddress(inputs.displayName)}
           </span>
-          <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap">
-            New analysis
-          </Link>
+          <div className="flex items-center gap-3 whitespace-nowrap">
+            <ViewModeToggle calculationId={id} />
+            <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900">
+              New analysis
+            </Link>
+          </div>
         </div>
       </header>
 
