@@ -25,6 +25,19 @@ function fmt(countryCode: string) {
   return countryCode === 'ie' ? '€' : countryCode === 'gb' ? '£' : '';
 }
 
+/**
+ * Nominatim returns very long display names (e.g. "14 Griffith Ave,
+ * Drumcondra, Dublin 9, County Dublin, Leinster, D09 X5R7, Ireland").
+ * The header only has room for a short hint — keep the first 2 comma-
+ * separated segments and cap to ~38 chars.
+ */
+function shortAddress(full: string | undefined): string {
+  if (!full) return '';
+  const parts = full.split(',').map((s) => s.trim()).filter(Boolean);
+  const out = parts.slice(0, 2).join(', ');
+  return out.length > 38 ? out.slice(0, 36) + '…' : out;
+}
+
 function PaybackCard({ months }: { months: number }) {
   const years = isNaN(months) ? null : months / 12;
   const color = !years ? 'text-red-600' : years < 8 ? 'text-green-600' : years < 12 ? 'text-yellow-600' : 'text-red-600';
@@ -73,17 +86,23 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header — 3-column layout so the address sits centred and can never
+          collide with the logo or the "New analysis" link. */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover" />
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 grid grid-cols-[auto_1fr_auto] items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 min-w-0">
+            <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover shrink-0" />
             <span className="font-bold text-gray-900">RoofSolar</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500 hidden sm:block">{inputs.displayName}</span>
-            <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900">New analysis</Link>
-          </div>
+          <span
+            className="hidden sm:block text-sm text-gray-500 text-center truncate"
+            title={inputs.displayName}
+          >
+            {shortAddress(inputs.displayName)}
+          </span>
+          <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap">
+            New analysis
+          </Link>
         </div>
       </header>
 

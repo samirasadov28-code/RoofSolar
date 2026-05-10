@@ -19,7 +19,10 @@ interface Preview {
   sampleAnnualKwh: number;
   annualKwhPerKwp: number;
   peakSunHoursPerYear: number;
+  sunHoursPerDay: number;
   capacityFactorPct: number;
+  typicalCapacityFactorLo: number;
+  typicalCapacityFactorHi: number;
   sunnyDaysEquivalent: number;
   dataSource: 'pvgis' | 'nrel' | 'manual';
 }
@@ -196,12 +199,12 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
                   <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
-                    Sunny days
+                    Sun hours
                   </p>
                   <p className="text-xl font-extrabold text-gray-900">
-                    {preview.sunnyDaysEquivalent.toLocaleString()}
+                    {preview.sunHoursPerDay.toFixed(1)}
                   </p>
-                  <p className="text-[10px] text-gray-500">equivalent / yr</p>
+                  <p className="text-[10px] text-gray-500">avg / day</p>
                 </div>
 
                 <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
@@ -216,32 +219,36 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
 
                 <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
                   <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
-                    Availability
+                    Capacity factor
                   </p>
                   <p className="text-xl font-extrabold text-gray-900">
                     {preview.capacityFactorPct.toFixed(1)}%
                   </p>
-                  <p className="text-[10px] text-gray-500">capacity factor</p>
+                  <p className="text-[10px] text-gray-500">
+                    typical {preview.typicalCapacityFactorLo}–{preview.typicalCapacityFactorHi}%
+                  </p>
                 </div>
 
                 <div className="bg-white rounded-lg p-3 text-center border border-amber-100">
                   <p className="text-[10px] uppercase tracking-wider text-amber-700 font-bold mb-0.5">
-                    Peak sun
+                    Sunny days
                   </p>
                   <p className="text-xl font-extrabold text-gray-900">
-                    {preview.peakSunHoursPerYear.toLocaleString()}
+                    {preview.sunnyDaysEquivalent.toLocaleString()}
                   </p>
-                  <p className="text-[10px] text-gray-500">hours / yr</p>
+                  <p className="text-[10px] text-gray-500">8-hr equivalents / yr</p>
                 </div>
               </div>
 
               <p className="text-[11px] text-gray-600 mt-3 leading-relaxed">
                 A reference {preview.sampleSystemKwp} kWp south-facing system at this site
                 would generate ~<strong>{preview.sampleAnnualKwh.toLocaleString()} kWh</strong> per year.
-                <span className="text-gray-500"> Peak sun is the location&apos;s raw solar
-                resource; net capacity is what your panels actually deliver after typical
-                system losses (~14% inverter, wiring, soiling, temperature). Availability is
-                the share of the 8,760-hour year that equates to full-rated output.</span>
+                <span className="text-gray-500"> Sun hours are the location&apos;s raw solar
+                resource (peak-sun-hour equivalents); net capacity is what your panels
+                actually deliver after typical system losses (~14% inverter, wiring,
+                soiling, temperature). Capacity factor is the share of the year that equates
+                to full-rated output — the &quot;typical&quot; band is a latitude-based reference, so
+                you can see if your spot sits above or below the norm.</span>
               </p>
             </>
           )}

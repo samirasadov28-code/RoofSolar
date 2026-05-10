@@ -45,6 +45,15 @@ export async function GET(request: NextRequest) {
   // Capacity factor = actual AC output / nameplate × 8,760.
   const capacityFactorPct = (specificYield / 8760) * 100;
 
+  // Average peak-sun hours per day — a more intuitive feel for the
+  // resource than the annual total.
+  const sunHoursPerDay = peakSunHoursPerYear / 365;
+
+  // Typical capacity-factor range for the latitude, so users have a
+  // sanity-check benchmark. Rough heuristic — clear-sky deserts will
+  // exceed the upper bound, persistent overcast regions will sit below.
+  const { lo: typicalLo, hi: typicalHi } = typicalCapacityFactorRange(lat);
+
   // "Sunny day equivalent" — how many full 8-hour blue-sky days the
   // peak-sun-hour budget represents. Rough public-friendly metric.
   const sunnyDaysEquivalent = peakSunHoursPerYear / 8;
@@ -54,8 +63,29 @@ export async function GET(request: NextRequest) {
     sampleAnnualKwh: Math.round(yieldResult.annualKwh),
     annualKwhPerKwp: Math.round(specificYield),
     peakSunHoursPerYear: Math.round(peakSunHoursPerYear),
+    sunHoursPerDay: Math.round(sunHoursPerDay * 10) / 10,
     capacityFactorPct: Math.round(capacityFactorPct * 10) / 10,
+    typicalCapacityFactorLo: typicalLo,
+    typicalCapacityFactorHi: typicalHi,
     sunnyDaysEquivalent: Math.round(sunnyDaysEquivalent),
     dataSource: yieldResult.dataSource,
   });
+}
+
+/**
+ * Typical residential PV capacity-factor band by latitude. Numbers reflect
+ * a south-facing array with no major shading, representative of widely
+ * published 2020-24 utility-scale and rooftop reports (NREL, IEA PVPS,
+ * Fraunhofer ISE). Clear-sky deserts and persistent overcast will fall
+ * outside the band.
+ */
+function typicalCapacityFactorRange(lat: number): { lo: number; hi: number } {
+  const absLat = Math.abs(lat);
+  if (absLat > 60) return { lo: 7,  hi: 10 };   // Iceland, far Scandinavia
+  if (absLat > 50) return { lo: 10, hi: 13 };   // UK, IE, N. Germany, S. Canada
+  if (absLat > 40) return { lo: 12, hi: 16 };   // Central Europe, N. US
+  if (absLat > 30) return { lo: 15, hi: 19 };   // Mediterranean, S. US, N. China
+  if (absLat > 20) return { lo: 17, hi: 22 };   // Subtropics: Mexico, N. India, N. Africa, AU
+  if (absLat > 10) return { lo: 16, hi: 20 };   // Tropics with seasonal cloud
+  return { lo: 15, hi: 18 };                    // Equatorial
 }
