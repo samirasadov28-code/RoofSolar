@@ -264,6 +264,9 @@ export default function HomePage() {
         <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
           <span className="font-bold text-base sm:text-xl text-gray-900 truncate">RoofSolar</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 rounded-full px-2 py-0.5">
+            <span aria-hidden>🤖</span> AI
+          </span>
         </Link>
         <div className="flex items-center gap-2 sm:gap-5 flex-shrink-0">
           <Link href="/installers" className="hidden md:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
@@ -289,22 +292,24 @@ export default function HomePage() {
           {/* Left — copy */}
           <div className="flex-1 lg:flex-[0.95] text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
-              ☀️ Financial-grade solar analysis — free in 3 minutes
+              <span aria-hidden>🤖</span> AI-powered solar analysis · 3 minutes · free
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-              Turn your roof into a
+              Your AI solar advisor turns your roof into a
               <span className="text-amber-500"> power station.</span>
             </h1>
             <p className="text-base sm:text-lg text-gray-600 max-w-xl mb-10 leading-relaxed">
-              Enter your address and get a 25-year cashflow model, payback analysis,
-              export tariff earnings, battery economics, and EV savings — tailored to your home.
+              Enter your address and get a 25-year cashflow model — payback,
+              export earnings, battery economics, EV savings — tailored to your
+              home and country. A built-in <strong className="text-gray-900">AI advisor</strong> explains every
+              number and answers your questions in plain English.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/calculator"
                 className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-amber-400/30"
               >
-                Start my free analysis
+                Start my free AI analysis
               </Link>
               <a
                 href="#how-it-works"
@@ -317,8 +322,8 @@ export default function HomePage() {
             {/* Trust badges */}
             <div className="flex flex-wrap gap-x-6 gap-y-3 mt-10 justify-center lg:justify-start">
               {[
+                { icon: '🤖', text: 'AI advisor built-in' },
                 { icon: '🔒', text: 'No account required' },
-                { icon: '⚡', text: 'Live PVGIS data' },
                 { icon: '🌍', text: 'Works worldwide' },
               ].map(b => (
                 <div key={b.text} className="flex items-center gap-2 text-sm text-gray-600">
@@ -387,13 +392,14 @@ export default function HomePage() {
       {/* How it works */}
       <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-4">How RoofSolar works</h2>
-        <p className="text-center text-gray-600 mb-14">Four steps to your financial-grade solar report</p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+        <p className="text-center text-gray-600 mb-14">Five steps to a financial-grade, AI-assisted solar report</p>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8">
           {[
-            { step: '1', icon: '📍', title: 'Your address', desc: 'We fetch live solar irradiance data for your exact location from PVGIS.' },
-            { step: '2', icon: '🏠', title: 'Roof details', desc: 'Orientation, pitch and shading loss — we calculate optimal panel placement.' },
-            { step: '3', icon: '💶', title: 'Your numbers', desc: 'Local tariffs, grants, consumption and financing — all pre-filled for your country.' },
-            { step: '4', icon: '📊', title: 'Your report', desc: '25-year cashflow, IRR, payback period, battery and EV economics.' },
+            { step: '1', icon: '📍', title: 'Your address', desc: 'We fetch live solar irradiance for your exact location from PVGIS.' },
+            { step: '2', icon: '🏠', title: 'Roof details', desc: 'Orientation, pitch and shading — we calculate optimal panel placement.' },
+            { step: '3', icon: '💶', title: 'Your numbers', desc: 'Local tariffs, grants, consumption and financing — pre-filled for your country.' },
+            { step: '4', icon: '📊', title: 'Your report', desc: '25-year cashflow, IRR, payback, battery and EV economics.' },
+            { step: '5', icon: '🤖', title: 'Ask the AI', desc: 'Chat with your AI advisor — plain-English answers about any number or scenario.' },
           ].map((item) => (
             <div key={item.step} className="text-center group">
               <div className="w-14 h-14 bg-amber-100 border border-amber-300 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-amber-200 transition-colors">
@@ -404,6 +410,76 @@ export default function HomePage() {
               <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* AI advisor section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16 sm:pb-20">
+        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-amber-900 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-72 h-72 bg-amber-400/20 rounded-full blur-3xl pointer-events-none" aria-hidden />
+          <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-sky-400/10 rounded-full blur-3xl pointer-events-none" aria-hidden />
+          <div className="relative grid lg:grid-cols-2 gap-10 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-3 py-1 text-xs font-semibold text-amber-200 mb-5">
+                <span aria-hidden>🤖</span> AI advisor · Groq + Llama 3.3
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-5 leading-tight">
+                Talk to your solar analysis like it&apos;s a person.
+              </h2>
+              <p className="text-gray-300 mb-6 leading-relaxed">
+                Most solar tools hand you a stack of numbers and leave you guessing what they mean.
+                RoofSolar pairs every analysis with an AI advisor that&apos;s read all 25 years of
+                your cashflow, knows your country&apos;s tariffs and grant scheme, and answers your
+                questions instantly — no scrolling through FAQs.
+              </p>
+              <ul className="space-y-3 text-sm">
+                {[
+                  { icon: '🧮', text: 'Explains your IRR, NPV and payback in plain English' },
+                  { icon: '🌍', text: 'Knows your local tariffs, grants and grid mix — answers vary by country' },
+                  { icon: '🎯', text: 'Stress-tests "what if" scenarios — bigger battery? higher rates? — instantly' },
+                  { icon: '💬', text: 'Always-on chat — bottom-right of every page, no signup' },
+                ].map((f) => (
+                  <li key={f.text} className="flex items-start gap-3">
+                    <span className="text-lg mt-0.5">{f.icon}</span>
+                    <span className="text-gray-200">{f.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Mock chat preview */}
+            <div className="bg-white/95 backdrop-blur rounded-2xl p-5 shadow-2xl text-gray-900 text-sm">
+              <div className="flex items-center gap-2 pb-3 border-b border-gray-200 mb-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-green-400" aria-hidden />
+                <span className="font-bold text-gray-800">RoofSolar AI</span>
+                <span className="text-[10px] text-gray-400 ml-auto">online</span>
+              </div>
+              <div className="space-y-3">
+                <div className="flex justify-end">
+                  <div className="bg-amber-100 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[80%] text-gray-900">
+                    Is 9.4 years a good payback?
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[85%] text-gray-800">
+                    For Ireland at €0.43/kWh import + SEAI grant, yes — 9 years is right in the
+                    good-but-not-amazing band (8–11 yrs is typical). Adding a 5 kWh battery
+                    would shave ~1.8 years off it. Want me to model that?
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <div className="bg-amber-100 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[80%] text-gray-900">
+                    Yes, and what&apos;s my year-1 grid bill?
+                  </div>
+                </div>
+                <div className="flex">
+                  <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[85%] text-gray-800 italic text-gray-500">
+                    Typing…
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -419,7 +495,7 @@ export default function HomePage() {
           <div className="relative">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">Ready to see your solar potential?</h2>
             <p className="text-gray-800 mb-8 max-w-xl mx-auto">
-              Free analysis in 3 minutes. Upgrade to Pro for €3.99 to download your full PDF report and get installer quotes.
+              Free AI-powered analysis in 3 minutes. Upgrade to Pro for €3.99 to download your full PDF report and get installer quotes.
             </p>
             <Link
               href="/calculator"

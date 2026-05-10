@@ -8,17 +8,17 @@ import { AiAdvisor } from '@/components/results/AiAdvisor';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'RoofSolar — Solar Investment Analysis',
+  title: 'RoofSolar — AI Solar Advisor',
   description:
-    'Get a personalised, financial-grade solar investment analysis in under 3 minutes. 10-year cashflow model, payback analysis, export tariff earnings and EV charging economics.',
+    'Free, AI-powered solar investment analysis in under 3 minutes. 25-year cashflow model, payback, export earnings, battery and EV economics — with a built-in AI advisor that explains every number in plain English.',
   icons: {
     icon: '/logo-192.png',
     apple: '/logo-192.png',
     shortcut: '/logo-192.png',
   },
   openGraph: {
-    title: 'RoofSolar — Solar Investment Analysis',
-    description: 'Financial-grade solar analysis in under 3 minutes.',
+    title: 'RoofSolar — AI Solar Advisor',
+    description: 'AI-powered solar investment analysis. 25-year cashflow, plain-English explanations, works worldwide.',
     images: [{ url: '/logo-512.png', width: 512, height: 512 }],
   },
 };
