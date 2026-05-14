@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useT } from '@/lib/i18n';
 
 export default function InstallersPage() {
+  const t = useT();
   const [form, setForm] = useState({
     company_name: '',
     contact_name: '',
@@ -35,10 +37,16 @@ export default function InstallersPage() {
       }
       setDone(true);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong');
+      setError(err.message || t.common.errorGeneric);
     }
     setLoading(false);
   }
+
+  const benefits = [
+    { title: t.installers.benefit1Title, desc: t.installers.benefit1Desc },
+    { title: t.installers.benefit2Title, desc: t.installers.benefit2Desc },
+    { title: t.installers.benefit3Title, desc: t.installers.benefit3Desc },
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -48,32 +56,25 @@ export default function InstallersPage() {
             <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover" />
             <span className="font-bold">RoofSolar</span>
           </Link>
-          <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900">For homeowners</Link>
+          <Link href="/calculator" className="text-sm text-gray-600 hover:text-gray-900">{t.installers.forHomeowners}</Link>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-20">
-        {/* Hero */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 rounded-full px-4 py-1.5 text-sm text-yellow-800 font-medium mb-6">
-            Installer network — coming soon
+            {t.installers.networkBadge}
           </div>
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
-            Join the RoofSolar installer network
+            {t.installers.heroTitle}
           </h1>
           <p className="text-xl text-gray-600 max-w-xl mx-auto">
-            Connect with homeowners who have already modelled their solar investment and are ready to buy.
-            No cold leads — just warm, financially-informed customers.
+            {t.installers.heroSubtitle}
           </p>
         </div>
 
-        {/* Benefits */}
         <div className="grid md:grid-cols-3 gap-6 mb-16">
-          {[
-            { title: 'Warm leads', desc: 'Customers who have already done the financial analysis and are motivated to proceed.' },
-            { title: 'No cold calling', desc: 'Homeowners opt in to receive quotes — you only get genuinely interested leads.' },
-            { title: 'Shared analysis', desc: 'Access the full financial model the customer ran, so you can quote faster.' },
-          ].map((b) => (
+          {benefits.map((b) => (
             <div key={b.title} className="bg-white rounded-2xl border border-gray-200 p-6">
               <h3 className="font-bold text-gray-900 mb-2">{b.title}</h3>
               <p className="text-sm text-gray-600">{b.desc}</p>
@@ -81,7 +82,6 @@ export default function InstallersPage() {
           ))}
         </div>
 
-        {/* Waitlist form */}
         {done ? (
           <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -89,12 +89,12 @@ export default function InstallersPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">You are on the waitlist</h2>
-            <p className="text-gray-500">We will be in touch when the installer network launches in your area.</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">{t.installers.successTitle}</h2>
+            <p className="text-gray-500">{t.installers.successDesc}</p>
           </div>
         ) : (
           <div className="bg-white rounded-2xl border border-gray-200 p-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Join the waitlist</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">{t.installers.joinWaitlistTitle}</h2>
 
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm mb-4">{error}</div>
@@ -103,7 +103,7 @@ export default function InstallersPage() {
             <form onSubmit={submit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Company name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.companyName}</label>
                   <input
                     type="text"
                     required
@@ -113,7 +113,7 @@ export default function InstallersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Contact name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.contactName}</label>
                   <input
                     type="text"
                     required
@@ -125,7 +125,7 @@ export default function InstallersPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.emailLabel}</label>
                   <input
                     type="email"
                     required
@@ -135,7 +135,7 @@ export default function InstallersPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.phoneLabel}</label>
                   <input
                     type="tel"
                     value={form.phone}
@@ -145,7 +145,7 @@ export default function InstallersPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Coverage regions (comma-separated)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.coverageRegions}</label>
                 <input
                   type="text"
                   value={form.coverage_regions}
@@ -155,7 +155,7 @@ export default function InstallersPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes (optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.installers.notesLabel}</label>
                 <textarea
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
@@ -168,7 +168,7 @@ export default function InstallersPage() {
                 disabled={loading}
                 className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-bold py-3 rounded-xl transition-colors"
               >
-                {loading ? 'Submitting…' : 'Join installer waitlist'}
+                {loading ? t.installers.submitting : t.installers.submitBtn}
               </button>
             </form>
           </div>

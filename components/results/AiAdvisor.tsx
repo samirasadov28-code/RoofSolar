@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -12,29 +14,13 @@ interface Props {
   inputs?: any;
 }
 
-const STARTER_QUESTIONS_WITH_CONTEXT = [
-  'Is my payback period good?',
-  'Should I add a battery?',
-  'How does the export tariff affect my return?',
-  'What size system is best for my roof?',
-];
-
-const STARTER_QUESTIONS_GENERIC = [
-  'How does residential solar work?',
-  'Is a hybrid inverter worth the extra cost?',
-  'When does a battery make financial sense?',
-  'What grants are available in my country?',
-];
-
 export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = {}) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [configured, setConfigured] = useState(true);
-  // When the advisor is mounted globally we fall back to the latest
-  // calculation cached in sessionStorage by Step 7. Lets the user keep
-  // chatting about their numbers after navigating away from /results.
   const [resolvedResults, setResolvedResults] = useState<any>(resultsProp);
   const [resolvedInputs, setResolvedInputs] = useState<any>(inputsProp);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -57,7 +43,10 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
   }, [resultsProp, inputsProp]);
 
   const hasContext = !!(resolvedResults && resolvedInputs);
-  const starters = hasContext ? STARTER_QUESTIONS_WITH_CONTEXT : STARTER_QUESTIONS_GENERIC;
+
+  const starters = hasContext
+    ? [t.advisor.starterQ1, t.advisor.starterQ2, t.advisor.starterQ3, t.advisor.starterQ4]
+    : [t.advisor.genericQ1, t.advisor.genericQ2, t.advisor.genericQ3, t.advisor.genericQ4];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -115,7 +104,6 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
 
       if (!res.body) throw new Error('Empty stream');
 
-      // Stream SSE
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let assistantText = '';
@@ -155,7 +143,7 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
         ...prev,
         {
           role: 'assistant',
-          content: `Sorry, something went wrong (${err?.message || 'unknown error'}). Please try again.`,
+          content: fmt(t.advisor.errorGeneric, { error: err?.message || 'unknown error' }),
         },
       ]);
     }
@@ -165,23 +153,20 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
 
   return (
     <>
-      {/* Floating button — icon-only on mobile, icon + label from sm up */}
       <button
         onClick={() => setOpen(true)}
         className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold p-3 sm:px-4 sm:py-3 rounded-full shadow-xl transition-all"
-        aria-label="Open AI advisor"
+        aria-label={t.advisor.openBtn}
       >
         <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
-        <span className="hidden sm:inline text-sm">Ask AI advisor</span>
+        <span className="hidden sm:inline text-sm">{t.advisor.openBtn}</span>
       </button>
 
-      {/* Chat drawer */}
       {open && (
         <div className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-50 w-full md:w-[420px] h-[520px] md:h-[520px] bg-white rounded-t-2xl md:rounded-2xl shadow-2xl border border-gray-200 flex flex-col">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 bg-gray-900 rounded-full flex items-center justify-center">
@@ -191,8 +176,8 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-semibold text-gray-900">Solar AI Advisor</p>
-                <p className="text-xs text-gray-400">Powered by Groq · Llama 3.3</p>
+                <p className="text-sm font-semibold text-gray-900">{t.advisor.chatTitle}</p>
+                <p className="text-xs text-gray-400">{t.advisor.poweredBy}</p>
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 p-1">
@@ -202,14 +187,11 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
             </button>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
               <div className="space-y-3">
                 <p className="text-sm text-gray-500 text-center">
-                  {hasContext
-                    ? 'Ask me anything about your solar analysis.'
-                    : 'Ask me anything about residential solar.'}
+                  {hasContext ? t.advisor.promptAnalysis : t.advisor.promptGeneric}
                 </p>
                 <div className="grid grid-cols-1 gap-2">
                   {starters.map((q) => (
@@ -248,7 +230,6 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
             <div ref={bottomRef} />
           </div>
 
-          {/* Input */}
           <div className="border-t border-gray-100 p-3">
             <form
               onSubmit={(e) => { e.preventDefault(); send(input); }}
@@ -259,7 +240,7 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={hasContext ? 'Ask about your analysis…' : 'Ask about residential solar…'}
+                placeholder={hasContext ? t.advisor.placeholderAnalysis : t.advisor.placeholderGeneric}
                 disabled={loading || !configured}
                 className="flex-1 border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
               />

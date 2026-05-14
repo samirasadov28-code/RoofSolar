@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { useWizardStore } from '@/lib/store/wizardStore';
 import { NumericInput } from '@/components/ui/NumericInput';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 const EV_VEHICLES = [
   { label: 'Tesla Model 3', efficiency: 15 },
@@ -14,12 +16,11 @@ const EV_VEHICLES = [
 ];
 
 export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const t = useT();
   const { inputs, setInputs } = useWizardStore();
 
-  // Only seed panel count from roof area when the user hasn't manually adjusted it.
-  // We detect "never adjusted" by checking if systemCostGross is still 0 (default).
   useEffect(() => {
-    if (inputs.systemCostGross > 0) return; // user has edited cost → keep their panel choice
+    if (inputs.systemCostGross > 0) return;
     const recommended = Math.max(4, Math.floor(inputs.roofAreaM2 / 1.7));
     setInputs({ panelCount: recommended, systemKwp: +(recommended * 0.4).toFixed(2) });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,36 +34,31 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">System size</h2>
-        <p className="text-gray-500">We recommend a size based on your roof area.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">{t.step4.title}</h2>
+        <p className="text-gray-500">{t.step4.subtitle}</p>
       </div>
 
-      {/* Panel count */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
         <p className="text-sm text-yellow-800 font-medium mb-3">
-          Recommended: {Math.floor(inputs.roofAreaM2 / 1.7)} panels ({(Math.floor(inputs.roofAreaM2 / 1.7) * 0.4).toFixed(1)} kWp) for your roof size
+          {fmt(t.step4.recommended, { panels: Math.floor(inputs.roofAreaM2 / 1.7), kwp: (Math.floor(inputs.roofAreaM2 / 1.7) * 0.4).toFixed(1) })}
         </p>
         <div className="flex items-center gap-4">
           <button onClick={() => adjustPanels(-1)} className="w-10 h-10 bg-white border border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50">−</button>
           <div className="flex-1 text-center">
             <p className="text-3xl font-bold text-gray-900">{inputs.panelCount}</p>
-            <p className="text-sm text-gray-500">panels × 400W = <strong>{inputs.systemKwp.toFixed(1)} kWp</strong></p>
+            <p className="text-sm text-gray-500">{t.step4.panelsSuffix} <strong>{inputs.systemKwp.toFixed(1)} kWp</strong></p>
           </div>
           <button onClick={() => adjustPanels(1)} className="w-10 h-10 bg-white border border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50">+</button>
         </div>
       </div>
 
-      {/* Inverter type */}
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-1">Inverter type</p>
-        <p className="text-xs text-gray-500 mb-3">
-          A hybrid (smart) inverter is required to add a battery later or to use
-          dynamic export. Adds ~€500 to the system cost.
-        </p>
+        <p className="text-sm font-medium text-gray-900 mb-1">{t.step4.inverterTypeTitle}</p>
+        <p className="text-xs text-gray-500 mb-3">{t.step4.inverterHint}</p>
         <div className="grid grid-cols-2 gap-2">
           {([
-            { value: 'standard', title: 'Standard string', desc: 'PV-only, lowest cost' },
-            { value: 'hybrid',   title: 'Hybrid (smart)',  desc: 'PV + battery-ready' },
+            { value: 'standard', title: t.step4.inverterStandard, desc: t.step4.inverterStandardDesc },
+            { value: 'hybrid',   title: t.step4.inverterHybrid,   desc: t.step4.inverterHybridDesc },
           ] as const).map((opt) => (
             <button
               key={opt.value}
@@ -80,19 +76,17 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
         </div>
       </div>
 
-      {/* Battery */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-sm font-medium text-gray-900">Battery storage</p>
+            <p className="text-sm font-medium text-gray-900">{t.step4.batteryTitle}</p>
             <p className="text-xs text-gray-500">
-              Store surplus solar for evening use{inputs.inverterType !== 'hybrid' && ' (auto-switches to hybrid inverter)'}
+              {t.step4.batteryDesc}{inputs.inverterType !== 'hybrid' && t.step4.batteryAutoSwitch}
             </p>
           </div>
           <button
             onClick={() => setInputs({
               hasBattery: !inputs.hasBattery,
-              // A battery only makes sense with a hybrid inverter — auto-flip.
               ...(!inputs.hasBattery && inputs.inverterType !== 'hybrid' ? { inverterType: 'hybrid' as const } : {}),
             })}
             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${inputs.hasBattery ? 'bg-yellow-400' : 'bg-gray-200'}`}
@@ -104,7 +98,7 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
         {inputs.hasBattery && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Battery size — <span className="text-yellow-600">{inputs.batteryKwh} kWh</span>
+              {t.step4.batterySize} <span className="text-yellow-600">{inputs.batteryKwh} kWh</span>
             </label>
             <input
               type="range"
@@ -122,12 +116,11 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
         )}
       </div>
 
-      {/* EV */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-sm font-medium text-gray-900">Electric vehicle</p>
-            <p className="text-xs text-gray-500">Include EV charging savings analysis</p>
+            <p className="text-sm font-medium text-gray-900">{t.step4.evTitle}</p>
+            <p className="text-xs text-gray-500">{t.step4.evDesc}</p>
           </div>
           <button
             onClick={() => setInputs({ hasEv: !inputs.hasEv })}
@@ -140,7 +133,7 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
         {inputs.hasEv && (
           <div className="space-y-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Annual mileage (km)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t.step4.annualMileage}</label>
               <NumericInput
                 value={inputs.annualMileageKm}
                 onChange={(n) => setInputs({ annualMileageKm: n })}
@@ -148,7 +141,7 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t.step4.vehicleLabel}</label>
               <select
                 value={inputs.vehicleEfficiencyKwhPer100km}
                 onChange={(e) => {
@@ -163,22 +156,26 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Charging preference</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t.step4.chargingPref}</label>
               <div className="flex gap-2">
-                {(['daytime', 'evening', 'mixed'] as const).map((pref) => (
+                {([
+                  { value: 'daytime', label: t.step4.dayCharging },
+                  { value: 'evening', label: t.step4.eveningCharging },
+                  { value: 'mixed',   label: t.step4.mixedCharging },
+                ] as const).map((pref) => (
                   <button
-                    key={pref}
-                    onClick={() => setInputs({ chargingPreference: pref })}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${inputs.chargingPreference === pref ? 'bg-yellow-400 text-gray-900' : 'bg-white text-gray-600 border border-gray-300'}`}
+                    key={pref.value}
+                    onClick={() => setInputs({ chargingPreference: pref.value })}
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${inputs.chargingPreference === pref.value ? 'bg-yellow-400 text-gray-900' : 'bg-white text-gray-600 border border-gray-300'}`}
                   >
-                    {pref}
+                    {pref.label}
                   </button>
                 ))}
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Public charging — <span className="text-yellow-600">{Math.round(inputs.publicChargingPct * 100)}%</span>
+                {t.step4.publicCharging} <span className="text-yellow-600">{Math.round(inputs.publicChargingPct * 100)}%</span>
               </label>
               <input
                 type="range"
@@ -195,8 +192,8 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
       </div>
 
       <div className="flex gap-3">
-        <button onClick={onBack} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors">Back</button>
-        <button onClick={onNext} className="flex-[2] bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-xl transition-colors">Continue</button>
+        <button onClick={onBack} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors">{t.common.back}</button>
+        <button onClick={onNext} className="flex-[2] bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-xl transition-colors">{t.common.continue}</button>
       </div>
     </div>
   );

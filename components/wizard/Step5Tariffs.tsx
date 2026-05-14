@@ -5,18 +5,17 @@ import { useWizardStore } from '@/lib/store/wizardStore';
 import { getGrant } from '@/lib/engine/grants';
 import { getCountryDefaults, TARIFF_DATA_AS_OF } from '@/lib/countryDefaults';
 import { NumericInput } from '@/components/ui/NumericInput';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+  const t = useT();
   const { inputs, setInputs } = useWizardStore();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const cc = inputs.countryCode;
   const cd = getCountryDefaults(cc);
   const symbol = cd.symbol;
 
-  // Auto-update grant when system size or cost changes. Tax-credit / VAT-refund
-  // countries (US, IT, NL, ES, PT) need the gross cost to compute their %-based
-  // incentive — fall back to the auto-estimate (panels × 900 + battery × 600)
-  // when the user hasn't manually entered a quote.
   const autoGross =
     inputs.systemCostGross > 0
       ? inputs.systemCostGross
@@ -26,24 +25,21 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Tariffs & grants</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">{t.step5.title}</h2>
         <p className="text-gray-500">
-          Pre-filled for {cd.countryName} (data as of {TARIFF_DATA_AS_OF}).
-          Override anything that doesn&apos;t match your contract.
+          {fmt(t.step5.subtitle, { country: cd.countryName, date: TARIFF_DATA_AS_OF })}
         </p>
       </div>
 
-      {/* Tariff type */}
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-1">Tariff structure</p>
+        <p className="text-sm font-medium text-gray-900 mb-1">{t.step5.tariffStructure}</p>
         <p className="text-xs text-gray-500 mb-2">
-          Pick fixed if you pay one rate all day. Pick day/night if your contract has different
-          peak and off-peak rates (e.g. {cd.touTariffExamples}).
+          {fmt(t.step5.tariffHint, { examples: cd.touTariffExamples })}
         </p>
         <div className="grid grid-cols-2 gap-2">
           {([
-            { value: 'fixed', title: 'Fixed rate', desc: 'one price all day' },
-            { value: 'tou',   title: 'Day / Night',  desc: 'time-of-use bands' },
+            { value: 'fixed', title: t.step5.tariffFixed, desc: t.step5.tariffFixedDesc },
+            { value: 'tou',   title: t.step5.tariffTou,   desc: t.step5.tariffTouDesc },
           ] as const).map((opt) => (
             <button
               key={opt.value}
@@ -64,7 +60,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            {inputs.tariffType === 'tou' ? 'Average / day rate (per kWh)' : 'Import price (per kWh)'}
+            {inputs.tariffType === 'tou' ? t.step5.importPriceTou : t.step5.importPriceFixed}
           </label>
           <div className="relative">
             {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
@@ -77,7 +73,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Export rate (per kWh)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t.step5.exportRate}</label>
           <div className="relative">
             {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
             <NumericInput
@@ -91,7 +87,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Government grant</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t.step5.govGrant}</label>
         <div className="relative">
           {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
           <NumericInput
@@ -102,15 +98,14 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         </div>
         {grantAmount > 0 && (
           <p className="text-xs text-green-700 mt-1">
-            Auto-detected: {symbol}{grantAmount.toLocaleString()} based on your {inputs.systemKwp.toFixed(1)} kWp system
+            {fmt(t.step5.grantAutoDetected, { symbol, amount: grantAmount.toLocaleString(), kwp: inputs.systemKwp.toFixed(1) })}
           </p>
         )}
       </div>
 
-      {/* System cost */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          System cost (gross, before grant)
+          {t.step5.systemCostLabel}
         </label>
         <div className="relative">
           {symbol && <span className="absolute left-3 top-2.5 text-gray-500 text-sm">{symbol}</span>}
@@ -126,15 +121,14 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
           />
         </div>
         <p className="text-xs text-gray-400 mt-1">
-          Auto-estimate: {symbol}{(inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0) + (inputs.inverterType === 'hybrid' ? 500 : 0)).toLocaleString()} — edit with your actual quote
+          {fmt(t.step5.systemCostAuto, { symbol, amount: (inputs.panelCount * 900 + (inputs.hasBattery ? inputs.batteryKwh * 600 : 0) + (inputs.inverterType === 'hybrid' ? 500 : 0)).toLocaleString() })}
         </p>
       </div>
 
-      {/* Day/Night rates — visible whenever Time-of-Use tariff is picked */}
       {inputs.tariffType === 'tou' && (
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Day rate (per kWh)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t.step5.dayRate}</label>
             <NumericInput
               step={0.001}
               value={inputs.dayPricePerKwh}
@@ -143,7 +137,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Night rate (per kWh)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t.step5.nightRate}</label>
             <NumericInput
               step={0.001}
               value={inputs.nightPricePerKwh}
@@ -154,7 +148,6 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
         </div>
       )}
 
-      {/* Advanced */}
       <div>
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
@@ -163,7 +156,7 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
           <svg className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          Advanced options
+          {t.step5.advancedOptions}
         </button>
 
         {showAdvanced && (
@@ -171,8 +164,8 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
             {inputs.hasBattery && (
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Battery arbitrage</p>
-                  <p className="text-xs text-gray-500">Buy cheap at night, offset peak rate</p>
+                  <p className="text-sm font-medium text-gray-900">{t.step5.batteryArbitrage}</p>
+                  <p className="text-xs text-gray-500">{t.step5.batteryArbitrageDesc}</p>
                 </div>
                 <button
                   onClick={() => setInputs({ performArbitrage: !inputs.performArbitrage })}
@@ -187,8 +180,8 @@ export function Step5Tariffs({ onNext, onBack }: { onNext: () => void; onBack: (
       </div>
 
       <div className="flex gap-3">
-        <button onClick={onBack} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors">Back</button>
-        <button onClick={onNext} className="flex-[2] bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-xl transition-colors">Continue</button>
+        <button onClick={onBack} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors">{t.common.back}</button>
+        <button onClick={onNext} className="flex-[2] bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-xl transition-colors">{t.common.continue}</button>
       </div>
     </div>
   );

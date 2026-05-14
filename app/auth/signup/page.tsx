@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase-browser';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 export default function SignupPage() {
+  const t = useT();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -38,9 +41,9 @@ export default function SignupPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Check your email</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">{t.auth.checkEmailTitle}</h2>
           <p className="text-gray-500">
-            We sent a confirmation link to <strong>{email}</strong>. Click it to activate your account.
+            {fmt(t.auth.checkEmailDesc, { email })}
           </p>
         </div>
       </div>
@@ -55,8 +58,8 @@ export default function SignupPage() {
           <span className="font-bold text-xl">RoofSolar</span>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Create your account</h1>
-        <p className="text-gray-500 mb-6">Save and revisit your solar analyses</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.auth.signupTitle}</h1>
+        <p className="text-gray-500 mb-6">{t.auth.signupSubtitle}</p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm mb-4">
@@ -66,7 +69,7 @@ export default function SignupPage() {
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t.auth.emailLabel}</label>
             <input
               type="email"
               value={email}
@@ -76,7 +79,7 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t.auth.passwordLabel}</label>
             <input
               type="password"
               value={password}
@@ -91,14 +94,14 @@ export default function SignupPage() {
             disabled={loading}
             className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-semibold py-2.5 rounded-lg transition-colors"
           >
-            {loading ? 'Creating account…' : 'Create account'}
+            {loading ? t.auth.creatingAccountBtn : t.auth.createAccountBtn}
           </button>
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{' '}
+          {t.auth.alreadyHaveAccount}{' '}
           <Link href="/auth/login" className="text-yellow-600 font-medium hover:underline">
-            Sign in
+            {t.auth.signInBtn}
           </Link>
         </p>
       </div>

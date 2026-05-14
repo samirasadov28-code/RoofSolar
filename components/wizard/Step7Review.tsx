@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWizardStore } from '@/lib/store/wizardStore';
+import { useT } from '@/lib/i18n';
 
-function fmt(cc: string) {
+function getCurrencySymbol(cc: string) {
   return cc === 'ie' ? '€' : cc === 'gb' ? '£' : '';
 }
 
@@ -18,11 +19,12 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 export function Step7Review({ onBack }: { onBack: () => void }) {
+  const t = useT();
   const router = useRouter();
   const { inputs } = useWizardStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const symbol = fmt(inputs.countryCode);
+  const symbol = getCurrencySymbol(inputs.countryCode);
 
   const systemCostGross =
     inputs.systemCostGross > 0
@@ -82,18 +84,17 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
       const data = await res.json();
 
       if (data.needsManualProduction) {
-        setError('Could not fetch solar data for this location. Please try a different address or contact support.');
+        setError(t.step7.errorNoData);
         setLoading(false);
         return;
       }
 
-      // Store in sessionStorage for results page
       sessionStorage.setItem('roofsolar_results', JSON.stringify({ inputs, results: data }));
 
       const id = data.calculationId ?? 'local';
       router.push(`/results/${id}`);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      setError(err.message || t.common.errorGeneric);
     }
 
     setLoading(false);
@@ -102,25 +103,25 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-1">Review your inputs</h2>
-        <p className="text-gray-500">Check everything looks right before we run your analysis.</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-1">{t.step7.title}</h2>
+        <p className="text-gray-500">{t.step7.subtitle}</p>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-xl p-4 space-y-0">
-        <Row label="Address" value={inputs.displayName || '—'} />
-        <Row label="Roof area" value={`${inputs.roofAreaM2} m²`} />
-        <Row label="Orientation" value={`${inputs.azimuthDeg}°`} />
-        <Row label="Pitch" value={`${inputs.tiltDeg}°`} />
-        <Row label="Shading" value={`${inputs.shadingLossPct}%`} />
-        <Row label="Annual consumption" value={`${inputs.annualKwh.toLocaleString()} kWh`} />
-        <Row label="System size" value={`${inputs.panelCount} panels (${inputs.systemKwp.toFixed(1)} kWp)`} />
-        {inputs.hasBattery && <Row label="Battery" value={`${inputs.batteryKwh} kWh`} />}
-        {inputs.hasEv && <Row label="EV annual mileage" value={`${inputs.annualMileageKm.toLocaleString()} km`} />}
-        <Row label="Import price" value={`${symbol}${inputs.importPricePerKwh}/kWh`} />
-        <Row label="Export rate" value={`${symbol}${inputs.exportPricePerKwh}/kWh`} />
-        <Row label="Grant" value={`${symbol}${inputs.grant.toLocaleString()}`} />
-        <Row label="Net system cost" value={`${symbol}${netCapex.toLocaleString()}`} />
-        <Row label="Financing" value={inputs.financingMode === 'outright' ? 'Outright' : `${Math.round(inputs.loanCoveragePct * 100)}% ${inputs.financingMode}`} />
+        <Row label={t.step7.rowAddress} value={inputs.displayName || '—'} />
+        <Row label={t.step7.rowRoofArea} value={`${inputs.roofAreaM2} m²`} />
+        <Row label={t.step7.rowOrientation} value={`${inputs.azimuthDeg}°`} />
+        <Row label={t.step7.rowPitch} value={`${inputs.tiltDeg}°`} />
+        <Row label={t.step7.rowShading} value={`${inputs.shadingLossPct}%`} />
+        <Row label={t.step7.rowAnnualConsumption} value={`${inputs.annualKwh.toLocaleString()} kWh`} />
+        <Row label={t.step7.rowSystemSize} value={`${inputs.panelCount} panels (${inputs.systemKwp.toFixed(1)} kWp)`} />
+        {inputs.hasBattery && <Row label={t.step7.rowBattery} value={`${inputs.batteryKwh} kWh`} />}
+        {inputs.hasEv && <Row label={t.step7.rowEvMileage} value={`${inputs.annualMileageKm.toLocaleString()} km`} />}
+        <Row label={t.step7.rowImportPrice} value={`${symbol}${inputs.importPricePerKwh}/kWh`} />
+        <Row label={t.step7.rowExportRate} value={`${symbol}${inputs.exportPricePerKwh}/kWh`} />
+        <Row label={t.step7.rowGrant} value={`${symbol}${inputs.grant.toLocaleString()}`} />
+        <Row label={t.step7.rowNetCost} value={`${symbol}${netCapex.toLocaleString()}`} />
+        <Row label={t.step7.rowFinancing} value={inputs.financingMode === 'outright' ? t.step7.financingOutright : `${Math.round(inputs.loanCoveragePct * 100)}% ${inputs.financingMode}`} />
       </div>
 
       {error && (
@@ -131,7 +132,7 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
 
       <div className="flex gap-3">
         <button onClick={onBack} disabled={loading} className="flex-1 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-3 rounded-xl transition-colors disabled:opacity-50">
-          Back
+          {t.common.back}
         </button>
         <button
           onClick={calculate}
@@ -141,10 +142,10 @@ export function Step7Review({ onBack }: { onBack: () => void }) {
           {loading ? (
             <>
               <div className="w-5 h-5 border-2 border-gray-700 border-t-transparent rounded-full animate-spin" />
-              Calculating…
+              {t.common.calculating}
             </>
           ) : (
-            'Calculate my analysis'
+            t.step7.calculateBtn
           )}
         </button>
       </div>
