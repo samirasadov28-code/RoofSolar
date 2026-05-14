@@ -1,16 +1,18 @@
 'use client';
 
-const STEPS = [
-  'Address',
-  'Roof',
-  'Consumption',
-  'System',
-  'Tariffs',
-  'Financing',
-  'Review',
-];
+import { useT } from '@/lib/i18n';
 
 export function WizardProgress({ current }: { current: number }) {
+  const t = useT();
+  const STEPS = [
+    t.wizard.stepAddress,
+    t.wizard.stepRoof,
+    t.wizard.stepConsumption,
+    t.wizard.stepSystem,
+    t.wizard.stepTariffs,
+    t.wizard.stepFinancing,
+    t.wizard.stepReview,
+  ];
   const total = STEPS.length;
   const safeCurrent = Math.min(Math.max(current, 1), total);
   const currentLabel = STEPS[safeCurrent - 1];

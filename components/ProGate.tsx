@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { isEarlyAccess } from '@/lib/earlyAccess';
 import { useProStatus } from '@/lib/hooks/useProStatus';
 import { useViewMode } from '@/lib/hooks/useViewMode';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 const EARLY_ACCESS_LS_KEY = 'roofsolar_early_access_email';
 
@@ -16,6 +18,7 @@ interface ProGateProps {
 }
 
 export function ProGate({ calculationId, children, preview, priceLabel = '£3.99' }: ProGateProps) {
+  const t = useT();
   const { isPro: detectedPro, loading } = useProStatus(calculationId);
   const [overrideIsPro, setOverrideIsPro] = useState(false);
   const isPro = detectedPro || overrideIsPro;
@@ -44,9 +47,9 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
   function submitEarlyAccess() {
     setEarlyAccessError(null);
     const email = earlyAccessEmail.trim().toLowerCase();
-    if (!email) { setEarlyAccessError('Enter your email.'); return; }
+    if (!email) { setEarlyAccessError(t.proGate.earlyAccessErrorEmpty); return; }
     if (!isEarlyAccess(email)) {
-      setEarlyAccessError('That email is not on the early-access list.');
+      setEarlyAccessError(t.proGate.earlyAccessErrorInvalid);
       return;
     }
     try { localStorage.setItem(EARLY_ACCESS_LS_KEY, email); } catch {}
@@ -66,14 +69,14 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-amber-600 text-lg leading-none">✨</span>
             <p className="text-sm text-amber-800 truncate">
-              <span className="font-bold">Pro view</span> — full analysis unlocked
+              <span className="font-bold">{t.proGate.proViewBadge}</span> — {t.proGate.proViewUnlocked}
             </p>
           </div>
           <button
             onClick={() => setShowFreeView(true)}
             className="text-xs sm:text-sm font-semibold text-amber-700 hover:text-amber-900 border border-amber-300 hover:border-amber-500 bg-white rounded-lg px-3 py-1.5 transition-colors whitespace-nowrap"
           >
-            Show free version
+            {t.proGate.showFreeVersion}
           </button>
         </div>
         {children}
@@ -88,14 +91,14 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-gray-500 text-lg leading-none">🔒</span>
             <p className="text-sm text-gray-700 truncate">
-              <span className="font-bold">Free preview</span> — what visitors without Pro see
+              <span className="font-bold">{t.proGate.freePreviewBadge}</span> — {t.proGate.freePreviewDesc}
             </p>
           </div>
           <button
             onClick={() => setShowFreeView(false)}
             className="text-xs sm:text-sm font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-300 rounded-lg px-3 py-1.5 transition-colors whitespace-nowrap"
           >
-            Back to Pro view
+            {t.proGate.backToProView}
           </button>
         </div>
         {renderLocked()}
@@ -118,9 +121,9 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h3 className="font-bold text-gray-900 mb-1">Unlock full analysis</h3>
+          <h3 className="font-bold text-gray-900 mb-1">{t.proGate.unlockTitle}</h3>
           <p className="text-sm text-gray-500 mb-4 text-center">
-            25-year cashflow, dynamic stress-tester, battery economics and PDF report
+            {t.proGate.unlockDesc}
           </p>
 
           {isPro ? (
@@ -128,12 +131,12 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
               onClick={() => setShowFreeView(false)}
               className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-6 py-2.5 rounded-xl transition-colors"
             >
-              Back to Pro view
+              {t.proGate.backToProView}
             </button>
           ) : showEarlyAccessForm ? (
             <div className="w-full max-w-xs">
               <label className="block text-xs font-medium text-gray-700 mb-1">
-                Early-access email
+                {t.proGate.earlyAccessLabel}
               </label>
               <div className="flex gap-2">
                 <input
@@ -142,14 +145,14 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
                   value={earlyAccessEmail}
                   onChange={(e) => setEarlyAccessEmail(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') submitEarlyAccess(); }}
-                  placeholder="you@example.com"
+                  placeholder={t.proGate.earlyAccessPlaceholder}
                   className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 />
                 <button
                   onClick={submitEarlyAccess}
                   className="bg-gray-900 hover:bg-gray-700 text-white font-semibold px-3 py-2 rounded-lg text-sm transition-colors"
                 >
-                  Unlock
+                  {t.proGate.unlockBtn}
                 </button>
               </div>
               {earlyAccessError && (
@@ -159,7 +162,7 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
                 onClick={() => { setShowEarlyAccessForm(false); setEarlyAccessError(null); }}
                 className="text-xs text-gray-500 hover:text-gray-700 mt-2"
               >
-                Cancel
+                {t.common.cancel}
               </button>
             </div>
           ) : (
@@ -169,13 +172,13 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
                 disabled={checkoutLoading}
                 className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-bold px-6 py-2.5 rounded-xl transition-colors"
               >
-                {checkoutLoading ? 'Loading…' : `Unlock for ${priceLabel}`}
+                {checkoutLoading ? t.proGate.loadingBtn : fmt(t.proGate.unlockFor, { price: priceLabel })}
               </button>
               <button
                 onClick={() => setShowEarlyAccessForm(true)}
                 className="text-xs text-gray-500 hover:text-gray-700 underline mt-3"
               >
-                I have an early-access email
+                {t.proGate.haveEarlyAccess}
               </button>
             </>
           )}

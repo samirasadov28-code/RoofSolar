@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { APP_VERSION } from '@/lib/version';
 import { ForceUpdateButton } from '@/components/ForceUpdateButton';
+import { useT } from '@/lib/i18n';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 function EnergyChainIllustration() {
   return (
@@ -256,6 +260,7 @@ function EnergyChainIllustration() {
 }
 
 export default function HomePage() {
+  const t = useT();
   return (
     <main className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-sky-50">
 
@@ -270,17 +275,18 @@ export default function HomePage() {
         </Link>
         <div className="flex items-center gap-2 sm:gap-5 flex-shrink-0">
           <Link href="/installers" className="hidden md:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
-            For Installers
+            {t.nav.forInstallers}
           </Link>
           <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap">
-            Sign in
+            {t.nav.signIn}
           </Link>
+          <LanguageSwitcher />
           <Link
             href="/calculator"
             className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-semibold px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm transition-colors whitespace-nowrap shadow-sm"
           >
-            <span className="sm:hidden">Free analysis</span>
-            <span className="hidden sm:inline">Get my analysis</span>
+            <span className="sm:hidden">{t.nav.freeAnalysis}</span>
+            <span className="hidden sm:inline">{t.nav.getMyAnalysis}</span>
           </Link>
         </div>
       </nav>
@@ -292,39 +298,36 @@ export default function HomePage() {
           {/* Left — copy */}
           <div className="flex-1 lg:flex-[0.95] text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
-              <span aria-hidden>🤖</span> AI-powered solar analysis · 3 minutes · free
+              <span aria-hidden>🤖</span> {t.home.aiBadge}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-              Your AI solar advisor turns your roof into a
-              <span className="text-amber-500"> power station.</span>
+              {t.home.heroHeadline}
+              <span className="text-amber-500">{t.home.heroPowerStation}</span>
             </h1>
             <p className="text-base sm:text-lg text-gray-600 max-w-xl mb-10 leading-relaxed">
-              Enter your address and get a 25-year cashflow model — payback,
-              export earnings, battery economics, EV savings — tailored to your
-              home and country. A built-in <strong className="text-gray-900">AI advisor</strong> explains every
-              number and answers your questions in plain English.
+              {t.home.heroSubtitle1} <strong className="text-gray-900">{t.home.heroAiAdvisor}</strong> {t.home.heroSubtitle2}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/calculator"
                 className="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold px-8 py-4 rounded-xl text-lg transition-colors shadow-lg shadow-amber-400/30"
               >
-                Start my free AI analysis
+                {t.home.startFreeAnalysis}
               </Link>
               <a
                 href="#how-it-works"
                 className="border-2 border-gray-300 hover:border-gray-500 bg-white text-gray-700 hover:text-gray-900 font-semibold px-8 py-4 rounded-xl text-lg transition-colors"
               >
-                How it works
+                {t.home.howItWorksLink}
               </a>
             </div>
 
             {/* Trust badges */}
             <div className="flex flex-wrap gap-x-6 gap-y-3 mt-10 justify-center lg:justify-start">
               {[
-                { icon: '🤖', text: 'AI advisor built-in' },
-                { icon: '🔒', text: 'No account required' },
-                { icon: '🌍', text: 'Works worldwide' },
+                { icon: '🤖', text: t.home.badgeAi },
+                { icon: '🔒', text: t.home.badgeNoAccount },
+                { icon: '🌍', text: t.home.badgeWorldwide },
               ].map(b => (
                 <div key={b.text} className="flex items-center gap-2 text-sm text-gray-600">
                   <span>{b.icon}</span>
@@ -347,12 +350,12 @@ export default function HomePage() {
             />
             {/* Caption ribbon — mobile only */}
             <p className="lg:hidden text-center text-xs font-bold tracking-widest text-amber-700 uppercase mb-2">
-              Solar · Inverter · Battery · Home · EV
+              {t.home.captionMobile}
             </p>
             <EnergyChainIllustration />
             {/* Caption ribbon — desktop */}
             <p className="hidden lg:block text-center text-sm font-bold tracking-widest text-amber-700 uppercase mt-3">
-              Solar &rarr; Inverter &rarr; Battery &rarr; Home &amp; EV
+              {t.home.captionDesktop}
             </p>
           </div>
         </div>
@@ -362,9 +365,9 @@ export default function HomePage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-3 gap-3 sm:gap-4 text-center">
           {[
-            { value: '3 min', label: 'Average analysis time' },
-            { value: '25yr', label: 'Cashflow projection' },
-            { value: '€3.99', label: 'Full pro report' },
+            { value: t.home.stat1Value, label: t.home.stat1Label },
+            { value: t.home.stat2Value, label: t.home.stat2Label },
+            { value: t.home.stat3Value, label: t.home.stat3Label },
           ].map((s) => (
             <div key={s.label} className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6">
               <p className="text-2xl sm:text-3xl font-extrabold text-amber-500">{s.value}</p>
@@ -391,21 +394,21 @@ export default function HomePage() {
 
       {/* How it works */}
       <section id="how-it-works" className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-4">How RoofSolar works</h2>
-        <p className="text-center text-gray-600 mb-14">Five steps to a financial-grade, AI-assisted solar report</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-4">{t.home.howItWorksTitle}</h2>
+        <p className="text-center text-gray-600 mb-14">{t.home.howItWorksSubtitle}</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8">
           {[
-            { step: '1', icon: '📍', title: 'Your address', desc: 'We fetch live solar irradiance for your exact location from PVGIS.' },
-            { step: '2', icon: '🏠', title: 'Roof details', desc: 'Orientation, pitch and shading — we calculate optimal panel placement.' },
-            { step: '3', icon: '💶', title: 'Your numbers', desc: 'Local tariffs, grants, consumption and financing — pre-filled for your country.' },
-            { step: '4', icon: '📊', title: 'Your report', desc: '25-year cashflow, IRR, payback, battery and EV economics.' },
-            { step: '5', icon: '🤖', title: 'Ask the AI', desc: 'Chat with your AI advisor — plain-English answers about any number or scenario.' },
+            { step: '1', icon: '📍', title: t.home.step1Title, desc: t.home.step1Desc },
+            { step: '2', icon: '🏠', title: t.home.step2Title, desc: t.home.step2Desc },
+            { step: '3', icon: '💶', title: t.home.step3Title, desc: t.home.step3Desc },
+            { step: '4', icon: '📊', title: t.home.step4Title, desc: t.home.step4Desc },
+            { step: '5', icon: '🤖', title: t.home.step5Title, desc: t.home.step5Desc },
           ].map((item) => (
             <div key={item.step} className="text-center group">
               <div className="w-14 h-14 bg-amber-100 border border-amber-300 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 group-hover:bg-amber-200 transition-colors">
                 {item.icon}
               </div>
-              <div className="text-xs font-bold text-amber-600 mb-1">STEP {item.step}</div>
+              <div className="text-xs font-bold text-amber-600 mb-1">{t.home.stepLabel} {item.step}</div>
               <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
               <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
             </div>
@@ -421,25 +424,22 @@ export default function HomePage() {
           <div className="relative grid lg:grid-cols-2 gap-10 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-3 py-1 text-xs font-semibold text-amber-200 mb-5">
-                <span aria-hidden>🤖</span> AI advisor · Groq + Llama 3.3
+                <span aria-hidden>🤖</span> {t.home.aiSectionBadge}
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-5 leading-tight">
-                Talk to your solar analysis like it&apos;s a person.
+                {t.home.aiHeadline}
               </h2>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Most solar tools hand you a stack of numbers and leave you guessing what they mean.
-                RoofSolar pairs every analysis with an AI advisor that&apos;s read all 25 years of
-                your cashflow, knows your country&apos;s tariffs and grant scheme, and answers your
-                questions instantly — no scrolling through FAQs.
+                {t.home.aiBody}
               </p>
               <ul className="space-y-3 text-sm">
                 {[
-                  { icon: '🧮', text: 'Explains your IRR, NPV and payback in plain English' },
-                  { icon: '🌍', text: 'Knows your local tariffs, grants and grid mix — answers vary by country' },
-                  { icon: '🎯', text: 'Stress-tests "what if" scenarios — bigger battery? higher rates? — instantly' },
-                  { icon: '💬', text: 'Always-on chat — bottom-right of every page, no signup' },
+                  { icon: '🧮', text: t.home.aiFeature1 },
+                  { icon: '🌍', text: t.home.aiFeature2 },
+                  { icon: '🎯', text: t.home.aiFeature3 },
+                  { icon: '💬', text: t.home.aiFeature4 },
                 ].map((f) => (
-                  <li key={f.text} className="flex items-start gap-3">
+                  <li key={f.icon} className="flex items-start gap-3">
                     <span className="text-lg mt-0.5">{f.icon}</span>
                     <span className="text-gray-200">{f.text}</span>
                   </li>
@@ -451,8 +451,8 @@ export default function HomePage() {
             <div className="bg-white/95 backdrop-blur rounded-2xl p-5 shadow-2xl text-gray-900 text-sm">
               <div className="flex items-center gap-2 pb-3 border-b border-gray-200 mb-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-green-400" aria-hidden />
-                <span className="font-bold text-gray-800">RoofSolar AI</span>
-                <span className="text-[10px] text-gray-400 ml-auto">online</span>
+                <span className="font-bold text-gray-800">{t.home.aiChatName}</span>
+                <span className="text-[10px] text-gray-400 ml-auto">{t.home.aiChatOnline}</span>
               </div>
               <div className="space-y-3">
                 <div className="flex justify-end">
@@ -474,7 +474,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex">
                   <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[85%] text-gray-800 italic text-gray-500">
-                    Typing…
+                    {t.home.aiChatTyping}
                   </div>
                 </div>
               </div>
@@ -493,15 +493,15 @@ export default function HomePage() {
             ))}
           </div>
           <div className="relative">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">Ready to see your solar potential?</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">{t.home.ctaTitle}</h2>
             <p className="text-gray-800 mb-8 max-w-xl mx-auto">
-              Free AI-powered analysis in 3 minutes. Upgrade to Pro for €3.99 to download your full PDF report and get installer quotes.
+              {t.home.ctaBody}
             </p>
             <Link
               href="/calculator"
               className="inline-block bg-gray-900 hover:bg-gray-800 text-yellow-400 font-bold px-8 sm:px-10 py-4 rounded-xl text-lg transition-colors"
             >
-              Start free analysis
+              {t.home.ctaBtn}
             </Link>
           </div>
         </div>
@@ -509,10 +509,10 @@ export default function HomePage() {
 
       <footer className="border-t border-gray-200 py-8 bg-white/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© 2026 RoofSolar. All rights reserved. · v{APP_VERSION}</p>
+          <p>{t.home.footerRights} · v{APP_VERSION}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-            <Link href="/installers" className="hover:text-gray-700 transition-colors">For Installers</Link>
-            <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">Contact</a>
+            <Link href="/installers" className="hover:text-gray-700 transition-colors">{t.nav.forInstallers}</Link>
+            <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
           </div>
         </div>
       </footer>

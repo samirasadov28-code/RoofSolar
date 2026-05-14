@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase-browser';
 import { isEarlyAccess } from '@/lib/earlyAccess';
+import { useT } from '@/lib/i18n';
 
 export default function AccountPage() {
+  const t = useT();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [calculations, setCalculations] = useState<any[]>([]);
@@ -55,28 +57,28 @@ export default function AccountPage() {
             <img src="/logo-192.png" alt="RoofSolar" width={28} height={28} className="w-7 h-7 rounded-full object-cover" />
             <span className="font-bold">RoofSolar</span>
           </Link>
-          <button onClick={signOut} className="text-sm text-gray-600 hover:text-gray-900">Sign out</button>
+          <button onClick={signOut} className="text-sm text-gray-600 hover:text-gray-900">{t.account.signOut}</button>
         </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">My account</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.account.title}</h1>
         <div className="flex flex-wrap items-center gap-2 mb-8">
           <p className="text-gray-500 text-sm">{user?.email}</p>
           {isEarlyAccess(user?.email) && (
             <span className="inline-flex items-center gap-1 bg-amber-100 border border-amber-300 text-amber-700 text-xs font-bold rounded-full px-2.5 py-0.5">
-              ✨ Early access — Pro unlocked
+              ✨ {t.account.earlyAccessBadge}
             </span>
           )}
         </div>
 
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Saved analyses</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">{t.account.savedAnalyses}</h2>
 
         {calculations.length === 0 ? (
           <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
-            <p className="text-gray-500 mb-4">No saved analyses yet.</p>
+            <p className="text-gray-500 mb-4">{t.account.noAnalyses}</p>
             <Link href="/calculator" className="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-2.5 rounded-xl transition-colors">
-              Start my first analysis
+              {t.account.startFirstAnalysis}
             </Link>
           </div>
         ) : (
@@ -89,7 +91,7 @@ export default function AccountPage() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">{calc.address || 'Unknown address'}</p>
+                    <p className="font-medium text-gray-900">{calc.address || t.account.unknownAddress}</p>
                     <p className="text-sm text-gray-500">
                       {calc.system_kwp?.toFixed(1)} kWp · {new Date(calc.created_at).toLocaleDateString()}
                     </p>
