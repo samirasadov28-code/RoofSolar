@@ -19,7 +19,10 @@ export const LANGUAGES: Language[] = [
   { code: 'zh', name: 'Chinese',    nativeName: '中文',        flag: '🇨🇳' },
   { code: 'ar', name: 'Arabic',     nativeName: 'العربية',    flag: '🇸🇦', rtl: true },
   { code: 'hi', name: 'Hindi',      nativeName: 'हिन्दी',      flag: '🇮🇳' },
-  { code: 'ru', name: 'Russian',    nativeName: 'Русский',    flag: '🏳️' },
+  { code: 'ru', name: 'Russian',    nativeName: 'Русский',          flag: '🏳️' },
+  { code: 'bn', name: 'Bengali',    nativeName: 'বাংলা',            flag: '🇧🇩' },
+  { code: 'ja', name: 'Japanese',   nativeName: '日本語',            flag: '🇯🇵' },
+  { code: 'id', name: 'Indonesian', nativeName: 'Bahasa Indonesia',  flag: '🇮🇩' },
 ];
 
 export const LANGUAGE_MAP = new Map(LANGUAGES.map((l) => [l.code, l]));
