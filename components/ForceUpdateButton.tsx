@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import { APP_VERSION } from '@/lib/version';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 export function ForceUpdateButton() {
+  const t = useT();
   const [busy, setBusy] = useState(false);
 
   async function forceUpdate() {
@@ -26,14 +29,12 @@ export function ForceUpdateButton() {
     window.location.replace(url.toString());
   }
 
-  // Sits at the bottom of the landing page in normal page flow — scrolls
-  // away with the rest of the content rather than floating above it.
   return (
     <div className="w-full flex justify-center py-8">
       <button
         onClick={forceUpdate}
         disabled={busy}
-        title={`Clear cached data and reload — currently on v${APP_VERSION}`}
+        title={fmt(t.forceUpdate.title, { version: APP_VERSION })}
         className="inline-flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:shadow-md text-gray-700 hover:text-gray-900 text-xs sm:text-sm font-medium px-4 py-2 rounded-full transition-all disabled:opacity-60"
       >
         <svg
@@ -48,7 +49,7 @@ export function ForceUpdateButton() {
           <path d="M21 12a9 9 0 1 1-3-6.7" />
           <path d="M21 4v5h-5" />
         </svg>
-        <span>{busy ? 'Updating…' : 'Force update'}</span>
+        <span>{busy ? t.forceUpdate.updating : t.forceUpdate.btn}</span>
         <span className="text-[10px] sm:text-xs text-gray-400 font-mono border-l border-gray-200 pl-2 ml-0.5">
           v{APP_VERSION}
         </span>

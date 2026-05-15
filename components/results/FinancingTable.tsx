@@ -1,6 +1,7 @@
 'use client';
 
 import { calcFinancing } from '@/lib/engine/financing';
+import { useT } from '@/lib/i18n';
 
 interface Props {
   data: any;
@@ -9,14 +10,15 @@ interface Props {
 }
 
 export function FinancingTable({ data, inputs, symbol }: Props) {
+  const t = useT();
   const netCapex = data.netCapex ?? 0;
   const rate = inputs.annualRatePct;
   const tenor = inputs.tenorYears;
 
   const scenarios = [
-    { label: 'Outright', mode: 'outright' as const, loanPct: 0, rate: 0, tenor: 0 },
-    { label: 'Personal Loan', mode: 'loan' as const, loanPct: 1.0, rate: rate || 0.065, tenor },
-    { label: 'Green Mortgage', mode: 'mortgage' as const, loanPct: 1.0, rate: 0.035, tenor },
+    { label: t.financingTable.outright,      mode: 'outright'  as const, loanPct: 0,   rate: 0,           tenor: 0 },
+    { label: t.financingTable.personalLoan,  mode: 'loan'      as const, loanPct: 1.0, rate: rate || 0.065, tenor },
+    { label: t.financingTable.greenMortgage, mode: 'mortgage'  as const, loanPct: 1.0, rate: 0.035,        tenor },
   ];
 
   const rows = scenarios.map((s) => {
@@ -45,19 +47,19 @@ export function FinancingTable({ data, inputs, symbol }: Props) {
         <tbody>
           {[
             {
-              label: 'Upfront cost',
+              label: t.financingTable.upfrontCost,
               values: rows.map((r) => `${symbol}${r.fin.upfrontCash.toLocaleString(undefined, { maximumFractionDigits: 0 })}`),
             },
             {
-              label: 'Monthly payment',
+              label: t.financingTable.monthlyPayment,
               values: rows.map((r) => r.fin.monthlyPayment > 0 ? `${symbol}${r.fin.monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'),
             },
             {
-              label: '10-yr total cost',
+              label: t.financingTable.tenYrTotalCost,
               values: rows.map((r) => `${symbol}${r.tenYrTotalOut.toLocaleString(undefined, { maximumFractionDigits: 0 })}`),
             },
             {
-              label: '10-yr net saving',
+              label: t.financingTable.tenYrNetSaving,
               values: rows.map((r) => (
                 <span key={r.label} className={r.tenYrNet >= 0 ? 'text-green-700 font-bold' : 'text-red-600 font-bold'}>
                   {symbol}{r.tenYrNet.toLocaleString(undefined, { maximumFractionDigits: 0 })}

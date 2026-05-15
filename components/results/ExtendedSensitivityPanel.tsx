@@ -12,6 +12,7 @@ import {
   ReferenceDot,
   ResponsiveContainer,
 } from 'recharts';
+import { useT } from '@/lib/i18n';
 
 interface SweepPoint {
   variable: number;
@@ -38,6 +39,11 @@ function SweepChart({
   xLabel,
   formatX,
   symbol,
+  youLabel,
+  npvLabel,
+  lifetimeSavingsLabel,
+  paybackLabel,
+  irrLabel,
 }: {
   title: string;
   desc: string;
@@ -45,13 +51,16 @@ function SweepChart({
   xLabel: string;
   formatX: (v: number) => string;
   symbol: string;
+  youLabel: string;
+  npvLabel: string;
+  lifetimeSavingsLabel: string;
+  paybackLabel: string;
+  irrLabel: string;
 }) {
   const data = points.map((p) => ({
     x: p.variable,
     xLabel: formatX(p.variable),
     payback: p.paybackYears != null ? Math.round(p.paybackYears * 10) / 10 : null,
-    // Cap plotted IRR at 100% so an unusually small / heavily-subsidised
-    // configuration doesn't blow out the right-axis scale.
     irrPct: p.irr != null ? Math.min(100, Math.round(p.irr * 1000) / 10) : null,
     npv: Math.round(p.npv),
     lifetime: Math.round(p.lifetimeSavings),
@@ -76,18 +85,18 @@ function SweepChart({
           <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}`} />
           <Tooltip
             formatter={(v: any, name: any) => {
-              if (name === 'NPV (8%)' || name === 'Lifetime savings') return [`${symbol}${Number(v).toLocaleString()}`, name];
-              if (name === 'Payback') return [v == null ? '—' : `${v} yrs`, name];
-              if (name === 'IRR') return [v == null ? '—' : `${v.toFixed(1)} %`, name];
+              if (name === npvLabel || name === lifetimeSavingsLabel) return [`${symbol}${Number(v).toLocaleString()}`, name];
+              if (name === paybackLabel) return [v == null ? '—' : `${v} yrs`, name];
+              if (name === irrLabel) return [v == null ? '—' : `${v.toFixed(1)} %`, name];
               return [v, name];
             }}
             labelStyle={{ fontWeight: 600 }}
           />
           <Legend wrapperStyle={{ fontSize: 11 }} />
-          <Bar yAxisId="left" dataKey="lifetime" name="Lifetime savings" fill="#16a34a" radius={[3, 3, 0, 0]} />
-          <Bar yAxisId="left" dataKey="npv" name="NPV (8%)" fill="#3b82f6" radius={[3, 3, 0, 0]} />
-          <Line yAxisId="right" type="monotone" dataKey="payback" name="Payback" stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
-          <Line yAxisId="right" type="monotone" dataKey="irrPct" name="IRR" stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} strokeDasharray="3 3" />
+          <Bar yAxisId="left" dataKey="lifetime" name={lifetimeSavingsLabel} fill="#16a34a" radius={[3, 3, 0, 0]} />
+          <Bar yAxisId="left" dataKey="npv" name={npvLabel} fill="#3b82f6" radius={[3, 3, 0, 0]} />
+          <Line yAxisId="right" type="monotone" dataKey="payback" name={paybackLabel} stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
+          <Line yAxisId="right" type="monotone" dataKey="irrPct" name={irrLabel} stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} strokeDasharray="3 3" />
           {baseline && (
             <ReferenceDot
               yAxisId="left"
@@ -97,7 +106,7 @@ function SweepChart({
               fill="#fbbf24"
               stroke="#92400e"
               strokeWidth={1.5}
-              label={{ value: 'You', position: 'top', fontSize: 10, fill: '#92400e' }}
+              label={{ value: youLabel, position: 'top', fontSize: 10, fill: '#92400e' }}
             />
           )}
         </ComposedChart>
@@ -106,24 +115,21 @@ function SweepChart({
   );
 }
 
-function SizingTable({ points, symbol }: { points: SweepPoint[]; symbol: string }) {
+function SizingTable({ points, symbol, t }: { points: SweepPoint[]; symbol: string; t: ReturnType<typeof useT> }) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-4">
-      <p className="font-bold text-gray-900 text-sm mb-1">System sizing optimizer</p>
-      <p className="text-xs text-gray-500 mb-3">
-        How payback / IRR / lifetime savings scale with the number of panels you install.
-        The yellow row is your current selection.
-      </p>
+      <p className="font-bold text-gray-900 text-sm mb-1">{t.sensitivityPanel.sizingOptimizerTitle}</p>
+      <p className="text-xs text-gray-500 mb-3">{t.sensitivityPanel.sizingOptimizerDesc}</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500">
-              <th className="text-left py-2 px-2 font-medium">Panels</th>
-              <th className="text-right py-2 px-2 font-medium">kWp</th>
-              <th className="text-right py-2 px-2 font-medium">Net cost</th>
-              <th className="text-right py-2 px-2 font-medium">Payback</th>
-              <th className="text-right py-2 px-2 font-medium">IRR</th>
-              <th className="text-right py-2 px-2 font-medium">Lifetime savings</th>
+              <th className="text-left py-2 px-2 font-medium">{t.sensitivityPanel.colPanels}</th>
+              <th className="text-right py-2 px-2 font-medium">{t.sensitivityPanel.colKwp}</th>
+              <th className="text-right py-2 px-2 font-medium">{t.sensitivityPanel.colNetCost}</th>
+              <th className="text-right py-2 px-2 font-medium">{t.sensitivityPanel.colPayback}</th>
+              <th className="text-right py-2 px-2 font-medium">{t.sensitivityPanel.colIrr}</th>
+              <th className="text-right py-2 px-2 font-medium">{t.sensitivityPanel.colLifetime}</th>
             </tr>
           </thead>
           <tbody>
@@ -165,50 +171,58 @@ function SizingTable({ points, symbol }: { points: SweepPoint[]; symbol: string 
 }
 
 export function ExtendedSensitivityPanel({ systemSize, battery, equity, interestRate, symbol }: Props) {
+  const t = useT();
+  const sharedChartProps = {
+    symbol,
+    youLabel: t.sensitivityPanel.youLabel,
+    npvLabel: t.sensitivityPanel.npvLabel,
+    lifetimeSavingsLabel: t.sensitivityPanel.lifetimeSavings,
+    paybackLabel: t.sensitivityPanel.colPayback,
+    irrLabel: t.sensitivityPanel.colIrr,
+  };
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-gray-600 leading-relaxed">
-        Each chart below stress-tests one variable while holding everything else constant.
-        Bars show absolute money figures (left axis); lines show payback years and IRR
-        (right axis). The yellow dot marks your current scenario.
+        {t.sensitivityPanel.intro}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SweepChart
-          title="By system size"
-          desc="More panels = more capex, more savings — but diminishing self-consumption."
+          title={t.sensitivityPanel.bySystemSize}
+          desc={t.sensitivityPanel.bySystemSizeDesc}
           points={systemSize}
-          xLabel="panels"
+          xLabel={t.sensitivityPanel.panelsUnit}
           formatX={(v) => String(v)}
-          symbol={symbol}
+          {...sharedChartProps}
         />
         <SweepChart
-          title="By battery size"
-          desc="Larger battery shifts more midday solar into evening loads (and arbitrage)."
+          title={t.sensitivityPanel.byBatterySize}
+          desc={t.sensitivityPanel.byBatterySizeDesc}
           points={battery}
-          xLabel="kWh"
+          xLabel={t.sensitivityPanel.kwhUnit}
           formatX={(v) => `${v}`}
-          symbol={symbol}
+          {...sharedChartProps}
         />
         <SweepChart
-          title="By equity invested"
-          desc="0% = fully financed (no IRR baseline). 100% = paid in cash."
+          title={t.sensitivityPanel.byEquity}
+          desc={t.sensitivityPanel.byEquityDesc}
           points={equity}
           xLabel="% equity"
           formatX={(v) => `${v}%`}
-          symbol={symbol}
+          {...sharedChartProps}
         />
         <SweepChart
-          title="By loan interest rate"
-          desc="Higher rates eat into the saving from financed scenarios."
+          title={t.sensitivityPanel.byInterestRate}
+          desc={t.sensitivityPanel.byInterestRateDesc}
           points={interestRate}
           xLabel="annual %"
           formatX={(v) => `${(v * 100).toFixed(1)}%`}
-          symbol={symbol}
+          {...sharedChartProps}
         />
       </div>
 
-      <SizingTable points={systemSize} symbol={symbol} />
+      <SizingTable points={systemSize} symbol={symbol} t={t} />
     </div>
   );
 }

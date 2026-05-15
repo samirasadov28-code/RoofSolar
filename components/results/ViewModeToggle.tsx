@@ -2,14 +2,10 @@
 
 import { useProStatus } from '@/lib/hooks/useProStatus';
 import { useViewMode } from '@/lib/hooks/useViewMode';
+import { useT } from '@/lib/i18n';
 
-/**
- * Small Pro/Free toggle for the results header. Only renders for users
- * who have Pro unlocked — gives them a single, always-visible way to
- * preview what a free visitor sees without scrolling down to the Pro
- * gate's in-place button.
- */
 export function ViewModeToggle({ calculationId }: { calculationId: string }) {
+  const t = useT();
   const { isPro, loading } = useProStatus(calculationId);
   const [mode, setMode] = useViewMode();
 
@@ -20,7 +16,7 @@ export function ViewModeToggle({ calculationId }: { calculationId: string }) {
   return (
     <div
       role="group"
-      aria-label="View mode"
+      aria-label={t.viewMode.ariaLabel}
       className="inline-flex items-center bg-gray-100 rounded-full p-0.5 text-xs font-semibold"
     >
       <button
@@ -32,7 +28,7 @@ export function ViewModeToggle({ calculationId }: { calculationId: string }) {
         }`}
         aria-pressed={!isFree}
       >
-        ✨ Pro
+        {t.viewMode.proBtn}
       </button>
       <button
         onClick={() => setMode('free')}
@@ -43,7 +39,7 @@ export function ViewModeToggle({ calculationId }: { calculationId: string }) {
         }`}
         aria-pressed={isFree}
       >
-        Free
+        {t.viewMode.freeBtn}
       </button>
     </div>
   );

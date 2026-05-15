@@ -1,22 +1,11 @@
 'use client';
 
 import type { SensitivityCell } from '@/lib/engine/sensitivity';
+import { useT } from '@/lib/i18n';
 
 interface Props {
   grid: SensitivityCell[];
 }
-
-const ENERGY_LABELS: Record<string, string> = {
-  bear: 'Energy −20%',
-  base: 'Base',
-  bull: 'Energy +30%',
-};
-
-const EXPORT_LABELS: Record<string, string> = {
-  low: 'Export −30%',
-  base: 'Base',
-  high: 'Export +50%',
-};
 
 function cellColor(years: number) {
   if (isNaN(years)) return 'bg-red-100 text-red-800';
@@ -26,8 +15,21 @@ function cellColor(years: number) {
 }
 
 export function SensitivityMatrix({ grid }: Props) {
+  const t = useT();
   const energyScenarios = ['bear', 'base', 'bull'] as const;
   const exportScenarios = ['low', 'base', 'high'] as const;
+
+  const energyLabels: Record<typeof energyScenarios[number], string> = {
+    bear: t.sensitivityMatrix.energyBear,
+    base: t.sensitivityMatrix.energyBase,
+    bull: t.sensitivityMatrix.energyBull,
+  };
+
+  const exportLabels: Record<typeof exportScenarios[number], string> = {
+    low:  t.sensitivityMatrix.exportLow,
+    base: t.sensitivityMatrix.exportBase,
+    high: t.sensitivityMatrix.exportHigh,
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -37,7 +39,7 @@ export function SensitivityMatrix({ grid }: Props) {
             <th className="py-2 px-3 text-left text-gray-500 font-medium" />
             {exportScenarios.map((es) => (
               <th key={es} className="py-2 px-3 text-center text-gray-700 font-medium">
-                {EXPORT_LABELS[es]}
+                {exportLabels[es]}
               </th>
             ))}
           </tr>
@@ -45,7 +47,7 @@ export function SensitivityMatrix({ grid }: Props) {
         <tbody>
           {energyScenarios.map((es) => (
             <tr key={es}>
-              <td className="py-2 px-3 text-gray-700 font-medium">{ENERGY_LABELS[es]}</td>
+              <td className="py-2 px-3 text-gray-700 font-medium">{energyLabels[es]}</td>
               {exportScenarios.map((xts) => {
                 const cell = grid.find(
                   (c) => c.energyPriceScenario === es && c.exportTariffScenario === xts

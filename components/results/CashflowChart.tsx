@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
+import { useT } from '@/lib/i18n';
 
 interface Props {
   cashflows: AnnualCashflow[];
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export function CashflowChart({ cashflows, symbol }: Props) {
+  const t = useT();
   const data = cashflows.map((row) => ({
     year: `Yr ${row.year}`,
     solarSavings: Math.round(row.solarSavings),
@@ -30,7 +32,6 @@ export function CashflowChart({ cashflows, symbol }: Props) {
     cumulative: Math.round(row.cumulativeCashflow),
   }));
 
-  // Find payback year
   const paybackYear = cashflows.findIndex((r, i) => i > 0 && r.cumulativeCashflow >= 0);
 
   return (
@@ -44,15 +45,15 @@ export function CashflowChart({ cashflows, symbol }: Props) {
           labelStyle={{ fontWeight: 600 }}
         />
         <Legend />
-        <Bar dataKey="capex" name="Capex" fill="#ef4444" stackId="a" />
-        <Bar dataKey="solarSavings" name="Solar savings" fill="#3b82f6" stackId="a" />
-        <Bar dataKey="exportIncome" name="Export income" fill="#22c55e" stackId="a" />
-        <Bar dataKey="evSavings" name="EV savings" fill="#14b8a6" stackId="a" />
-        <Bar dataKey="batteryValue" name="Battery value" fill="#f97316" stackId="a" />
+        <Bar dataKey="capex" name={t.charts.capex} fill="#ef4444" stackId="a" />
+        <Bar dataKey="solarSavings" name={t.charts.solarSavings} fill="#3b82f6" stackId="a" />
+        <Bar dataKey="exportIncome" name={t.charts.exportIncome} fill="#22c55e" stackId="a" />
+        <Bar dataKey="evSavings" name={t.charts.evSavings} fill="#14b8a6" stackId="a" />
+        <Bar dataKey="batteryValue" name={t.charts.batteryValue} fill="#f97316" stackId="a" />
         <Line
           type="monotone"
           dataKey="cumulative"
-          name="Cumulative"
+          name={t.charts.cumulative}
           stroke="#6366f1"
           strokeWidth={2}
           dot={false}
@@ -62,7 +63,7 @@ export function CashflowChart({ cashflows, symbol }: Props) {
             x={`Yr ${paybackYear}`}
             stroke="#22c55e"
             strokeDasharray="4 4"
-            label={{ value: 'Payback', position: 'top', fontSize: 11, fill: '#16a34a' }}
+            label={{ value: t.charts.payback, position: 'top', fontSize: 11, fill: '#16a34a' }}
           />
         )}
       </ComposedChart>

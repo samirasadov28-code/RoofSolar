@@ -1,6 +1,8 @@
 'use client';
 
 import { getGrantSchemeName, getGrantMechanism } from '@/lib/engine/grants';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 interface Props {
   data: any;
@@ -42,6 +44,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export function CalculationBreakdown({ data, inputs, symbol }: Props) {
+  const t = useT();
   const annualKwh = data.annualProductionKwh ?? 0;
   const specificYield = inputs.systemKwp > 0 ? annualKwh / inputs.systemKwp : 0;
   const capacityFactorPct = (specificYield / 8760) * 100;
@@ -70,7 +73,7 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
   const irrPct = data.irr != null ? data.irr * 100 : null;
   const paybackYrs = isNaN(data.paybackMonths) ? null : data.paybackMonths / 12;
 
-  const fmt = (n: number) => Math.round(n).toLocaleString();
+  const fmtN = (n: number) => Math.round(n).toLocaleString();
   const fmtMoney = (n: number) => `${symbol}${Math.round(n).toLocaleString()}`;
   const fmt1 = (n: number) => n.toFixed(1);
   const fmt2 = (n: number) => n.toFixed(2);
@@ -79,120 +82,117 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
     <div className="bg-white rounded-2xl border border-gray-200 p-6">
       <div className="flex items-start justify-between mb-4 gap-3">
         <div>
-          <h2 className="font-bold text-gray-900">How we calculated this</h2>
-          <p className="text-sm text-gray-500">
-            Every number on this page comes from these formulas. All figures are
-            transparent — verify them against your own spreadsheet if you wish.
-          </p>
+          <h2 className="font-bold text-gray-900">{t.calcBreakdown.title}</h2>
+          <p className="text-sm text-gray-500">{t.calcBreakdown.subtitle}</p>
         </div>
         <span className="hidden sm:inline-flex items-center gap-1 bg-amber-100 border border-amber-300 text-amber-700 text-[10px] font-bold uppercase tracking-wider rounded-full px-2 py-0.5 whitespace-nowrap">
-          Free · always visible
+          {t.calcBreakdown.freeBadge}
         </span>
       </div>
 
-      <Section title="1. Solar resource at your site">
+      <Section title={t.calcBreakdown.section1}>
         <Row
-          label="Specific yield"
-          formula={`${fmt(annualKwh)} kWh ÷ ${fmt1(inputs.systemKwp)} kWp`}
-          result={`${fmt(specificYield)} kWh/kWp/yr`}
+          label={t.calcBreakdown.specificYield}
+          formula={`${fmtN(annualKwh)} kWh ÷ ${fmt1(inputs.systemKwp)} kWp`}
+          result={`${fmtN(specificYield)} kWh/kWp/yr`}
         />
         <Row
-          label="Peak sun hours"
+          label={t.calcBreakdown.peakSunHours}
           formula="≈ specific yield (1 kWp ≈ 1 kWh per peak sun hour)"
-          result={`${fmt(peakSunHours)} hr/yr`}
+          result={`${fmtN(peakSunHours)} hr/yr`}
         />
         <Row
-          label="Capacity factor"
-          formula={`${fmt(specificYield)} ÷ 8,760 hr × 100`}
+          label={t.calcBreakdown.capacityFactor}
+          formula={`${fmtN(specificYield)} ÷ 8,760 hr × 100`}
           result={`${fmt1(capacityFactorPct)} %`}
         />
         <Row
-          label="Annual production"
+          label={t.calcBreakdown.annualProduction}
           formula={`PVGIS modelled output (tilt ${inputs.tiltDeg}° / azimuth ${inputs.azimuthDeg}°, ${inputs.shadingLossPct}% shading)`}
-          result={`${fmt(annualKwh)} kWh`}
+          result={`${fmtN(annualKwh)} kWh`}
         />
       </Section>
 
-      <Section title="2. Self-consumption split (year 1)">
+      <Section title={t.calcBreakdown.section2}>
         <Row
-          label="Self-consumed"
+          label={t.calcBreakdown.selfConsumed}
           formula="hourly overlap of production vs household demand"
-          result={`${fmt(selfConsumed)} kWh (${fmt1(selfCovPct)} % of consumption)`}
+          result={`${fmtN(selfConsumed)} kWh (${fmt1(selfCovPct)} % of consumption)`}
         />
         <Row
-          label="Exported to grid"
+          label={t.calcBreakdown.exportedToGrid}
           formula="excess production after self-use & battery"
-          result={`${fmt(exported)} kWh (${fmt1(exportSharePct)} % of generation)`}
+          result={`${fmtN(exported)} kWh (${fmt1(exportSharePct)} % of generation)`}
         />
         <Row
-          label="Grid import"
+          label={t.calcBreakdown.gridImport}
           formula="consumption shortfall when sun isn't producing"
-          result={`${fmt(gridImport)} kWh`}
+          result={`${fmtN(gridImport)} kWh`}
         />
       </Section>
 
-      <Section title="3. Year-1 cash impact">
+      <Section title={t.calcBreakdown.section3}>
         <Row
-          label="Solar savings"
-          formula={`${fmt(selfConsumed)} kWh × ${symbol}${fmt2(inputs.importPricePerKwh)}/kWh`}
+          label={t.calcBreakdown.solarSavings}
+          formula={`${fmtN(selfConsumed)} kWh × ${symbol}${fmt2(inputs.importPricePerKwh)}/kWh`}
           result={fmtMoney(solarSavings1)}
         />
         <Row
-          label="Export income"
-          formula={`${fmt(exported)} kWh × ${symbol}${fmt2(inputs.exportPricePerKwh)}/kWh`}
+          label={t.calcBreakdown.exportIncome}
+          formula={`${fmtN(exported)} kWh × ${symbol}${fmt2(inputs.exportPricePerKwh)}/kWh`}
           result={fmtMoney(exportIncome1)}
         />
         {inputs.hasBattery && (
           <Row
-            label="Battery value"
-            formula={`night-charged kWh × (import − night) price`}
+            label={t.calcBreakdown.batteryValue}
+            formula="night-charged kWh × (import − night) price"
             result={fmtMoney((data.batteryResult?.batteryConsumptionKwh ?? []).reduce((a: number, b: number) => a + b, 0) * inputs.importPricePerKwh)}
           />
         )}
         {inputs.hasEv && data.evCharging && (
           <Row
-            label="EV savings"
-            formula={`solar-charged miles vs grid charging`}
+            label={t.calcBreakdown.evSavings}
+            formula="solar-charged miles vs grid charging"
             result={fmtMoney(data.evCharging.annualSavingVsGrid ?? 0)}
           />
         )}
         <Row
-          label="Year-1 net cashflow"
+          label={t.calcBreakdown.year1Net}
           formula="solar + export + battery + EV − debt service"
           result={fmtMoney(netSavings1)}
         />
       </Section>
 
-      <Section title="4. Capital structure">
+      <Section title={t.calcBreakdown.section4}>
         <Row
-          label="Gross system cost"
+          label={t.calcBreakdown.grossCost}
           formula="quote / auto-estimate from panel count + battery"
           result={fmtMoney(grossCost)}
         />
         <Row
-          label="Grant / incentive"
+          label={t.calcBreakdown.grantIncentive}
           formula={`${getGrantSchemeName(inputs.countryCode)} — ${getGrantMechanism(inputs.countryCode)}`}
           result={`− ${fmtMoney(grant)}`}
         />
         <Row
-          label="Net capex"
+          label={t.calcBreakdown.netCapex}
           formula="gross − grant"
           result={fmtMoney(netCapex)}
         />
         {inputs.financingMode !== 'outright' && (
           <>
             <Row
-              label="Loan amount"
+              label={t.calcBreakdown.loanAmount}
               formula={`${fmtMoney(netCapex)} × ${Math.round(inputs.loanCoveragePct * 100)} %`}
               result={fmtMoney(loanAmount)}
             />
             <Row
-              label="Upfront cash"
+              label={t.calcBreakdown.upfrontCash}
               formula="net capex − loan amount"
               result={fmtMoney(upfrontCash)}
             />
             <Row
-              label="Monthly repayment"
+              label={t.calcBreakdown.monthlyRepayment}
               formula={`PMT(${(inputs.annualRatePct * 100).toFixed(2)} % / 12, ${inputs.tenorYears * 12} months, ${fmtMoney(loanAmount)})`}
               result={`${symbol}${monthlyPayment.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             />
@@ -200,30 +200,30 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
         )}
       </Section>
 
-      <Section title="5. Lifetime financial metrics">
+      <Section title={t.calcBreakdown.section5}>
         <Row
-          label="Lifetime gross savings"
+          label={t.calcBreakdown.lifetimeGross}
           formula="Σ year-1..N (solar + export + battery + EV) — N is the panel warranty horizon"
           result={fmtMoney(lifetime)}
         />
         <Row
-          label="Payback period"
+          label={t.calcBreakdown.paybackPeriod}
           formula="first year cumulative cashflow ≥ 0"
-          result={paybackYrs != null ? `${fmt1(paybackYrs)} years` : 'N/A'}
+          result={paybackYrs != null ? `${fmt1(paybackYrs)} years` : t.common.na}
         />
         <Row
-          label="NPV (8 % discount)"
+          label={t.calcBreakdown.npvLabel}
           formula="Σ cf_t ÷ (1.08)^t"
           result={fmtMoney(npv)}
         />
         <Row
-          label="IRR"
+          label={t.calcBreakdown.irrLabel}
           formula={
             data.irrUnavailableReason === 'no_equity'
-              ? 'undefined — no equity invested (100 % financed)'
+              ? t.calcBreakdown.irrNoEquity
               : 'rate where Σ cf_t ÷ (1+r)^t = 0'
           }
-          result={irrPct != null ? `${fmt1(irrPct)} %` : 'N/A'}
+          result={irrPct != null ? `${fmt1(irrPct)} %` : t.common.na}
         />
       </Section>
     </div>

@@ -15,6 +15,8 @@ import {
   ReferenceLine,
 } from 'recharts';
 import type { MonthlyHourlyProfile } from '@/lib/engine/hourlySimulator';
+import { useT } from '@/lib/i18n';
+import { fmt } from '@/lib/i18n/types';
 
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -45,7 +47,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageSavings, performArbitrage }: Props) {
-  const [selectedMonth, setSelectedMonth] = useState(6); // July default
+  const t = useT();
+  const [selectedMonth, setSelectedMonth] = useState(6);
 
   const profile = months[selectedMonth];
   if (!profile) return null;
@@ -68,18 +71,16 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
   );
 
   const monthSummary = [
-    { label: 'Daily solar', value: `${profile.dailySolarKwh.toFixed(2)} kWh` },
-    { label: 'Self-consumed', value: `${profile.dailySelfConsumedKwh.toFixed(2)} kWh` },
-    { label: 'Grid import', value: `${profile.dailyGridImportKwh.toFixed(2)} kWh` },
-    { label: 'Grid export', value: `${profile.dailyGridExportKwh.toFixed(2)} kWh` },
+    { label: t.dailyBattery.dailySolar,    value: `${profile.dailySolarKwh.toFixed(2)} kWh` },
+    { label: t.dailyBattery.selfConsumed,  value: `${profile.dailySelfConsumedKwh.toFixed(2)} kWh` },
+    { label: t.dailyBattery.gridImport,    value: `${profile.dailyGridImportKwh.toFixed(2)} kWh` },
+    { label: t.dailyBattery.gridExport,    value: `${profile.dailyGridExportKwh.toFixed(2)} kWh` },
   ];
 
   return (
     <div className="space-y-4">
       <p className="text-sm text-gray-600 leading-relaxed">
-        Hour-by-hour energy flows for a representative day in each month. The battery
-        absorbs midday solar surplus and returns it during the evening peak
-        {performArbitrage && ', also pre-charging from the grid at night-rate to shift cheap energy into peak hours'}.
+        {performArbitrage ? t.dailyBattery.introArbitrage : t.dailyBattery.intro}
       </p>
 
       {/* Month selector */}
@@ -141,16 +142,13 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <ReferenceLine yAxisId="kwh" y={0} stroke="#d1d5db" strokeWidth={1} />
 
-            {/* Positive bars: sources of energy for the home */}
-            <Bar yAxisId="kwh" dataKey="Solar" stackId="pos" fill="#facc15" name="Solar" />
-            <Bar yAxisId="kwh" dataKey="Battery discharge" stackId="pos" fill="#f97316" name="Battery discharge" />
-            <Bar yAxisId="kwh" dataKey="Grid import" stackId="pos" fill="#ef4444" name="Grid import" />
+            <Bar yAxisId="kwh" dataKey="Solar" stackId="pos" fill="#facc15" name={t.dailyBattery.solar} />
+            <Bar yAxisId="kwh" dataKey="Battery discharge" stackId="pos" fill="#f97316" name={t.dailyBattery.batteryDischarge} />
+            <Bar yAxisId="kwh" dataKey="Grid import" stackId="pos" fill="#ef4444" name={t.dailyBattery.gridImport} />
 
-            {/* Negative bars: energy leaving the home / going into battery */}
-            <Bar yAxisId="kwh" dataKey="Battery charge" stackId="neg" fill="#3b82f6" name="Battery charge" />
-            <Bar yAxisId="kwh" dataKey="Grid export" stackId="neg" fill="#22c55e" name="Grid export" />
+            <Bar yAxisId="kwh" dataKey="Battery charge" stackId="neg" fill="#3b82f6" name={t.dailyBattery.batteryCharge} />
+            <Bar yAxisId="kwh" dataKey="Grid export" stackId="neg" fill="#22c55e" name={t.dailyBattery.gridExport} />
 
-            {/* Load line */}
             <Line
               yAxisId="kwh"
               type="monotone"
@@ -158,10 +156,9 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
               stroke="#1e293b"
               strokeWidth={2}
               dot={false}
-              name="Load"
+              name={t.dailyBattery.load}
             />
 
-            {/* Battery state of charge */}
             {batteryKwh > 0 && (
               <Area
                 yAxisId="soc"
@@ -172,7 +169,7 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
                 fillOpacity={0.4}
                 strokeWidth={1.5}
                 dot={false}
-                name="SoC"
+                name={t.dailyBattery.soc}
               />
             )}
           </ComposedChart>
@@ -181,9 +178,8 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
 
       {/* Legend note */}
       <p className="text-[11px] text-gray-500">
-        Bars above zero = energy sources feeding the home (solar direct, battery, grid).
-        Bars below zero = energy being stored or exported. Black line = household load.
-        {batteryKwh > 0 && ' Purple area = battery state of charge (right axis).'}
+        {t.dailyBattery.legendNote}
+        {batteryKwh > 0 && t.dailyBattery.legendNoteBattery}
       </p>
 
       {/* Arbitrage callout */}
@@ -192,12 +188,10 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
           <div className="text-blue-500 mt-0.5 text-lg leading-none">⚡</div>
           <div>
             <p className="font-semibold text-blue-900 text-sm">
-              Arbitrage saves ~{symbol}{Math.round(annualArbitrageSavings).toLocaleString()} / year
+              {fmt(t.dailyBattery.arbitrageTitle, { symbol, amount: Math.round(annualArbitrageSavings).toLocaleString() })}
             </p>
             <p className="text-blue-700 text-xs mt-0.5 leading-relaxed">
-              By charging from the grid at the cheaper night rate and using that stored energy
-              during peak hours, your battery earns {symbol}{(annualArbitrageSavings / 12).toFixed(0)}/month
-              on top of solar self-consumption savings.
+              {fmt(t.dailyBattery.arbitrageDesc, { symbol, monthly: (annualArbitrageSavings / 12).toFixed(0) })}
             </p>
           </div>
         </div>
@@ -207,17 +201,17 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
       <details className="group">
         <summary className="cursor-pointer text-xs font-semibold text-amber-700 hover:text-amber-900 list-none flex items-center gap-1">
           <span className="group-open:rotate-90 transition-transform inline-block">▶</span>
-          Monthly averages (representative day)
+          {t.dailyBattery.monthlySummaryTitle}
         </summary>
         <div className="mt-2 overflow-x-auto">
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr className="bg-gray-50">
-                <th className="text-left px-2 py-1.5 font-semibold text-gray-600">Month</th>
-                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">Solar</th>
-                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">Self-use</th>
-                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">Grid import</th>
-                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">Grid export</th>
+                <th className="text-left px-2 py-1.5 font-semibold text-gray-600">{t.dailyBattery.colMonth}</th>
+                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">{t.dailyBattery.colSolar}</th>
+                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">{t.dailyBattery.colSelfUse}</th>
+                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">{t.dailyBattery.colGridImport}</th>
+                <th className="text-right px-2 py-1.5 font-semibold text-gray-600">{t.dailyBattery.colGridExport}</th>
               </tr>
             </thead>
             <tbody>
@@ -238,7 +232,7 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
               ))}
             </tbody>
           </table>
-          <p className="text-[10px] text-gray-400 mt-1">All values kWh per representative day. Click a row to view that month&apos;s hourly chart.</p>
+          <p className="text-[10px] text-gray-400 mt-1">{t.dailyBattery.kwhPerDayNote}</p>
         </div>
       </details>
     </div>

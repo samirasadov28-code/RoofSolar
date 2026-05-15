@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useT } from '@/lib/i18n';
 
 interface Props {
   calculationId: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function LeadModal({ calculationId, countryCode, onClose }: Props) {
+  const t = useT();
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -35,26 +37,26 @@ export function LeadModal({ calculationId, countryCode, onClose }: Props) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Request received</h3>
-            <p className="text-gray-500 text-sm mb-6">We will connect you with certified installers in your area shortly.</p>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{t.leadModal.successTitle}</h3>
+            <p className="text-gray-500 text-sm mb-6">{t.leadModal.successDesc}</p>
             <button onClick={onClose} className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2.5 rounded-xl transition-colors">
-              Close
+              {t.common.close}
             </button>
           </div>
         ) : (
           <>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">Get installer quotes</h3>
+              <h3 className="text-xl font-bold text-gray-900">{t.leadModal.title}</h3>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-            <p className="text-sm text-gray-500 mb-6">Free, no obligation. We connect you with certified solar installers in your area.</p>
+            <p className="text-sm text-gray-500 mb-6">{t.leadModal.subtitle}</p>
             <form onSubmit={submit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.leadModal.fullName}</label>
                 <input
                   type="text"
                   required
@@ -64,7 +66,7 @@ export function LeadModal({ calculationId, countryCode, onClose }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.leadModal.emailLabel}</label>
                 <input
                   type="email"
                   required
@@ -74,7 +76,7 @@ export function LeadModal({ calculationId, countryCode, onClose }: Props) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone (optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t.leadModal.phoneLabel}</label>
                 <input
                   type="tel"
                   value={form.phone}
@@ -87,7 +89,7 @@ export function LeadModal({ calculationId, countryCode, onClose }: Props) {
                 disabled={loading}
                 className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-bold py-3 rounded-xl transition-colors"
               >
-                {loading ? 'Sending…' : 'Connect me with installers'}
+                {loading ? t.common.sending : t.leadModal.connectBtn}
               </button>
             </form>
           </>
