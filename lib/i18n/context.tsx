@@ -17,9 +17,12 @@ import zh from './zh';
 import ar from './ar';
 import hi from './hi';
 import ru from './ru';
+import bn from './bn';
+import ja from './ja';
+import id from './id';
 
 const TRANSLATIONS: Record<string, Translations> = {
-  en, uk, fr, es, de, pt, it, nl, tr, zh, ar, hi, ru,
+  en, uk, fr, es, de, pt, it, nl, tr, zh, ar, hi, ru, bn, ja, id,
 };
 
 const STORAGE_KEY = 'roofsolar_lang';
