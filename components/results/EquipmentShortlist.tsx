@@ -41,26 +41,26 @@ function PanelCard({ p, count, t }: { p: SolarPanel; count: number; t: Translati
   const sym = symbolFor(p.retailPrice.currency);
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col">
-      <div className="flex items-start justify-between gap-2 mb-1">
-        <p className="font-semibold text-gray-900 text-sm">
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+        <p className="font-semibold text-gray-900 text-sm min-w-0">
           {p.manufacturer}<br />
           <span className="font-bold">{p.model}</span>
         </p>
         {tierBadge(p.tier, t)}
       </div>
-      <div className="grid grid-cols-2 gap-2 text-xs text-gray-700 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.powerLabel}</span> · <strong>{p.watts}W</strong></div>
         <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{p.efficiencyPct}%</strong></div>
-        <div className="col-span-2"><span className="text-gray-500">{t.equipment.techLabel}</span> · {p.cellTech}</div>
-        <div className="col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {p.warrantyYears} yr</div>
+        <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.techLabel}</span> · {p.cellTech}</div>
+        <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {p.warrantyYears} yr</div>
       </div>
       <p className="text-xs text-gray-600 mt-2 leading-relaxed">{p.notes}</p>
       <div className="border-t border-gray-100 mt-3 pt-2 text-xs">
         <p className="text-gray-500">{formatPrice(p.retailPrice)}</p>
         <p className="font-bold text-gray-900 mt-0.5">
           {sym}{totalLow.toLocaleString()}–{sym}{totalHigh.toLocaleString()}
-          <span className="font-normal text-gray-500"> {fmt(t.equipment.forPanels, { n: count })}</span>
         </p>
+        <p className="font-normal text-gray-500">{fmt(t.equipment.forPanels, { n: count })}</p>
       </div>
     </div>
   );
@@ -73,12 +73,12 @@ function InverterCard({ inv, t }: { inv: HybridInverter; t: Translations }) {
         {inv.manufacturer}<br />
         <span className="font-bold">{inv.model}</span>
       </p>
-      <div className="grid grid-cols-2 gap-2 text-xs text-gray-700 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.ratedLabel}</span> · <strong>{inv.ratedKw} kW</strong></div>
         <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{inv.efficiencyPct}%</strong></div>
-        <div className="col-span-2"><span className="text-gray-500">{t.equipment.phaseLabel}</span> · {inv.phase}</div>
-        <div className="col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {inv.warrantyYears} yr</div>
-        <div className="col-span-2">
+        <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.phaseLabel}</span> · {inv.phase}</div>
+        <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {inv.warrantyYears} yr</div>
+        <div className="sm:col-span-2">
           <span className="text-gray-500">{t.equipment.pairsWith}</span> ·{' '}
           <span className="text-gray-900">{inv.batteryBrands.join(', ')}</span>
         </div>
@@ -98,15 +98,15 @@ function BatteryCard({ b, t }: { b: HomeBattery; t: Translations }) {
         {b.manufacturer}<br />
         <span className="font-bold">{b.model}</span>
       </p>
-      <div className="grid grid-cols-2 gap-2 text-xs text-gray-700 mt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.capacityLabel}</span> · <strong>{b.kwh} kWh</strong></div>
         <div><span className="text-gray-500">{t.equipment.cyclesLabel}</span> · <strong>{b.cycles.toLocaleString()}</strong></div>
-        <div className="col-span-2"><span className="text-gray-500">{t.equipment.chemistryLabel}</span> · {b.chemistry}</div>
-        <div className="col-span-2">
+        <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.chemistryLabel}</span> · {b.chemistry}</div>
+        <div className="sm:col-span-2">
           <span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {b.warrantyYears} yr ·{' '}
           {b.modular ? t.equipment.modular : t.equipment.singleUnit}
         </div>
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <span className="text-gray-500">{t.equipment.pairsWith}</span> ·{' '}
           <span className="text-gray-900">{b.inverterBrands.join(', ')}</span>
         </div>
@@ -155,7 +155,7 @@ export function EquipmentShortlist({ inputs }: Props) {
           {fmt(t.equipment.inverterSection, { kwp: (inputs.systemKwp || 4.8).toFixed(1) })}
           {isHybrid ? t.equipment.inverterHybrid : t.equipment.inverterStandard}
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {inverters.map((i) => (
             <InverterCard key={i.id} inv={i} t={t} />
           ))}
@@ -168,7 +168,7 @@ export function EquipmentShortlist({ inputs }: Props) {
           <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">
             {fmt(t.equipment.batterySection, { kwh: inputs.batteryKwh })}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {batteries.map((b) => (
               <BatteryCard key={b.id} b={b} t={t} />
             ))}
