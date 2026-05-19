@@ -615,6 +615,27 @@ const nl: Translations = {
     colGridExport: 'Nettexport',
     kwhPerDayNote: 'Alle waarden in kWh per representatieve dag. Klik op een rij om het uurlijkse grafiek van die maand te bekijken.',
   },
+  resultsTip: {
+    headline: 'Hoe u uw rapport leest',
+    step1: 'Uw kerngetallen staan bovenaan — terugverdientijd, besparingen jaar 1 en vermeden CO₂.',
+    step2: 'Scroll naar beneden voor maandelijkse energiestromen, factuurvergelijking en uw 25-jaars cashflowgrafiek.',
+    step3: 'Met de live stresstester kunt u schuifregelaars slepen — eigen vermogen, rente, grootte — en ziet u elke maatstaf direct bijwerken.',
+    dismiss: 'Begrepen',
+  },
+  proWelcome: {
+    badge: '✨ Pro ontgrendeld',
+    title: 'Dit is wat u zojuist heeft ontgrendeld',
+    subtitle: 'Scroll naar beneden om alles te verkennen — of spring er direct in hieronder.',
+    f1Title: 'Cashflow over de hele levensduur',
+    f1Desc: '25-jaars staafdiagram met jaarlijkse besparingen, exportinkomsten en EV-waarde met een cumulatieve lijn.',
+    f2Title: 'Live stresstester',
+    f2Desc: 'Sleep schuifregelaars voor eigen vermogen, leenrente, energieprijzen en systeemgrootte — statistieken worden direct bijgewerkt in uw browser.',
+    f3Title: 'Gevoeligheidsanalyses & prijsmatrix',
+    f3Desc: 'Voorberekende grafieken die één parameter tegelijk variëren, plus een terugverdienraster over import-/exportprijsscenario\'s.',
+    f4Title: 'PDF-rapport',
+    f4Desc: 'Volledige 7-pagina analyse met alle aannames — klaar om te downloaden en te delen met installateurs.',
+    exploreBtn: 'Mijn analyse verkennen',
+  },
 };
 
 export default nl;

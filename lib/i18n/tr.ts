@@ -615,6 +615,27 @@ const tr: Translations = {
     colGridExport: 'Şebekeye verilen',
     kwhPerDayNote: "Tüm değerler temsili gün başına kWh cinsindendir. O ayın saatlik grafiğini görüntülemek için bir satıra tıklayın.",
   },
+  resultsTip: {
+    headline: 'Raporunuzu nasıl okursunuz',
+    step1: 'Ana rakamlarınız en üstte — geri ödeme süresi, 1. yıl tasarrufları ve önlenen CO₂.',
+    step2: 'Aylık enerji akışları, fatura karşılaştırması ve 25 yıllık nakit akışı grafiği için aşağı kaydırın.',
+    step3: 'Canlı stres testi, öz sermaye, oran, boyut gibi kaydırıcıları sürüklemenize ve her metriğin anında güncellenmesini izlemenize olanak tanır.',
+    dismiss: 'Anlaşıldı',
+  },
+  proWelcome: {
+    badge: '✨ Pro kilidi açıldı',
+    title: 'Az önce kilidi açtıklarınız bunlar',
+    subtitle: 'Her şeyi keşfetmek için aşağı kaydırın — veya hemen aşağıya girin.',
+    f1Title: 'Ömür boyu nakit akışı',
+    f1Desc: 'Kümülatif bir çizgiyle birlikte yıllık tasarrufları, ihracat gelirini ve EV değerini gösteren 25 yıllık çubuk grafik.',
+    f2Title: 'Canlı stres testi',
+    f2Desc: 'Öz sermaye, kredi oranı, enerji fiyatları ve sistem boyutu için kaydırıcıları sürükleyin — metrikler tarayıcınızda anında güncellenir.',
+    f3Title: 'Duyarlılık analizleri ve fiyat matrisi',
+    f3Desc: 'Bir seferde bir girdiyi değiştiren önceden hesaplanmış grafikler ve ithalat/ihracat fiyat senaryolarında bir geri ödeme ızgarası.',
+    f4Title: 'PDF raporu',
+    f4Desc: 'Tüm varsayımlarıyla eksiksiz 7 sayfalık analiz — kurulum uzmanlarıyla indirmeye ve paylaşmaya hazır.',
+    exploreBtn: 'Analizimi keşfet',
+  },
 };
 
 export default tr;

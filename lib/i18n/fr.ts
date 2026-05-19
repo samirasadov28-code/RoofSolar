@@ -615,6 +615,27 @@ const fr: Translations = {
     colGridExport: 'Export réseau',
     kwhPerDayNote: 'Toutes les valeurs en kWh par journée représentative. Cliquez sur une ligne pour afficher le graphique horaire de ce mois.',
   },
+  resultsTip: {
+    headline: 'Comment lire votre rapport',
+    step1: 'Vos chiffres clés sont en haut — durée de remboursement, économies de la 1ère année et CO₂ évité.',
+    step2: 'Faites défiler vers le bas pour les flux d\'énergie mensuels, la comparaison des factures et le graphique de trésorerie sur 25 ans.',
+    step3: 'Le simulateur de stress en direct vous permet de faire glisser des curseurs — fonds propres, taux, taille — et de voir chaque indicateur se mettre à jour instantanément.',
+    dismiss: 'Compris',
+  },
+  proWelcome: {
+    badge: '✨ Pro débloqué',
+    title: 'Voici ce que vous venez de débloquer',
+    subtitle: 'Faites défiler vers le bas pour tout explorer — ou plongez directement ci-dessous.',
+    f1Title: 'Trésorerie sur toute la durée de vie',
+    f1Desc: 'Graphique à barres sur 25 ans montrant les économies annuelles, les revenus d\'exportation et la valeur VE avec une ligne cumulative.',
+    f2Title: 'Simulateur de stress en direct',
+    f2Desc: 'Faites glisser les curseurs pour les fonds propres, le taux de crédit, les prix de l\'énergie et la taille du système — les indicateurs se mettent à jour instantanément dans votre navigateur.',
+    f3Title: 'Analyses de sensibilité et matrice de prix',
+    f3Desc: 'Graphiques précalculés qui font varier un paramètre à la fois, plus une grille de remboursement selon les scénarios de prix d\'import/export.',
+    f4Title: 'Rapport PDF',
+    f4Desc: 'Analyse complète de 7 pages avec toutes les hypothèses — prête à télécharger et à partager avec les installateurs.',
+    exploreBtn: 'Explorer mon analyse',
+  },
 };
 
 export default fr;

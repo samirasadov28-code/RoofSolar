@@ -615,6 +615,27 @@ const de: Translations = {
     colGridExport: 'Netzeinspeisung',
     kwhPerDayNote: 'Alle Werte in kWh pro repräsentativem Tag. Klicke auf eine Zeile, um das Stundendiagramm dieses Monats anzuzeigen.',
   },
+  resultsTip: {
+    headline: 'So liest du deinen Bericht',
+    step1: 'Deine Kennzahlen stehen oben — Amortisationszeit, Ersparnis im Jahr 1 und vermiedenes CO₂.',
+    step2: 'Scrolle nach unten für monatliche Energieflüsse, Rechnungsvergleich und dein 25-Jahre-Cashflow-Diagramm.',
+    step3: 'Der Live-Stress-Tester lässt dich Schieberegler ziehen — Eigenkapital, Zinssatz, Größe — und jede Kennzahl sofort aktualisieren.',
+    dismiss: 'Verstanden',
+  },
+  proWelcome: {
+    badge: '✨ Pro freigeschaltet',
+    title: 'Das hast du gerade freigeschaltet',
+    subtitle: 'Scrolle nach unten, um alles zu erkunden — oder steige direkt unten ein.',
+    f1Title: 'Cashflow über die gesamte Laufzeit',
+    f1Desc: '25-Jahre-Balkendiagramm mit jährlichen Ersparnissen, Exporteinnahmen und EV-Wert mit einer kumulativen Linie.',
+    f2Title: 'Live-Stress-Tester',
+    f2Desc: 'Schieberegler für Eigenkapital, Kreditzinssatz, Energiepreise und Systemgröße ziehen — Kennzahlen aktualisieren sich sofort im Browser.',
+    f3Title: 'Sensitivitätsanalysen & Preismatrix',
+    f3Desc: 'Vorberechnete Diagramme, die jeweils einen Parameter variieren, plus ein Amortisationsraster über Import-/Exportpreisszenarien.',
+    f4Title: 'PDF-Bericht',
+    f4Desc: 'Vollständige 7-seitige Analyse mit allen Annahmen — bereit zum Herunterladen und Teilen mit Installateuren.',
+    exploreBtn: 'Meine Analyse erkunden',
+  },
 };
 
 export default de;

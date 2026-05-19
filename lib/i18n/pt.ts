@@ -615,6 +615,27 @@ const pt: Translations = {
     colGridExport: 'Exportação para a rede',
     kwhPerDayNote: 'Todos os valores em kWh por dia representativo. Clique numa linha para ver o gráfico horário desse mês.',
   },
+  resultsTip: {
+    headline: 'Como ler o seu relatório',
+    step1: 'Os seus números principais estão no topo — período de retorno, poupanças do ano 1 e CO₂ evitado.',
+    step2: 'Deslize para baixo para ver os fluxos de energia mensais, comparação de faturas e o gráfico de fluxo de caixa de 25 anos.',
+    step3: 'O simulador de stress em tempo real permite arrastar controlos deslizantes — capital próprio, taxa, tamanho — e ver cada métrica atualizar-se instantaneamente.',
+    dismiss: 'Entendido',
+  },
+  proWelcome: {
+    badge: '✨ Pro desbloqueado',
+    title: 'Isto é o que acabou de desbloquear',
+    subtitle: 'Deslize para baixo para explorar tudo — ou entre diretamente abaixo.',
+    f1Title: 'Fluxo de caixa vitalício',
+    f1Desc: 'Gráfico de barras de 25 anos mostrando poupanças anuais, receitas de exportação e valor do VE com uma linha cumulativa.',
+    f2Title: 'Simulador de stress em tempo real',
+    f2Desc: 'Arraste os controlos deslizantes para capital próprio, taxa de empréstimo, preços de energia e tamanho do sistema — as métricas atualizam-se instantaneamente no seu browser.',
+    f3Title: 'Análises de sensibilidade & matriz de preços',
+    f3Desc: 'Gráficos pré-calculados que variam um parâmetro de cada vez, mais uma grelha de retorno em cenários de preços de importação/exportação.',
+    f4Title: 'Relatório PDF',
+    f4Desc: 'Análise completa de 7 páginas com todos os pressupostos — pronta para descarregar e partilhar com instaladores.',
+    exploreBtn: 'Explorar a minha análise',
+  },
 };
 
 export default pt;

@@ -615,6 +615,27 @@ const it: Translations = {
     colGridExport: 'Esportazione in rete',
     kwhPerDayNote: 'Tutti i valori in kWh per giorno rappresentativo. Clicca su una riga per visualizzare il grafico orario di quel mese.',
   },
+  resultsTip: {
+    headline: 'Come leggere il tuo rapporto',
+    step1: 'I tuoi numeri principali sono in alto — periodo di ammortamento, risparmi del 1° anno e CO₂ evitata.',
+    step2: 'Scorri verso il basso per i flussi energetici mensili, il confronto delle bollette e il grafico del flusso di cassa a 25 anni.',
+    step3: 'Il simulatore di stress live ti consente di trascinare i cursori — equity, tasso, dimensione — e vedere ogni metrica aggiornarsi istantaneamente.',
+    dismiss: 'Capito',
+  },
+  proWelcome: {
+    badge: '✨ Pro sbloccato',
+    title: 'Ecco cosa hai appena sbloccato',
+    subtitle: 'Scorri verso il basso per esplorare tutto — o tuffati direttamente qui sotto.',
+    f1Title: 'Flusso di cassa per tutta la vita',
+    f1Desc: 'Grafico a barre di 25 anni con risparmi annuali, entrate da esportazione e valore EV con una linea cumulativa.',
+    f2Title: 'Simulatore di stress live',
+    f2Desc: 'Trascina i cursori per equity, tasso di prestito, prezzi dell\'energia e dimensione del sistema — le metriche si aggiornano istantaneamente nel browser.',
+    f3Title: 'Analisi di sensibilità e matrice dei prezzi',
+    f3Desc: 'Grafici pre-calcolati che variano un parametro alla volta, più una griglia di ammortamento per scenari di prezzo di importazione/esportazione.',
+    f4Title: 'Rapporto PDF',
+    f4Desc: 'Analisi completa di 7 pagine con tutte le ipotesi — pronta da scaricare e condividere con gli installatori.',
+    exploreBtn: 'Esplora la mia analisi',
+  },
 };
 
 export default it;

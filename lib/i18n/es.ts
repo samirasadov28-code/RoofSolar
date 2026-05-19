@@ -615,6 +615,27 @@ const es: Translations = {
     colGridExport: 'Exportación a red',
     kwhPerDayNote: 'Todos los valores en kWh por día representativo. Haz clic en una fila para ver el gráfico horario de ese mes.',
   },
+  resultsTip: {
+    headline: 'Cómo leer tu informe',
+    step1: 'Tus cifras principales están arriba — período de amortización, ahorros del año 1 y CO₂ evitado.',
+    step2: 'Desplázate hacia abajo para ver los flujos de energía mensuales, la comparación de facturas y el gráfico de flujo de caja a 25 años.',
+    step3: 'El simulador de estrés en vivo te permite arrastrar controles deslizantes — fondos propios, tasa, tamaño — y ver cada métrica actualizarse al instante.',
+    dismiss: 'Entendido',
+  },
+  proWelcome: {
+    badge: '✨ Pro desbloqueado',
+    title: 'Esto es lo que acabas de desbloquear',
+    subtitle: 'Desplázate hacia abajo para explorar todo — o entra directamente abajo.',
+    f1Title: 'Flujo de caja de por vida',
+    f1Desc: 'Gráfico de barras de 25 años que muestra ahorros anuales, ingresos por exportación y valor del VE con una línea acumulativa.',
+    f2Title: 'Simulador de estrés en vivo',
+    f2Desc: 'Arrastra los controles deslizantes para fondos propios, tasa de préstamo, precios de energía y tamaño del sistema — las métricas se actualizan al instante en tu navegador.',
+    f3Title: 'Análisis de sensibilidad y matriz de precios',
+    f3Desc: 'Gráficos precalculados que varían un parámetro a la vez, más una cuadrícula de amortización según escenarios de precios de importación/exportación.',
+    f4Title: 'Informe PDF',
+    f4Desc: 'Análisis completo de 7 páginas con todos los supuestos — listo para descargar y compartir con instaladores.',
+    exploreBtn: 'Explorar mi análisis',
+  },
 };
 
 export default es;

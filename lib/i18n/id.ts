@@ -615,6 +615,27 @@ const id: Translations = {
     colGridExport: 'Ekspor jaringan',
     kwhPerDayNote: 'Semua nilai kWh per hari representatif. Klik baris untuk melihat grafik per jam bulan tersebut.',
   },
+  resultsTip: {
+    headline: 'Cara membaca laporan Anda',
+    step1: 'Angka utama Anda ada di bagian atas — periode pengembalian, penghematan Tahun-1 dan CO₂ yang dihindari.',
+    step2: 'Gulir ke bawah untuk melihat aliran energi bulanan, perbandingan tagihan, dan grafik arus kas 25 tahun.',
+    step3: 'Penguji stres langsung memungkinkan Anda menyeret penggeser — ekuitas, suku bunga, ukuran — dan melihat setiap metrik diperbarui secara instan.',
+    dismiss: 'Mengerti',
+  },
+  proWelcome: {
+    badge: '✨ Pro terbuka',
+    title: 'Inilah yang baru saja Anda buka',
+    subtitle: 'Gulir ke bawah untuk menjelajahi semuanya — atau langsung masuk di bawah.',
+    f1Title: 'Arus kas seumur hidup',
+    f1Desc: 'Grafik batang 25 tahun yang menampilkan penghematan tahunan, pendapatan ekspor, dan nilai EV dengan garis kumulatif.',
+    f2Title: 'Penguji stres langsung',
+    f2Desc: 'Seret penggeser untuk ekuitas, suku bunga pinjaman, harga energi, dan ukuran sistem — metrik diperbarui secara instan di browser Anda.',
+    f3Title: 'Analisis sensitivitas dan matriks harga',
+    f3Desc: 'Grafik yang dihitung sebelumnya yang memvariasikan satu masukan sekaligus, ditambah kisi pengembalian di berbagai skenario harga impor/ekspor.',
+    f4Title: 'Laporan PDF',
+    f4Desc: 'Analisis 7 halaman lengkap dengan semua asumsi — siap untuk diunduh dan dibagikan dengan instalatur.',
+    exploreBtn: 'Jelajahi analisis saya',
+  },
 };
 
 export default id;
