@@ -265,6 +265,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-sky-50">
 
       {/* Nav */}
+      <div className="sticky top-0 z-30 bg-amber-50/95 backdrop-blur-sm border-b border-amber-100/60">
       <nav className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-5 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
@@ -290,6 +291,7 @@ export default function HomePage() {
           </Link>
         </div>
       </nav>
+      </div>
 
       {/* Hero */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 sm:pt-12 pb-10">
