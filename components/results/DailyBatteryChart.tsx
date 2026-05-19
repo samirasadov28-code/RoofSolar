@@ -126,7 +126,7 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
               tick={{ fontSize: 10, fill: '#6b7280' }}
               tickFormatter={(v) => `${Math.abs(v).toFixed(1)}`}
               domain={[-maxKwh * 1.1, maxKwh * 1.1]}
-              label={{ value: 'kWh', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: '#9ca3af' } }}
+              width={36}
             />
             {batteryKwh > 0 && (
               <YAxis
@@ -135,7 +135,7 @@ export function DailyBatteryChart({ months, batteryKwh, symbol, annualArbitrageS
                 domain={[0, batteryKwh * 1.05]}
                 tick={{ fontSize: 10, fill: '#6b7280' }}
                 tickFormatter={(v) => `${v.toFixed(1)}`}
-                label={{ value: 'SoC kWh', angle: 90, position: 'insideRight', style: { fontSize: 10, fill: '#9ca3af' } }}
+                width={32}
               />
             )}
             <Tooltip content={<CustomTooltip symbol={symbol} />} />

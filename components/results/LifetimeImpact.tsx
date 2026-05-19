@@ -27,12 +27,12 @@ export function LifetimeImpact({ annualCo2Saved, horizonYears, lifetimeSavings, 
 
   return (
     <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 border border-green-200 rounded-2xl p-6">
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div>
+      <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
+        <div className="min-w-0">
           <h2 className="font-bold text-gray-900">{fmt(t.lifetimeImpact.title, { n: horizonYears })}</h2>
           <p className="text-sm text-gray-500">{t.lifetimeImpact.subtitle}</p>
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-green-700 bg-white border border-green-300 rounded-full px-2 py-0.5 whitespace-nowrap">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-green-700 bg-white border border-green-300 rounded-full px-2 py-0.5 shrink-0">
           {t.lifetimeImpact.freeBadge}
         </span>
       </div>

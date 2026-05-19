@@ -36,15 +36,15 @@ export function CashflowChart({ cashflows, symbol }: Props) {
 
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <ComposedChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+      <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-        <XAxis dataKey="year" tick={{ fontSize: 11 }} />
-        <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => `${symbol}${(v / 1000).toFixed(0)}k`} />
+        <XAxis dataKey="year" tick={{ fontSize: 10 }} interval={4} />
+        <YAxis tick={{ fontSize: 10 }} tickFormatter={(v) => `${symbol}${(v / 1000).toFixed(0)}k`} width={42} />
         <Tooltip
           formatter={(v: any, name: any) => [`${symbol}${Number(v).toLocaleString()}`, name]}
           labelStyle={{ fontWeight: 600 }}
         />
-        <Legend />
+        <Legend wrapperStyle={{ fontSize: 11 }} />
         <Bar dataKey="capex" name={t.charts.capex} fill="#ef4444" stackId="a" />
         <Bar dataKey="solarSavings" name={t.charts.solarSavings} fill="#3b82f6" stackId="a" />
         <Bar dataKey="exportIncome" name={t.charts.exportIncome} fill="#22c55e" stackId="a" />
@@ -63,7 +63,7 @@ export function CashflowChart({ cashflows, symbol }: Props) {
             x={`Yr ${paybackYear}`}
             stroke="#22c55e"
             strokeDasharray="4 4"
-            label={{ value: t.charts.payback, position: 'top', fontSize: 11, fill: '#16a34a' }}
+            label={{ value: t.charts.payback, position: 'insideTopLeft', fontSize: 10, fill: '#16a34a' }}
           />
         )}
       </ComposedChart>

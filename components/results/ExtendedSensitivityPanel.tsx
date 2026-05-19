@@ -78,11 +78,11 @@ function SweepChart({
       </div>
 
       <ResponsiveContainer width="100%" height={200}>
-        <ComposedChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 10 }}>
+        <ComposedChart data={data} margin={{ top: 5, right: 5, bottom: 5, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis dataKey="xLabel" tick={{ fontSize: 11 }} label={{ value: xLabel, position: 'insideBottom', offset: -2, fontSize: 10, fill: '#6b7280' }} />
-          <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={(v) => `${symbol}${(v / 1000).toFixed(0)}k`} />
-          <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} tickFormatter={(v) => `${v}`} />
+          <XAxis dataKey="xLabel" tick={{ fontSize: 10 }} />
+          <YAxis yAxisId="left" tick={{ fontSize: 10 }} tickFormatter={(v) => `${symbol}${(v / 1000).toFixed(0)}k`} width={40} />
+          <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}`} width={28} />
           <Tooltip
             formatter={(v: any, name: any) => {
               if (name === npvLabel || name === lifetimeSavingsLabel) return [`${symbol}${Number(v).toLocaleString()}`, name];
@@ -92,7 +92,7 @@ function SweepChart({
             }}
             labelStyle={{ fontWeight: 600 }}
           />
-          <Legend wrapperStyle={{ fontSize: 11 }} />
+          <Legend wrapperStyle={{ fontSize: 10 }} />
           <Bar yAxisId="left" dataKey="lifetime" name={lifetimeSavingsLabel} fill="#16a34a" radius={[3, 3, 0, 0]} />
           <Bar yAxisId="left" dataKey="npv" name={npvLabel} fill="#3b82f6" radius={[3, 3, 0, 0]} />
           <Line yAxisId="right" type="monotone" dataKey="payback" name={paybackLabel} stroke="#f59e0b" strokeWidth={2} dot={{ r: 3 }} />
@@ -106,7 +106,7 @@ function SweepChart({
               fill="#fbbf24"
               stroke="#92400e"
               strokeWidth={1.5}
-              label={{ value: youLabel, position: 'top', fontSize: 10, fill: '#92400e' }}
+              label={{ value: youLabel, position: 'insideTopRight', fontSize: 10, fill: '#92400e' }}
             />
           )}
         </ComposedChart>
