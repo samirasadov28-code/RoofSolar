@@ -177,7 +177,7 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">{t.advisor.chatTitle}</p>
-                <p className="text-xs text-gray-400">{t.advisor.poweredBy}</p>
+                {t.advisor.poweredBy && <p className="text-xs text-gray-400">{t.advisor.poweredBy}</p>}
               </div>
             </div>
             <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 p-1">

@@ -59,7 +59,7 @@ const tr: Translations = {
     step4Desc: '25 yıllık nakit akışı, IRR, geri ödeme, batarya ve EV ekonomisi.',
     step5Title: 'Yapay zekaya sor',
     step5Desc: 'Yapay zeka danışmanınızla sohbet edin — her sayı veya senaryo hakkında açık yanıtlar.',
-    aiSectionBadge: 'Yapay zeka danışmanı · Groq + Llama 3.3',
+    aiSectionBadge: 'Yapay zeka danışmanı',
     aiHeadline: 'Güneş analizinizle bir insanmış gibi konuşun.',
     aiBody: 'Çoğu güneş aracı size bir yığın rakam sunar ve ne anlama geldiğini tahmin etmenizi bekler. RoofSolar, her analizi nakit akışınızın 25 yılını okumuş, ülkenizin tarifelerini ve hibe planını bilen ve sorularınızı anında yanıtlayan bir yapay zeka danışmanıyla eşleştirir.',
     aiFeature1: 'IRR, NPV ve geri ödemeyi sade bir dille açıklar',
@@ -303,7 +303,7 @@ const tr: Translations = {
   advisor: {
     openBtn: 'Yapay zeka danışmanına sor',
     chatTitle: 'Güneş Yapay Zeka Danışmanı',
-    poweredBy: 'Groq · Llama 3.3 ile çalışır',
+    poweredBy: '',
     promptAnalysis: 'Güneş analiziniz hakkında bana her şeyi sorun.',
     promptGeneric: 'Konut güneş enerjisi hakkında bana her şeyi sorun.',
     placeholderAnalysis: 'Analiziniz hakkında soru sorun…',

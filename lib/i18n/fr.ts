@@ -59,7 +59,7 @@ const fr: Translations = {
     step4Desc: 'Flux de trésorerie sur 25 ans, TRI, remboursement, économies batterie et VE.',
     step5Title: "Demandez à l'IA",
     step5Desc: "Discutez avec votre conseiller IA — réponses claires sur n'importe quel chiffre ou scénario.",
-    aiSectionBadge: 'Conseiller IA · Groq + Llama 3.3',
+    aiSectionBadge: 'Conseiller IA',
     aiHeadline: 'Parlez à votre analyse solaire comme à une personne.',
     aiBody: "La plupart des outils solaires vous donnent un tas de chiffres et vous laissent deviner leur sens. RoofSolar associe chaque analyse à un conseiller IA qui a lu les 25 ans de vos flux de trésorerie, connaît les tarifs et les subventions de votre pays, et répond instantanément à vos questions.",
     aiFeature1: 'Explique votre TRI, VAN et remboursement en langage clair',
@@ -303,7 +303,7 @@ const fr: Translations = {
   advisor: {
     openBtn: 'Demander au conseiller IA',
     chatTitle: 'Conseiller IA Solaire',
-    poweredBy: 'Propulsé par Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Posez-moi des questions sur votre analyse solaire.',
     promptGeneric: 'Posez-moi des questions sur le solaire résidentiel.',
     placeholderAnalysis: 'Demandez à propos de votre analyse…',

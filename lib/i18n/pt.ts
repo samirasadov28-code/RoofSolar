@@ -59,7 +59,7 @@ const pt: Translations = {
     step4Desc: 'Fluxo de caixa a 25 anos, TIR, amortização, bateria e economia de VE.',
     step5Title: 'Perguntar à IA',
     step5Desc: 'Converse com o seu consultor de IA — respostas claras sobre qualquer número ou cenário.',
-    aiSectionBadge: 'Consultor de IA · Groq + Llama 3.3',
+    aiSectionBadge: 'Consultor de IA',
     aiHeadline: 'Fale com a sua análise solar como se fosse uma pessoa.',
     aiBody: 'A maioria das ferramentas solares dá-lhe um monte de números e deixa-o adivinhar o que significam. O RoofSolar combina cada análise com um consultor de IA que leu os 25 anos do seu fluxo de caixa, conhece as tarifas e subsídios do seu país e responde às suas perguntas instantaneamente.',
     aiFeature1: 'Explica a sua TIR, VPL e amortização em linguagem simples',
@@ -303,7 +303,7 @@ const pt: Translations = {
   advisor: {
     openBtn: 'Perguntar ao consultor de IA',
     chatTitle: 'Consultor Solar de IA',
-    poweredBy: 'Desenvolvido por Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Pergunte-me qualquer coisa sobre a sua análise solar.',
     promptGeneric: 'Pergunte-me qualquer coisa sobre solar residencial.',
     placeholderAnalysis: 'Pergunte sobre a sua análise…',

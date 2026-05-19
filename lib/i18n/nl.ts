@@ -59,7 +59,7 @@ const nl: Translations = {
     step4Desc: '25-jaars kasstroom, IRR, terugverdientijd, batterij- en EV-economie.',
     step5Title: 'Vraag de AI',
     step5Desc: 'Chat met uw AI-adviseur — duidelijke antwoorden over elk getal of scenario.',
-    aiSectionBadge: 'AI-adviseur · Groq + Llama 3.3',
+    aiSectionBadge: 'AI-adviseur',
     aiHeadline: 'Praat met uw zonne-analyse alsof het een persoon is.',
     aiBody: 'De meeste zonnetools geven u een stapel cijfers en laten u raden wat ze betekenen. RoofSolar koppelt elke analyse aan een AI-adviseur die alle 25 jaar van uw kasstroom heeft gelezen, de tarieven en subsidieregelingen van uw land kent en uw vragen onmiddellijk beantwoordt.',
     aiFeature1: 'Legt uw IRR, NPV en terugverdientijd in begrijpelijke taal uit',
@@ -303,7 +303,7 @@ const nl: Translations = {
   advisor: {
     openBtn: 'Vraag AI-adviseur',
     chatTitle: 'Zonne-energie AI-adviseur',
-    poweredBy: 'Aangedreven door Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Stel mij alles over uw zonne-analyse.',
     promptGeneric: 'Stel mij alles over residentiële zonne-energie.',
     placeholderAnalysis: 'Vraag over uw analyse…',

@@ -59,7 +59,7 @@ const id: Translations = {
     step4Desc: 'Arus kas 25 tahun, IRR, balik modal, ekonomi baterai dan EV.',
     step5Title: 'Tanya AI',
     step5Desc: 'Ngobrol dengan penasihat AI Anda — jawaban mudah dipahami tentang angka atau skenario apa pun.',
-    aiSectionBadge: 'Penasihat AI · Groq + Llama 3.3',
+    aiSectionBadge: 'Penasihat AI',
     aiHeadline: 'Bicara dengan analisis surya Anda seperti berbicara dengan seseorang.',
     aiBody: 'Sebagian besar alat surya menyerahkan tumpukan angka dan membiarkan Anda menebak artinya. RoofSolar memadukan setiap analisis dengan penasihat AI yang telah membaca seluruh 25 tahun arus kas Anda, mengetahui tarif dan skema subsidi negara Anda, dan menjawab pertanyaan Anda secara instan — tanpa perlu gulir FAQ.',
     aiFeature1: 'Menjelaskan IRR, NPV, dan balik modal dengan bahasa yang mudah dipahami',
@@ -303,7 +303,7 @@ const id: Translations = {
   advisor: {
     openBtn: 'Tanya penasihat AI',
     chatTitle: 'Solar AI Advisor',
-    poweredBy: 'Powered by Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Tanyakan apa saja tentang analisis surya Anda.',
     promptGeneric: 'Tanyakan apa saja tentang surya residensial.',
     placeholderAnalysis: 'Tanyakan tentang analisis Anda…',

@@ -59,7 +59,7 @@ const de: Translations = {
     step4Desc: '25-Jahres-Cashflow, IRR, Amortisation, Batterie- und E-Auto-Ökonomie.',
     step5Title: 'KI fragen',
     step5Desc: 'Chatte mit deinem KI-Berater — verständliche Antworten zu jeder Zahl oder jedem Szenario.',
-    aiSectionBadge: 'KI-Berater · Groq + Llama 3.3',
+    aiSectionBadge: 'KI-Berater',
     aiHeadline: 'Sprich mit deiner Solaranalyse wie mit einer Person.',
     aiBody: 'Die meisten Solartools geben dir einen Haufen Zahlen und lassen dich raten, was sie bedeuten. RoofSolar kombiniert jede Analyse mit einem KI-Berater, der alle 25 Jahre deines Cashflows gelesen hat, die Tarife und Förderprogramme deines Landes kennt und sofort auf deine Fragen antwortet.',
     aiFeature1: 'Erklärt deinen IRR, NPV und die Amortisation in verständlicher Sprache',
@@ -303,7 +303,7 @@ const de: Translations = {
   advisor: {
     openBtn: 'KI-Berater fragen',
     chatTitle: 'Solar-KI-Berater',
-    poweredBy: 'Bereitgestellt von Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Frag mich alles über deine Solaranalyse.',
     promptGeneric: 'Frag mich alles über Heimsolar.',
     placeholderAnalysis: 'Frage zu deiner Analyse…',

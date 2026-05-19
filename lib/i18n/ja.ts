@@ -59,7 +59,7 @@ const ja: Translations = {
     step4Desc: '25年間のキャッシュフロー、IRR、ペイバック、蓄電池・EV経済性。',
     step5Title: 'AIに質問する',
     step5Desc: 'AIアドバイザーとチャット — 数字やシナリオについてわかりやすい回答をどうぞ。',
-    aiSectionBadge: 'AIアドバイザー · Groq + Llama 3.3',
+    aiSectionBadge: 'AIアドバイザー',
     aiHeadline: 'あなたの太陽光分析と人と話すように会話しましょう。',
     aiBody: 'ほとんどの太陽光ツールは数字の山を渡して、その意味を自分で考えさせます。RoofSolarはすべての分析にAIアドバイザーを組み合わせており、25年分のキャッシュフローをすべて読み込み、お客様の国の電気料金と補助金制度を把握し、質問に即座に回答します — FAQをスクロールする必要はありません。',
     aiFeature1: 'IRR、NPV、ペイバックをわかりやすく説明',
@@ -303,7 +303,7 @@ const ja: Translations = {
   advisor: {
     openBtn: 'AIアドバイザーに質問する',
     chatTitle: 'Solar AI Advisor',
-    poweredBy: 'Powered by Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: '太陽光分析についてなんでも質問してください。',
     promptGeneric: '住宅用太陽光についてなんでも質問してください。',
     placeholderAnalysis: '分析について質問する…',

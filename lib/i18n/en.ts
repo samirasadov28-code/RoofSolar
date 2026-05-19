@@ -59,7 +59,7 @@ const en: Translations = {
     step4Desc: '25-year cashflow, IRR, payback, battery and EV economics.',
     step5Title: 'Ask the AI',
     step5Desc: 'Chat with your AI advisor — plain-English answers about any number or scenario.',
-    aiSectionBadge: 'AI advisor · Groq + Llama 3.3',
+    aiSectionBadge: 'AI advisor',
     aiHeadline: "Talk to your solar analysis like it's a person.",
     aiBody: "Most solar tools hand you a stack of numbers and leave you guessing what they mean. RoofSolar pairs every analysis with an AI advisor that's read all 25 years of your cashflow, knows your country's tariffs and grant scheme, and answers your questions instantly — no scrolling through FAQs.",
     aiFeature1: 'Explains your IRR, NPV and payback in plain English',
@@ -303,7 +303,7 @@ const en: Translations = {
   advisor: {
     openBtn: 'Ask AI advisor',
     chatTitle: 'Solar AI Advisor',
-    poweredBy: 'Powered by Groq · Llama 3.3',
+    poweredBy: '',
     promptAnalysis: 'Ask me anything about your solar analysis.',
     promptGeneric: 'Ask me anything about residential solar.',
     placeholderAnalysis: 'Ask about your analysis…',

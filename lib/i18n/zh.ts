@@ -59,7 +59,7 @@ const zh: Translations = {
     step4Desc: '25 年现金流、IRR、回收期、电池和电动车经济性。',
     step5Title: '向 AI 提问',
     step5Desc: '与您的 AI 顾问对话——就任何数字或场景获得直接答案。',
-    aiSectionBadge: 'AI 顾问 · Groq + Llama 3.3',
+    aiSectionBadge: 'AI 顾问',
     aiHeadline: '像与人交谈一样与您的太阳能分析对话。',
     aiBody: '大多数太阳能工具给您一堆数字，让您自己猜测含义。RoofSolar 将每次分析与一个 AI 顾问配对——它已阅读您现金流的 25 年数据，了解您国家的电价和补贴计划，并能即时回答您的问题。',
     aiFeature1: '用通俗语言解释 IRR、NPV 和回收期',
@@ -303,7 +303,7 @@ const zh: Translations = {
   advisor: {
     openBtn: '咨询 AI 顾问',
     chatTitle: '太阳能 AI 顾问',
-    poweredBy: '由 Groq · Llama 3.3 驱动',
+    poweredBy: '',
     promptAnalysis: '关于您的太阳能分析，尽管问我。',
     promptGeneric: '关于住宅太阳能，尽管问我。',
     placeholderAnalysis: '询问您的分析…',
