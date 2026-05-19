@@ -107,7 +107,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-10 space-y-8">
+      <main className="max-w-5xl mx-auto px-6 pt-10 pb-24 sm:py-10 space-y-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">{t.results.pageTitle}</h1>
           <p className="text-gray-500 text-sm">

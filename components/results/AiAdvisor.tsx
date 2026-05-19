@@ -155,7 +155,7 @@ export function AiAdvisor({ results: resultsProp, inputs: inputsProp }: Props = 
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold p-3 sm:px-4 sm:py-3 rounded-full shadow-xl transition-all"
+        className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold p-3 sm:px-4 sm:py-3 rounded-full shadow-xl transition-all"
         aria-label={t.advisor.openBtn}
       >
         <svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

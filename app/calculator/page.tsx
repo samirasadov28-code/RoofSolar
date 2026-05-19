@@ -31,7 +31,7 @@ export default function CalculatorPage() {
       </header>
 
       {/* Wizard */}
-      <main className="max-w-2xl mx-auto px-6 py-10">
+      <main className="max-w-2xl mx-auto px-6 pt-10 pb-24 sm:py-10">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           {step === 1 && <Step1Address onNext={next} />}
           {step === 2 && <Step2Roof onNext={next} onBack={back} />}
