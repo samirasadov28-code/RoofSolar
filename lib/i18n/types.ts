@@ -613,6 +613,27 @@ export interface Translations {
     colGridExport: string;
     kwhPerDayNote: string;
   };
+  resultsTip: {
+    headline: string;
+    step1: string;
+    step2: string;
+    step3: string;
+    dismiss: string;
+  };
+  proWelcome: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    f1Title: string;
+    f1Desc: string;
+    f2Title: string;
+    f2Desc: string;
+    f3Title: string;
+    f3Desc: string;
+    f4Title: string;
+    f4Desc: string;
+    exploreBtn: string;
+  };
 }
 
 /** Replace {key} placeholders in a string */

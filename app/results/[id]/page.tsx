@@ -19,6 +19,7 @@ import { EquipmentShortlist } from '@/components/results/EquipmentShortlist';
 import { DailyBatteryChart } from '@/components/results/DailyBatteryChart';
 import { LeadModal } from '@/components/results/LeadModal';
 import { ViewModeToggle } from '@/components/results/ViewModeToggle';
+import { ResultsTipStrip } from '@/components/results/ResultsTipStrip';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
 import { useT } from '@/lib/i18n';
@@ -141,6 +142,8 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
             <p className="text-xs text-gray-400 mt-1">{t.results.year1Label}</p>
           </div>
         </div>
+
+        <ResultsTipStrip />
 
         <div className="bg-white rounded-2xl border border-gray-200 p-6">
           <h2 className="font-bold text-gray-900 mb-4">{t.results.systemSummary}</h2>

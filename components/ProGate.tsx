@@ -6,6 +6,7 @@ import { useProStatus } from '@/lib/hooks/useProStatus';
 import { useViewMode } from '@/lib/hooks/useViewMode';
 import { useT } from '@/lib/i18n';
 import { fmt } from '@/lib/i18n/types';
+import { ProWelcomeModal } from '@/components/results/ProWelcomeModal';
 
 const EARLY_ACCESS_LS_KEY = 'roofsolar_early_access_email';
 
@@ -65,6 +66,7 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
   if (isPro && !showFreeView) {
     return (
       <div className="space-y-4">
+        <ProWelcomeModal calculationId={calculationId} isPro={isPro} />
         <div className="flex items-center justify-between gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5">
           <div className="flex items-center gap-2 min-w-0">
             <span className="text-amber-600 text-lg leading-none">✨</span>

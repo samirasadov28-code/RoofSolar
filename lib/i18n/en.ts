@@ -615,6 +615,27 @@ const en: Translations = {
     colGridExport: 'Grid export',
     kwhPerDayNote: 'All values kWh per representative day. Click a row to view that month\'s hourly chart.',
   },
+  resultsTip: {
+    headline: 'How to read your report',
+    step1: 'Your headline numbers are at the top — payback period, Year-1 savings and CO₂ avoided.',
+    step2: 'Scroll down for monthly energy flows, bill comparison and your 25-year cashflow chart.',
+    step3: 'The live stress-tester lets you drag sliders — equity, rate, size — and watch every metric update instantly.',
+    dismiss: 'Got it',
+  },
+  proWelcome: {
+    badge: '✨ Pro unlocked',
+    title: "Here's what you just unlocked",
+    subtitle: 'Scroll down to explore all of it — or jump straight in below.',
+    f1Title: 'Lifetime cashflow',
+    f1Desc: '25-year bar chart showing annual savings, export income and EV value with a cumulative line.',
+    f2Title: 'Live stress-tester',
+    f2Desc: 'Drag sliders for equity, loan rate, energy prices and system size — metrics update instantly in your browser.',
+    f3Title: 'Sensitivity sweeps & price matrix',
+    f3Desc: 'Pre-computed charts that vary one input at a time, plus a payback grid across import/export price scenarios.',
+    f4Title: 'PDF report',
+    f4Desc: 'Full 7-page analysis with all assumptions — ready to download and share with installers.',
+    exploreBtn: 'Explore my analysis',
+  },
 };
 
 export default en;
