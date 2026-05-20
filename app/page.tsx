@@ -278,6 +278,17 @@ export default function HomePage() {
           <Link href="/installers" className="hidden md:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
             {t.nav.forInstallers}
           </Link>
+          <a
+            href="https://asadov-stack.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:inline-flex items-center gap-1 text-xs font-semibold text-gray-600 hover:text-gray-900 bg-white border border-gray-300 hover:border-gray-500 rounded-full px-3 py-1.5 transition-colors whitespace-nowrap shadow-sm"
+          >
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            ModeLoop
+          </a>
           <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap">
             {t.nav.signIn}
           </Link>
@@ -519,7 +530,7 @@ export default function HomePage() {
               href="https://asadov-stack.netlify.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-semibold text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 border border-gray-200 hover:border-gray-400 rounded-full px-3.5 py-1.5 transition-colors"
+              className="inline-flex items-center gap-1.5 font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-300 rounded-full px-4 py-1.5 transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
