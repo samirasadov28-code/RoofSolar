@@ -36,7 +36,7 @@ function SweepChart({
   title,
   desc,
   points,
-  xLabel,
+  xLabel: _xLabel,
   formatX,
   symbol,
   youLabel,

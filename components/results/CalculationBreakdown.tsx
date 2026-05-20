@@ -2,7 +2,6 @@
 
 import { getGrantSchemeName, getGrantMechanism } from '@/lib/engine/grants';
 import { useT } from '@/lib/i18n';
-import { fmt } from '@/lib/i18n/types';
 
 interface Props {
   data: any;
