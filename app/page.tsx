@@ -520,23 +520,32 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ModeLoop cross-promotion */}
+      <section className="py-12 bg-gradient-to-b from-white to-amber-50/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-3">
+          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">From the makers of RoofSolar</p>
+          <a
+            href="https://asadov-stack.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-full px-2 py-2 pr-5 shadow-sm hover:shadow-md hover:border-amber-300 transition-all group"
+          >
+            <span className="bg-amber-500 text-white text-xs font-bold uppercase tracking-wider rounded-full px-4 py-2 leading-none">
+              MODELOOP
+            </span>
+            <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+              Explore our other products&nbsp;→
+            </span>
+          </a>
+        </div>
+      </section>
+
       <footer className="border-t border-gray-200 py-8 bg-white/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
           <p>{t.home.footerRights} · v{APP_VERSION}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Link href="/installers" className="hover:text-gray-700 transition-colors">{t.nav.forInstallers}</Link>
             <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
-            <a
-              href="https://asadov-stack.netlify.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-semibold text-gray-900 bg-yellow-400 hover:bg-yellow-300 rounded-full px-4 py-1.5 transition-colors"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              ModeLoop Other Products
-            </a>
           </div>
         </div>
       </footer>
