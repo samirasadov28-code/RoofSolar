@@ -521,23 +521,42 @@ export default function HomePage() {
       </section>
 
       {/* ModeLoop cross-promotion */}
-      <section className="bg-gray-900 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-4">
-          <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">From the makers of RoofSolar</p>
+      <section className="relative bg-gray-950 py-16 overflow-hidden">
+        {/* Ambient glow blobs */}
+        <div className="absolute top-0 left-1/3 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-amber-400/8 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-5">
+          <p className="text-[11px] font-semibold text-amber-400/70 uppercase tracking-[0.25em]">
+            From the makers of RoofSolar
+          </p>
+
           <a
             href="https://asadov-stack.netlify.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-white border-2 border-white rounded-full px-2 py-2 pr-6 shadow-lg hover:shadow-amber-500/30 hover:scale-105 transition-all group"
+            className="group w-full max-w-sm flex items-stretch rounded-2xl overflow-hidden shadow-2xl shadow-black/40 hover:shadow-amber-500/20 hover:-translate-y-1 transition-all duration-300"
           >
-            <span className="bg-amber-500 text-white text-sm font-extrabold uppercase tracking-wider rounded-full px-5 py-2.5 leading-none">
-              MODELOOP
-            </span>
-            <span className="text-base font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
-              Explore our other products&nbsp;→
-            </span>
+            {/* Left — amber brand panel */}
+            <div className="bg-gradient-to-br from-amber-400 to-amber-600 flex flex-col items-center justify-center px-6 py-5 gap-1 min-w-[110px]">
+              <svg className="w-5 h-5 text-white/90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <span className="text-white font-black text-xs uppercase tracking-[0.15em] leading-none">MODELOOP</span>
+            </div>
+
+            {/* Right — CTA panel */}
+            <div className="flex-1 bg-white flex flex-col justify-center px-5 py-5 gap-0.5">
+              <p className="font-bold text-gray-900 text-sm leading-snug">Explore our other products</p>
+              <p className="text-xs text-gray-500">Solar · Finance · Productivity</p>
+              <div className="mt-2 flex items-center gap-1 text-amber-600 text-xs font-semibold group-hover:gap-2 transition-all">
+                Visit site
+                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </div>
+            </div>
           </a>
-          <p className="text-gray-500 text-xs">Solar · Finance · Energy tools</p>
         </div>
       </section>
 
