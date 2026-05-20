@@ -521,22 +521,23 @@ export default function HomePage() {
       </section>
 
       {/* ModeLoop cross-promotion */}
-      <section className="py-12 bg-gradient-to-b from-white to-amber-50/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-3">
+      <section className="bg-gray-900 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-4">
           <p className="text-xs font-medium text-gray-400 uppercase tracking-widest">From the makers of RoofSolar</p>
           <a
             href="https://asadov-stack.netlify.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-white border border-gray-200 rounded-full px-2 py-2 pr-5 shadow-sm hover:shadow-md hover:border-amber-300 transition-all group"
+            className="inline-flex items-center gap-3 bg-white border-2 border-white rounded-full px-2 py-2 pr-6 shadow-lg hover:shadow-amber-500/30 hover:scale-105 transition-all group"
           >
-            <span className="bg-amber-500 text-white text-xs font-bold uppercase tracking-wider rounded-full px-4 py-2 leading-none">
+            <span className="bg-amber-500 text-white text-sm font-extrabold uppercase tracking-wider rounded-full px-5 py-2.5 leading-none">
               MODELOOP
             </span>
-            <span className="text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+            <span className="text-base font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
               Explore our other products&nbsp;→
             </span>
           </a>
+          <p className="text-gray-500 text-xs">Solar · Finance · Energy tools</p>
         </div>
       </section>
 
