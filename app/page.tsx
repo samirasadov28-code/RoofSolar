@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { APP_VERSION } from '@/lib/version';
 import { ForceUpdateButton } from '@/components/ForceUpdateButton';
 import { useT } from '@/lib/i18n';
@@ -256,6 +257,86 @@ function EnergyChainIllustration() {
         <text x="528" y="345" textAnchor="middle" fontSize="11" fill="#ffffff" fontWeight="bold" letterSpacing="0.5">EV</text>
       </g>
     </svg>
+  );
+}
+
+function InlineFeedback() {
+  const [rating, setRating] = useState<number | null>(null);
+  const [message, setMessage] = useState('');
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  async function submit() {
+    if (!rating) return;
+    setLoading(true);
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating, message, page: '/' }),
+      });
+      setSent(true);
+    } catch {}
+    setLoading(false);
+  }
+
+  if (sent) {
+    return (
+      <section className="py-8 bg-white border-t border-gray-100 text-center">
+        <p className="text-2xl mb-1">🙏</p>
+        <p className="text-sm font-semibold text-gray-700">Thanks for your feedback!</p>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-8 bg-white border-t border-gray-100">
+      <div className="max-w-xl mx-auto px-4 sm:px-6">
+        {!open ? (
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center gap-2 border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 text-sm font-medium px-5 py-2.5 rounded-full transition-colors bg-white shadow-sm hover:shadow"
+            >
+              <span>💬</span> Feedback
+            </button>
+          </div>
+        ) : (
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="font-semibold text-gray-900 text-sm">How are we doing?</p>
+              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600 text-lg leading-none">×</button>
+            </div>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setRating(n)}
+                  className={`flex-1 py-2.5 rounded-xl text-xl transition-colors ${rating === n ? 'bg-yellow-400' : 'bg-white border border-gray-200 hover:bg-gray-50'}`}
+                >
+                  {['😞', '😕', '😐', '😊', '😍'][n - 1]}
+                </button>
+              ))}
+            </div>
+            <textarea
+              rows={2}
+              placeholder="Anything to share? (optional)"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+            <button
+              onClick={submit}
+              disabled={!rating || loading}
+              className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 text-gray-900 font-semibold py-2.5 rounded-xl text-sm transition-colors"
+            >
+              {loading ? 'Sending…' : 'Send feedback'}
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -519,6 +600,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Inline feedback */}
+      <InlineFeedback />
 
       {/* ModeLoop cross-promotion */}
       <section className="relative bg-gray-950 py-16 overflow-hidden">

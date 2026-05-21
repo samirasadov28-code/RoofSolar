@@ -20,6 +20,7 @@ import { DailyBatteryChart } from '@/components/results/DailyBatteryChart';
 import { LeadModal } from '@/components/results/LeadModal';
 import { ViewModeToggle } from '@/components/results/ViewModeToggle';
 import { ResultsTipStrip } from '@/components/results/ResultsTipStrip';
+import { AiAdvisor } from '@/components/results/AiAdvisor';
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
 import { useT } from '@/lib/i18n';
@@ -359,6 +360,8 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
           onClose={() => setShowLeadModal(false)}
         />
       )}
+
+      <AiAdvisor results={data} inputs={inputs} />
     </div>
   );
 }
