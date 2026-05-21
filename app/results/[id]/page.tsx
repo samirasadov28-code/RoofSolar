@@ -24,10 +24,7 @@ import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { fmtInt } from '@/lib/format';
 import { useT } from '@/lib/i18n';
 import { fmt } from '@/lib/i18n/types';
-
-function getCurrencySymbol(countryCode: string) {
-  return countryCode === 'ie' ? '€' : countryCode === 'gb' ? '£' : '';
-}
+import { currencySymbol } from '@/lib/countryDefaults';
 
 function shortAddress(full: string | undefined): string {
   if (!full) return '';
@@ -80,7 +77,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
     );
   }
 
-  const symbol = getCurrencySymbol(inputs.countryCode);
+  const symbol = currencySymbol(inputs.countryCode);
   const id = params.id;
   const cashflows: AnnualCashflow[] = data.cashflows ?? [];
 
@@ -199,7 +196,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
         <ProGate
           calculationId={id}
-          priceLabel={`${symbol || '£'}3.99`}
+          priceLabel={`${symbol}3.99`}
           preview={
             <div className="space-y-8 p-6">
               <div className="h-64 bg-gray-100 rounded-xl" />
