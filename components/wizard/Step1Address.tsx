@@ -59,6 +59,8 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
   const [query, setQuery] = useState(inputs.address);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [loading, setLoading] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [locateError, setLocateError] = useState<string | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -96,6 +98,39 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  async function useMyLocation() {
+    if (!navigator.geolocation) {
+      setLocateError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setLocating(true);
+    setLocateError(null);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude: lat, longitude: lon } = pos.coords;
+          const res = await fetch(`/api/geocode/reverse?lat=${lat}&lon=${lon}`);
+          if (!res.ok) throw new Error('reverse geocode failed');
+          const s: Suggestion = await res.json();
+          selectSuggestion(s);
+        } catch {
+          setLocateError('Could not find an address for your location. Try typing it instead.');
+        } finally {
+          setLocating(false);
+        }
+      },
+      (err) => {
+        setLocating(false);
+        if (err.code === err.PERMISSION_DENIED) {
+          setLocateError('Location access was denied. Please type your address instead.');
+        } else {
+          setLocateError('Could not detect your location. Please type your address.');
+        }
+      },
+      { timeout: 10000 }
+    );
+  }
 
   function selectSuggestion(s: Suggestion) {
     const defaults = getCountryDefaults(s.countryCode);
@@ -152,6 +187,29 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
               </button>
             ))}
           </div>
+        )}
+      </div>
+
+      {/* Use my location */}
+      <div className="flex flex-col gap-1.5">
+        <button
+          type="button"
+          onClick={useMyLocation}
+          disabled={locating}
+          className="inline-flex items-center gap-2 self-start bg-gray-50 hover:bg-amber-50 border border-gray-200 hover:border-amber-300 text-gray-700 hover:text-gray-900 text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {locating ? (
+            <div className="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
+          ) : (
+            <svg className="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 2a7 7 0 017 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 017-7z" />
+              <circle cx="12" cy="9" r="2.5" fill="currentColor" className="text-amber-500" />
+            </svg>
+          )}
+          {locating ? 'Detecting location…' : 'Use my location'}
+        </button>
+        {locateError && (
+          <p className="text-xs text-red-600">{locateError}</p>
         )}
       </div>
 
