@@ -7,20 +7,70 @@ import { RtlWrapper } from '@/components/RtlWrapper';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
+const SITE = 'https://roofsolar.netlify.app';
+
 export const metadata: Metadata = {
-  title: 'RoofSolar — AI Solar Advisor',
+  metadataBase: new URL(SITE),
+  title: {
+    default: 'RoofSolar — Free AI Solar Calculator',
+    template: '%s | RoofSolar',
+  },
   description:
-    'Free, AI-powered solar investment analysis in under 3 minutes. 25-year cashflow model, payback, export earnings, battery and EV economics — with a built-in AI advisor that explains every number in plain English.',
+    'Free solar panel calculator powered by AI. Get a 25-year cashflow model, payback period, export earnings, battery & EV savings in under 3 minutes. Works worldwide.',
+  keywords: [
+    'solar calculator', 'solar panel calculator', 'solar payback calculator',
+    'solar ROI', 'solar investment', 'solar savings calculator',
+    'solar energy calculator', 'solar panel cost', 'solar battery',
+    'free solar calculator', 'AI solar advisor',
+  ],
+  alternates: { canonical: SITE },
   icons: {
     icon: '/logo-192.png',
     apple: '/logo-192.png',
     shortcut: '/logo-192.png',
   },
   openGraph: {
-    title: 'RoofSolar — AI Solar Advisor',
-    description: 'AI-powered solar investment analysis. 25-year cashflow, plain-English explanations, works worldwide.',
-    images: [{ url: '/logo-512.png', width: 512, height: 512 }],
+    type: 'website',
+    url: SITE,
+    siteName: 'RoofSolar',
+    title: 'RoofSolar — Free AI Solar Calculator',
+    description:
+      'Free solar panel calculator. 25-year cashflow, payback period, battery & EV savings. Instant results, works worldwide.',
+    images: [{ url: '/logo-512.png', width: 512, height: 512, alt: 'RoofSolar logo' }],
+    locale: 'en_US',
   },
+  twitter: {
+    card: 'summary',
+    title: 'RoofSolar — Free AI Solar Calculator',
+    description: 'Free solar panel calculator. 25-year cashflow, payback, battery & EV savings. Instant results.',
+    images: ['/logo-512.png'],
+  },
+  robots: { index: true, follow: true },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'RoofSolar',
+  url: SITE,
+  description: 'Free AI-powered solar panel investment calculator. Get payback period, 25-year cashflow, export earnings, battery and EV economics in under 3 minutes.',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  },
+  featureList: [
+    '25-year cashflow model',
+    'Solar payback period calculator',
+    'Export earnings calculator',
+    'Battery storage economics',
+    'EV charging savings',
+    'AI solar advisor',
+    'Works worldwide',
+  ],
 };
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -29,6 +79,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
           <Script
             defer
