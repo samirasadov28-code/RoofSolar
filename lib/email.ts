@@ -100,3 +100,38 @@ export async function sendProReportEmail(
     `,
   });
 }
+
+const STARS = ['😞', '😕', '😐', '😊', '😍'];
+
+export async function sendFeedbackNotification(rating: number, message: string | null, page: string | null) {
+  if (!process.env.RESEND_API_KEY) return;
+
+  await resend.emails.send({
+    from: FROM,
+    to: 'finmodelup@gmail.com',
+    subject: `RoofSolar feedback — ${rating}/5 ${STARS[rating - 1]}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="28" height="28" style="border-radius:50%;object-fit:cover" />
+          <span style="font-weight:700;font-size:16px">RoofSolar — User Feedback</span>
+        </div>
+        <table style="border-collapse:collapse;width:100%">
+          <tr>
+            <td style="padding:8px 12px;background:#f9fafb;border:1px solid #e5e7eb;font-weight:600;width:110px">Rating</td>
+            <td style="padding:8px 12px;border:1px solid #e5e7eb">${rating} / 5 &nbsp; ${STARS[rating - 1]}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;background:#f9fafb;border:1px solid #e5e7eb;font-weight:600">Page</td>
+            <td style="padding:8px 12px;border:1px solid #e5e7eb;color:#6b7280">${page || '/'}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;background:#f9fafb;border:1px solid #e5e7eb;font-weight:600;vertical-align:top">Message</td>
+            <td style="padding:8px 12px;border:1px solid #e5e7eb">${message ? message.replace(/</g, '&lt;').replace(/>/g, '&gt;') : '<span style="color:#9ca3af">—</span>'}</td>
+          </tr>
+        </table>
+        <p style="color:#9ca3af;font-size:11px;margin-top:24px">RoofSolar · automated feedback notification</p>
+      </div>
+    `,
+  });
+}
