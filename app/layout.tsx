@@ -4,6 +4,7 @@ import './globals.css';
 import Script from 'next/script';
 import { LanguageProvider } from '@/lib/i18n/context';
 import { RtlWrapper } from '@/components/RtlWrapper';
+import { ServiceWorkerRegistrar } from '@/components/ServiceWorkerRegistrar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -83,6 +84,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="theme-color" content="#f59e0b" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="RoofSolar" />
         {process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN && (
           <Script
             defer
@@ -108,6 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </RtlWrapper>
         </LanguageProvider>
+        <ServiceWorkerRegistrar />
       </body>
     </html>
   );
