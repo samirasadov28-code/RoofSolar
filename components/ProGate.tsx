@@ -22,7 +22,10 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
   const t = useT();
   const { isPro: detectedPro, loading } = useProStatus(calculationId);
   const [overrideIsPro, setOverrideIsPro] = useState(false);
-  const isPro = detectedPro || overrideIsPro;
+  // FREE_FOR_ALL: full report is free for everyone. To re-enable paid gating,
+  // remove this line and restore: const isPro = detectedPro || overrideIsPro;
+  const isPro = true;
+  void detectedPro; void overrideIsPro; void loading;
   const [viewMode, setViewMode] = useViewMode();
   const showFreeView = viewMode === 'free';
   const setShowFreeView = (v: boolean) => setViewMode(v ? 'free' : 'pro');
