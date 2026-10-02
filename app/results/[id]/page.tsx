@@ -42,7 +42,7 @@ function PaybackCard({ data }: { data: any }) {
   const benefit = y1 ? (y1.solarSavings ?? 0) + (y1.exportIncome ?? 0) + (y1.batteryValue ?? 0) + (y1.evSavings ?? 0) : 0;
   const simple = benefit > 0 && data.netCapex > 0 ? data.netCapex / benefit : null;
   const years = simple ?? (isNaN(data.paybackMonths) ? null : data.paybackMonths / 12);
-  const financed = (y1?.debtService ?? 0) > 0;
+  const financed = (y1?.debtService ?? 0) < 0; // debtService is stored as a negative cashflow
   const breakeven = isNaN(data.paybackMonths) ? null : data.paybackMonths / 12;
   const color = !years ? 'text-red-600' : years < 8 ? 'text-green-600' : years < 12 ? 'text-yellow-600' : 'text-red-600';
   return (
