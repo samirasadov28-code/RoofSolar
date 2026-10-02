@@ -34,9 +34,16 @@ function shortAddress(full: string | undefined): string {
   return out.length > 38 ? out.slice(0, 36) + '…' : out;
 }
 
-function PaybackCard({ months }: { months: number }) {
+function PaybackCard({ data }: { data: any }) {
   const t = useT();
-  const years = isNaN(months) ? null : months / 12;
+  // Headline = simple payback on net system cost (net capex / year-1 benefits),
+  // so a loan does not make it look shorter than the system really pays back.
+  const y1 = data.cashflows?.[1];
+  const benefit = y1 ? (y1.solarSavings ?? 0) + (y1.exportIncome ?? 0) + (y1.batteryValue ?? 0) + (y1.evSavings ?? 0) : 0;
+  const simple = benefit > 0 && data.netCapex > 0 ? data.netCapex / benefit : null;
+  const years = simple ?? (isNaN(data.paybackMonths) ? null : data.paybackMonths / 12);
+  const financed = (y1?.debtService ?? 0) < 0; // debtService is stored as a negative cashflow
+  const breakeven = isNaN(data.paybackMonths) ? null : data.paybackMonths / 12;
   const color = !years ? 'text-red-600' : years < 8 ? 'text-green-600' : years < 12 ? 'text-yellow-600' : 'text-red-600';
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
@@ -45,6 +52,10 @@ function PaybackCard({ months }: { months: number }) {
         {years ? fmt(t.results.paybackYrs, { n: years.toFixed(1) }) : t.common.na}
       </p>
       {years && <p className="text-xs text-gray-400 mt-1">{years < 8 ? t.results.paybackExcellent : years < 12 ? t.results.paybackGood : t.results.paybackLong}</p>}
+      <p className="text-xs text-gray-400 mt-1">Simple payback: net cost / year-1 savings</p>
+      {financed && breakeven && (
+        <p className="text-xs text-gray-400 mt-1">Cash breakeven after loan repayments: {breakeven.toFixed(1)} yrs</p>
+      )}
     </div>
   );
 }
@@ -114,7 +125,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <PaybackCard months={data.paybackMonths} />
+          <PaybackCard data={data} />
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">{t.results.year1Savings}</p>

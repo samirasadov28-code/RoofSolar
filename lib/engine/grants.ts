@@ -24,9 +24,12 @@ export function getGrant(country: string, systemKwp: number, systemCostGross: nu
   const code = (country || '').toLowerCase();
 
   // ── Cash-grant countries ──────────────────────────────────────────
-  // Ireland — SEAI residential grant (size-banded, May 2026 rates)
+  // Ireland — SEAI domestic solar PV grant: 700 EUR/kWp up to 2 kWp, then
+  // 200 EUR per extra kWp up to 4 kWp, capped at 1,800 EUR (unchanged in 2026).
+  // Source: https://www.seai.ie/grants/home-energy-grants/individual-grants/solar-electricity-grant
   if (code === 'ie') {
-    return systemKwp <= 4 ? 2400 : 3000;
+    const kwp = Math.max(0, systemKwp);
+    return Math.min(700 * Math.min(kwp, 2) + 200 * Math.max(0, Math.min(kwp, 4) - 2), 1800);
   }
 
   // ── Tax-credit / refund countries (need systemCostGross) ──────────

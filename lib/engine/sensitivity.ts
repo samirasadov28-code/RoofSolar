@@ -1,6 +1,6 @@
 import type { CashflowParams } from './cashflow';
 import { buildCashflow } from './cashflow';
-import { calcIRR, calcPaybackMonths } from './metrics';
+import { calcIRR, calcSimplePaybackYears } from './metrics';
 
 export interface SensitivityCell {
   energyPriceScenario: 'bear' | 'base' | 'bull';
@@ -43,13 +43,13 @@ export function runSensitivity(baseParams: CashflowParams): SensitivityResult {
       const cfValues = cashflows.map((r) => r.netCashflow);
       cfValues[0] = cashflows[0].capex;
 
-      const paybackMonths = calcPaybackMonths(cashflows);
+      const simplePayback = calcSimplePaybackYears(cashflows, scenarioParams.netCapex);
       const irr = calcIRR(cfValues);
 
       grid.push({
         energyPriceScenario: energyScenario,
         exportTariffScenario: exportScenario,
-        paybackYears: isNaN(paybackMonths) ? NaN : paybackMonths / 12,
+        paybackYears: simplePayback ?? NaN,
         irr,
       });
     }

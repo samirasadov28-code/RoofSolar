@@ -44,6 +44,14 @@ export function calcPaybackMonths(annualCashflows: AnnualCashflow[]): number {
   return NaN;
 }
 
+/** Simple payback in years: net system cost / year-1 benefits. Ignores financing. */
+export function calcSimplePaybackYears(annualCashflows: AnnualCashflow[], netCapex: number): number | null {
+  const y1 = annualCashflows[1];
+  if (!y1) return null;
+  const benefit = (y1.solarSavings ?? 0) + (y1.exportIncome ?? 0) + (y1.batteryValue ?? 0) + (y1.evSavings ?? 0);
+  return benefit > 0 && netCapex > 0 ? netCapex / benefit : null;
+}
+
 export function calcLifetimeSavings(annualCashflows: AnnualCashflow[]): number {
   return annualCashflows
     .filter((r) => r.year > 0)
