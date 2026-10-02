@@ -142,11 +142,12 @@ describe('Module D — calcBattery', () => {
 
 // ─── Module E: Grants ─────────────────────────────────────────────────────────
 describe('Module E — getGrant', () => {
-  it('Ireland ≤4kWp → €2,400', () => expect(getGrant('ie', 4)).toBe(2400));
-  it('Ireland >4kWp → €3,000', () => expect(getGrant('ie', 4.1)).toBe(3000));
+  it('Ireland 4kWp → €1,800 (SEAI max)', () => expect(getGrant('ie', 4)).toBe(1800));
+  it('Ireland >4kWp → capped at €1,800', () => expect(getGrant('ie', 11.6)).toBe(1800));
   it('Great Britain → £0', () => expect(getGrant('gb', 10)).toBe(0));
   it('Other country → 0', () => expect(getGrant('us', 10)).toBe(0));
-  it('Ireland exact 4.0kWp → €2,400 (boundary)', () => expect(getGrant('ie', 4.0)).toBe(2400));
+  it('Ireland 2.5kWp → €1,500 (SEAI pro rata example)', () => expect(getGrant('ie', 2.5)).toBe(1500));
+  it('Ireland 2kWp → €1,400, 3kWp → €1,600', () => { expect(getGrant('ie', 2)).toBe(1400); expect(getGrant('ie', 3)).toBe(1600); });
 });
 
 // ─── Module G: Financing / PMT ────────────────────────────────────────────────
