@@ -207,7 +207,7 @@ export function CalculationBreakdown({ data, inputs, symbol }: Props) {
         />
         <Row
           label={t.calcBreakdown.paybackPeriod}
-          formula="first year cumulative cashflow ≥ 0"
+          formula="first year cumulative cashflow after any loan repayments ≥ 0 (cash breakeven, not simple payback)"
           result={paybackYrs != null ? `${fmt1(paybackYrs)} years` : t.common.na}
         />
         <Row
