@@ -51,16 +51,6 @@ function irr(cfs: number[]): number | null {
   return Number.isFinite(r) && r > -0.999 && r < 10 ? r : null;
 }
 
-function payback(cfs: number[]): number | null {
-  let cum = 0;
-  for (let y = 0; y < cfs.length; y++) {
-    const prev = cum;
-    cum += cfs[y];
-    if (y > 0 && prev < 0 && cum >= 0) return (y - 1) + (-prev) / (cfs[y] || 1);
-  }
-  return null;
-}
-
 function lifetime(cfs: number[]): number {
   return cfs.slice(1).reduce((a, b) => a + b, 0);
 }
