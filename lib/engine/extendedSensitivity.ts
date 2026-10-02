@@ -12,7 +12,7 @@
 import type { AnnualCashflow, CashflowParams } from './cashflow';
 import { buildCashflow } from './cashflow';
 import { calcFinancing } from './financing';
-import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from './metrics';
+import { calcIRR, calcNPV, calcSimplePaybackYears, calcLifetimeSavings } from './metrics';
 import { getGrant } from './grants';
 
 export interface SweepPoint {
@@ -57,8 +57,8 @@ export interface BaselineContext {
 function evaluate(params: CashflowParams): { cashflows: AnnualCashflow[]; payback: number | null; irr: number | null; npv: number; lifetime: number; } {
   const cashflows = buildCashflow(params);
   const cf = cashflows.map((r) => r.netCashflow);
-  const months = calcPaybackMonths(cashflows);
-  const payback = isNaN(months) ? null : months / 12;
+  // Simple payback (net cost / year-1 benefits), same definition as the results headline.
+  const payback = calcSimplePaybackYears(cashflows, params.netCapex);
 
   // IRR is undefined when there's no upfront equity — return null in that
   // case so the chart can show a gap.
