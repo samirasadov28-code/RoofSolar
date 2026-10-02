@@ -169,13 +169,12 @@ export function LiveStressTester({
     const npvVal = npv(cfs, 0.08);
     // Headline payback = simple payback (net cost / year-1 benefits), matching the results card.
     const paybackVal = scaledSavings > 0 && scaledCapex > 0 ? scaledCapex / scaledSavings : null;
-    const breakevenVal = annualDebtService > 0 ? payback(cfs) : null;
     const lifetimeVal = lifetime(cfs);
     const year1Net = cfs[1] ?? 0;
-    return { irrVal, npvVal, paybackVal, breakevenVal, lifetimeVal, year1Net, upfront, annualDebtService };
+    return { irrVal, npvVal, paybackVal, lifetimeVal, year1Net, upfront, annualDebtService };
   }, [equityPct, annualRate, energyMult, panelMult, netCapex, tenorYears, horizonYears, year1SolarSavings, year1ExportIncome, year1BatteryValue, year1EvSavings, inverterReplacementYear, inverterReplacementCost]);
 
-  const { irrVal, npvVal, paybackVal, breakevenVal, lifetimeVal, year1Net } = metrics;
+  const { irrVal, npvVal, paybackVal, lifetimeVal, year1Net } = metrics;
 
   function paybackColor() {
     if (paybackVal == null) return 'red';
@@ -232,7 +231,7 @@ export function LiveStressTester({
         <MetricPill
           label={t.stressTester.paybackLabel}
           value={paybackVal != null ? `${paybackVal.toFixed(1)} yr` : t.common.na}
-          sub={paybackVal != null ? ((paybackVal < 8 ? t.stressTester.excellent : paybackVal < 12 ? t.stressTester.good : t.stressTester.long) + (breakevenVal != null ? ` · loan cash breakeven ${breakevenVal.toFixed(1)} yr` : '')) : undefined}
+          sub={paybackVal != null ? (paybackVal < 8 ? t.stressTester.excellent : paybackVal < 12 ? t.stressTester.good : t.stressTester.long) : undefined}
           color={paybackColor()}
         />
         <MetricPill
