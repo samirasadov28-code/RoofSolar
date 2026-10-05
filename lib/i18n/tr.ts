@@ -260,7 +260,7 @@ const tr: Translations = {
     co2SavedYr: 'CO₂ tasarrufu/yıl',
     kgCo2Year: 'kg CO₂/yıl',
     exportEarnings: 'İhracat geliri/yıl',
-    exportTaxNote: "In Ireland, only the first €400 a year of microgeneration (export) income is exempt from income tax, USC and PRSI (2024 to 2028). Export income above that is taxable. These results are before any tax on it.",
+    exportTaxNote: "İrlanda'da bir bireyin ana konutunda mikro üretimden (kendi tüketimi için) elde ettiği kâr, yılda 400 €'ya kadar (2024-2028) gelir vergisi, USC ve PRSI'dan muaftır. Bunun üzerindeki kâr vergilendirilir. Bu sonuçlar, bu vergiden önceki değerlerdir.",
     year1Label: '1. yıl',
     systemSummary: 'Sistem özeti',
     labelSystem: 'Sistem',
