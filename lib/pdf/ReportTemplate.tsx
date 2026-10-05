@@ -13,6 +13,12 @@ import {
 import type { AnnualCashflow } from '@/lib/engine/cashflow';
 import { getCountryDefaults } from '@/lib/countryDefaults';
 
+/** Currency with the minus sign in front of the symbol: -€8,100 not €-8,100. */
+function money(symbol: string, n: number): string {
+  const r = Math.round(n);
+  return `${r < 0 ? '-' : ''}${symbol}${Math.abs(r).toLocaleString()}`;
+}
+
 const AMBER = '#fbbf24';
 const DARK = '#111827';
 const GRAY = '#6b7280';
@@ -197,7 +203,19 @@ const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Se
 export function ReportTemplate({ inputs, results }: Props) {
   const s = sym(inputs.countryCode);
   const cashflows: AnnualCashflow[] = results.cashflows ?? [];
-  const paybackYrs = isNaN(results.paybackMonths) ? 'N/A' : `${(results.paybackMonths / 12).toFixed(1)} yrs`;
+  // Same definitions as the results page: simple payback = net cost / year-1 benefit;
+  // cash breakeven = first year the cumulative cashflow after financing is >= 0.
+  const y1 = cashflows[1];
+  const y1Benefit = y1 ? (y1.solarSavings ?? 0) + (y1.exportIncome ?? 0) + (y1.batteryValue ?? 0) + (y1.evSavings ?? 0) : 0;
+  const simplePayback = y1Benefit > 0 && (results.netCapex ?? 0) > 0 ? results.netCapex / y1Benefit : null;
+  const paybackYrs = simplePayback != null
+    ? `${simplePayback.toFixed(1)} yrs`
+    : isNaN(results.paybackMonths) ? 'N/A' : `${(results.paybackMonths / 12).toFixed(1)} yrs`;
+  const breakevenYrs = isNaN(results.paybackMonths)
+    ? 'N/A'
+    : (results.financing?.upfrontCash ?? 1) <= 1 && results.paybackMonths === 0
+      ? 'No upfront cash'
+      : `${(results.paybackMonths / 12).toFixed(1)} yrs`;
   const today = new Date().toLocaleDateString('en-GB');
   const horizonYears = results.horizonYears ?? 25;
   const monthly = results.monthlyProductionKwh ?? [];
@@ -255,21 +273,24 @@ export function ReportTemplate({ inputs, results }: Props) {
       <Page size="A4" style={styles.page}>
         <Text style={styles.h1}>Executive Summary</Text>
         <MetricRow items={[
-          ['Payback period', paybackYrs],
+          ['Payback period (simple)', paybackYrs],
           ['IRR', results.irr != null
             ? `${(results.irr * 100).toFixed(1)}%`
             : results.irrUnavailableReason === 'no_equity' ? 'N/A (no equity)' : 'N/A'],
-          ['NPV (8% discount)', `${s}${Math.round(results.npv ?? 0).toLocaleString()}`],
+          ['NPV (8% discount)', money(s, results.npv ?? 0)],
         ]} />
         <MetricRow items={[
-          [`${horizonYears}-yr gross savings`, `${s}${Math.round(results.lifetimeSavings ?? 0).toLocaleString()}`],
+          [`${horizonYears}-yr gross savings`, money(s, results.lifetimeSavings ?? 0)],
           ['Year 1 solar savings', `${s}${Math.round(results.solarSavingsYear1 ?? 0).toLocaleString()}`],
           ['Year 1 export income', `${s}${Math.round(results.exportIncomeYear1 ?? 0).toLocaleString()}`],
         ]} />
         <MetricRow items={[
           ['Self-consumed (yr 1)', `${Math.round(results.selfConsumedKwh ?? 0).toLocaleString()} kWh`],
           ['Exported (yr 1)', `${Math.round(results.exportedKwh ?? 0).toLocaleString()} kWh`],
-          ['Net yr-1 cashflow', `${s}${Math.round(results.netSavingsYear1 ?? 0).toLocaleString()}`],
+          ['Net yr-1 cashflow', money(s, results.netSavingsYear1 ?? 0)],
+        ]} />
+        <MetricRow items={[
+          ['Cash breakeven (after financing)', breakevenYrs],
         ]} />
 
         <Text style={styles.h2}>Monthly Production vs Consumption</Text>
@@ -324,7 +345,7 @@ export function ReportTemplate({ inputs, results }: Props) {
                   ? (Number(v) >= 0 ? '#16a34a' : RED)
                   : DARK,
               }}>
-                {i === 0 ? String(v) : `${s}${Number(v).toLocaleString()}`}
+                {i === 0 ? String(v) : money(s, Number(v))}
               </Text>
             ))}
           </View>
@@ -434,7 +455,7 @@ export function ReportTemplate({ inputs, results }: Props) {
 
         <MetricRow items={[
           ['Net system cost', `${s}${(results.netCapex ?? 0).toLocaleString()}`],
-          ['Financing mode', financingMode === 'outright' ? 'Cash purchase' : financingMode === 'loan' ? 'Solar loan' : 'Hire purchase'],
+          ['Financing mode', financingMode === 'outright' ? 'Cash purchase' : financingMode === 'loan' ? 'Solar loan' : 'Green mortgage'],
           ['Loan amount', financing.loanAmount > 0 ? `${s}${Math.round(financing.loanAmount).toLocaleString()}` : 'N/A'],
         ]} />
 
@@ -462,9 +483,9 @@ export function ReportTemplate({ inputs, results }: Props) {
             <View key={row.year} style={{ ...styles.row, backgroundColor: idx % 2 === 0 ? '#ffffff' : LIGHT }}>
               <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5 }}>{row.year}</Text>
               <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5 }}>{s}{Math.round(income).toLocaleString()}</Text>
-              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.debtService > 0 ? RED : GRAY }}>{row.debtService > 0 ? `−${s}${Math.round(row.debtService).toLocaleString()}` : '—'}</Text>
-              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.netCashflow >= 0 ? '#16a34a' : RED }}>{s}{Math.round(row.netCashflow).toLocaleString()}</Text>
-              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.cumulativeCashflow >= 0 ? '#16a34a' : RED }}>{s}{Math.round(row.cumulativeCashflow).toLocaleString()}</Text>
+              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.debtService !== 0 ? RED : GRAY }}>{row.debtService !== 0 ? money(s, -Math.abs(row.debtService)) : '—'}</Text>
+              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.netCashflow >= 0 ? '#16a34a' : RED }}>{money(s, row.netCashflow)}</Text>
+              <Text style={{ flex: 1, textAlign: 'right', fontSize: 8.5, color: row.cumulativeCashflow >= 0 ? '#16a34a' : RED }}>{money(s, row.cumulativeCashflow)}</Text>
             </View>
           );
         })}
@@ -500,7 +521,8 @@ export function ReportTemplate({ inputs, results }: Props) {
           ['Panel degradation', '0.5%/yr linear'],
           ['Energy price escalation', '3%/yr'],
           ['System losses (inverter + wiring)', '14% (baked into PVGIS/NREL request)'],
-          ['Self-consumption model', 'Monthly balance with time-of-day cap (profileCap parameter)'],
+          ['Self-consumption model', 'Hourly representative-day balance per month (same model as the hourly view)'],
+          ['Battery efficiency (if a battery is included)', 'Modelling assumption: 89% solar-to-battery-to-home, one manufacturer\'s published figure (Tesla Powerwall 3 datasheet, solar shifting, 25C, new). Other products and ageing differ; capacity fade and cycle limits are not modelled'],
           ['Battery arbitrage', 'Pre-charges to (capacity − expected solar surplus) each night'],
           ['Hourly simulation', 'Gaussian solar bell curve (σ = 2.5–3.2 h) + standard residential load shape (morning + evening peaks)'],
           ['IRR', 'Internal rate of return on equity invested; undefined when equity = 0'],
