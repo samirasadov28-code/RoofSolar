@@ -61,7 +61,7 @@ export interface HomeBattery {
   model: string;
   kwh: number;
   chemistry: 'LFP (LiFePO₄)' | 'NMC' | 'Sodium-ion';
-  cycles: number;            // rated full cycles
+  cycles: number | null;     // rated full cycles; null = not verified against a manufacturer datasheet
   warrantyYears: number;
   modular: boolean;
   /** Inverter brands explicitly compatible. */
@@ -285,7 +285,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Force-H2 7.1 kWh',
     kwh: 7.1,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Sungrow', 'Solis', 'Fox ESS', 'GoodWe'],
@@ -299,7 +299,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'LUNA2000 10 kWh',
     kwh: 10.0,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Huawei SUN2000'],
@@ -313,12 +313,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Battery-Box Premium HVS 10.2',
     kwh: 10.24,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 10000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Fronius', 'SMA', 'Sungrow', 'Solis', 'GoodWe'],
     region: 'IE+UK',
-    notes: 'High-voltage LFP, 10,000-cycle life. Pairs with most premium inverters.',
+    notes: 'High-voltage LFP. Pairs with most premium inverters.',
     installedPrice: { currency: 'EUR', min: 6000, max: 7500, unit: 'installed' },
   },
   {
@@ -327,7 +327,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'All-in-One 9.5 kWh',
     kwh: 9.5,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 12,
     modular: false,
     inverterBrands: ['GivEnergy Gen3'],
@@ -341,7 +341,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Powerwall 3',
     kwh: 13.5,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 8000,
+    cycles: null,
     warrantyYears: 10,
     modular: false,
     inverterBrands: ['Built-in PV inverter (rating varies by market)'],
@@ -355,7 +355,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'SBR 096 (9.6 kWh)',
     kwh: 9.6,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Sungrow SH-RS / SH-RT'],
