@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
       sendProReportEmail(
         session.customer_details.email,
         calculationId,
-        calc?.address ?? 'your property'
+        calc?.address ?? 'your property',
+        session.id
       ).catch(console.error);
     }
   }
