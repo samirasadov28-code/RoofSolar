@@ -142,6 +142,7 @@ export function EquipmentShortlist({ inputs }: Props) {
         <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">
           {fmt(t.equipment.panelsSection, { n: inputs.panelCount })}
         </h3>
+        <p className="text-[11px] text-gray-500 mb-2">{t.equipment.panelWattNote}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {panels.map((p) => (
             <PanelCard key={p.id} p={p} count={inputs.panelCount || 12} t={t} />
@@ -155,11 +156,20 @@ export function EquipmentShortlist({ inputs }: Props) {
           {fmt(t.equipment.inverterSection, { kwp: (inputs.systemKwp || 4.8).toFixed(1) })}
           {isHybrid ? t.equipment.inverterHybrid : t.equipment.inverterStandard}
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {inverters.map((i) => (
-            <InverterCard key={i.id} inv={i} t={t} />
-          ))}
-        </div>
+        {!isHybrid ? (
+          <p className="text-xs text-gray-600 leading-relaxed">{t.equipment.stringInverterNote}</p>
+        ) : (
+          <>
+            {inverters.length > 0 && Math.max(...inverters.map((i) => i.ratedKw)) < 0.7 * (inputs.systemKwp || 0) && (
+              <p className="text-[11px] text-amber-700 mb-2">{t.equipment.undersizedInverterNote}</p>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {inverters.map((i) => (
+                <InverterCard key={i.id} inv={i} t={t} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Batteries — only when the user picked one */}
