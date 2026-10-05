@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const params = new URLSearchParams({ lat, lon, format: 'json', addressdetails: '1' });
 
   const res = await fetch(`https://nominatim.openstreetmap.org/reverse?${params}`, {
-    headers: { 'User-Agent': 'RoofSolar/1.0 (contact@roofsolar.netlify.app)' },
+    headers: { 'User-Agent': 'RoofSolar/1.0 (finmodeloop@gmail.com)' },
     signal: AbortSignal.timeout(8000),
   });
 
