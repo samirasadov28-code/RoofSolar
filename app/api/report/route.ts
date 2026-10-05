@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase';
 import { isEarlyAccess } from '@/lib/earlyAccess';
+import { isPaidSessionFor } from '@/lib/proVerification';
+import { createServiceClient } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('id');
@@ -8,36 +10,38 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = createClient();
-
-    // Check pro purchase
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
-    }
-
-    const earlyAccess = isEarlyAccess(session.user.email);
+    const paidViaStripe = await isPaidSessionFor(request.nextUrl.searchParams.get('session_id'), id);
 
     let purchase: { id: string } | null = null;
-    if (!earlyAccess) {
-      const { data } = await supabase
-        .from('pro_purchases')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .eq('calculation_id', id)
-        .maybeSingle();
+    let calc: { inputs: any; results: any } | null = null;
 
-      if (!data) {
-        return NextResponse.json({ error: 'Pro purchase required' }, { status: 403 });
+    if (paidViaStripe) {
+      // Anonymous buyers have no login: Stripe confirmed payment for this calculation.
+      const { data } = await createServiceClient()
+        .from('calculations').select('inputs, results').eq('id', id).single();
+      calc = data;
+    } else {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
       }
-      purchase = data;
+      const earlyAccess = isEarlyAccess(session.user.email);
+      if (!earlyAccess) {
+        const { data } = await supabase
+          .from('pro_purchases')
+          .select('id')
+          .eq('user_id', session.user.id)
+          .eq('calculation_id', id)
+          .maybeSingle();
+        if (!data) {
+          return NextResponse.json({ error: 'Pro purchase required' }, { status: 403 });
+        }
+        purchase = data;
+      }
+      const { data } = await supabase
+        .from('calculations').select('inputs, results').eq('id', id).single();
+      calc = data;
     }
-
-    // Fetch calculation
-    const { data: calc } = await supabase
-      .from('calculations')
-      .select('inputs, results')
-      .eq('id', id)
-      .single();
 
     if (!calc) return NextResponse.json({ error: 'Calculation not found' }, { status: 404 });
 
