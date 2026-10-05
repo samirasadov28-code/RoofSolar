@@ -261,7 +261,7 @@ export function ReportTemplate({ inputs, results }: Props) {
         <MetricRow items={[
           ['Annual production', `${Math.round(results.annualProductionKwh ?? 0).toLocaleString()} kWh`],
           ['Annual consumption', `${Math.round(inputs.annualKwh ?? 0).toLocaleString()} kWh`],
-          ['CO₂ saved/yr', `${Math.round(results.annualCo2Saved ?? 0).toLocaleString()} kg`],
+          ['CO2 saved/yr', `${Math.round(results.annualCo2Saved ?? 0).toLocaleString()} kg`],
         ]} />
 
         <View style={styles.tag}><Text>Solar data source: {results.dataSource}</Text></View>
@@ -523,11 +523,11 @@ export function ReportTemplate({ inputs, results }: Props) {
           ['System losses (inverter + wiring)', '14% (baked into PVGIS/NREL request)'],
           ['Self-consumption model', 'Hourly representative-day balance per month (same model as the hourly view)'],
           ['Battery efficiency (if a battery is included)', 'Modelling assumption: 89% solar-to-battery-to-home, one manufacturer\'s published figure (Tesla Powerwall 3 datasheet, solar shifting, 25C, new). Other products and ageing differ; capacity fade and cycle limits are not modelled'],
-          ['Battery arbitrage', 'Pre-charges to (capacity − expected solar surplus) each night'],
-          ['Hourly simulation', 'Gaussian solar bell curve (σ = 2.5–3.2 h) + standard residential load shape (morning + evening peaks)'],
+          ['Battery arbitrage', 'Pre-charges to (capacity minus expected solar surplus) each night'],
+          ['Hourly simulation', 'Gaussian solar bell curve (sigma 2.5 to 3.2 hours) + standard residential load shape (morning + evening peaks)'],
           ['IRR', 'Internal rate of return on equity invested; undefined when equity = 0'],
           ['NPV discount rate', '8% real (roughly in-line with 10-yr equity market returns)'],
-          ['CO₂ factor', `${(results.co2FactorKgPerKwh ?? 0.475).toFixed(3)} kg/kWh (grid mix for ${inputs.countryCode?.toUpperCase() || 'your region'})`],
+          ['CO2 factor', `${(results.co2FactorKgPerKwh ?? 0.475).toFixed(3)} kg/kWh (grid mix for ${inputs.countryCode?.toUpperCase() || 'your region'})`],
           ['Inverter replacement', `Year ${results.inverterReplacementYear ?? 12}, ${s}${(results.inverterReplacementCost ?? 1200).toLocaleString()}`],
         ].map(([k, v]) => (
           <View key={k} style={styles.row}>
@@ -546,4 +546,4 @@ export function ReportTemplate({ inputs, results }: Props) {
       </Page>
     </Document>
   );
-}
+          }
