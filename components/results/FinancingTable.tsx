@@ -31,7 +31,10 @@ export function FinancingTable({ data, inputs, symbol }: Props) {
     });
     const tenYrDebtService = fin.monthlyPayment * 12 * Math.min(s.tenor || 0, 10);
     const tenYrTotalOut = fin.upfrontCash + tenYrDebtService;
-    const tenYrGrossIn = (data.lifetimeSavings ?? 0);
+    // Income over the first 10 years only (not the 25-year lifetime total).
+    const tenYrGrossIn = ((data.cashflows ?? []) as any[])
+      .filter((r) => r.year >= 1 && r.year <= 10)
+      .reduce((sum, r) => sum + (r.solarSavings ?? 0) + (r.exportIncome ?? 0) + (r.batteryValue ?? 0) + (r.evSavings ?? 0), 0);
     return { ...s, fin, tenYrTotalOut, tenYrNet: tenYrGrossIn - tenYrTotalOut };
   });
 
