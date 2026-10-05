@@ -27,10 +27,6 @@ export function calcSelfConsumption(
   for (let i = 0; i < 12; i++) {
     const prod = monthlyProduction[i];
     const cons = monthlyConsumption[i];
-    // Three independent ceilings on monthly self-consumption:
-    //   • can't self-consume more than was produced
-    //   • can't self-consume more than was used
-    //   • can't self-consume more than the time-of-day overlap allows
     const self = Math.min(prod, cons, prod * profileCap);
     selfConsumedKwh.push(self);
     exportedKwh.push(prod - self);
