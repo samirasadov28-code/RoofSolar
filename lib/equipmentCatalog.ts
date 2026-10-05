@@ -31,7 +31,7 @@ export interface SolarPanel {
   manufacturer: string;
   model: string;
   watts: number;
-  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC' | 'HPBC';
+  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC' | 'HPBC' | 'Mono half-cell (Q.ANTUM DUO Z)';
   efficiencyPct: number;
   warrantyYears: number;
   /** Tier-1 bankable, Tier-2 reliable budget, Premium = top end. */
@@ -103,7 +103,7 @@ export const PANELS: SolarPanel[] = [
     model: 'Vertex S+ 430W',
     watts: 430,
     cellTech: 'TOPCon (N-type)',
-    efficiencyPct: 22.0,
+    efficiencyPct: 21.5,
     warrantyYears: 25,
     tier: 'tier-1',
     notes: 'Compact form factor (1.76 m × 1.13 m) — fits more panels on small roofs.',
@@ -150,11 +150,11 @@ export const PANELS: SolarPanel[] = [
     manufacturer: 'Q.Cells',
     model: 'Q.PEAK DUO BLK ML-G11+ 435W',
     watts: 435,
-    cellTech: 'TOPCon (N-type)',
-    efficiencyPct: 22.0,
+    cellTech: 'Mono half-cell (Q.ANTUM DUO Z)',
+    efficiencyPct: 21.5,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Korean engineering, German design heritage. Most-installed all-black panel in the US and Germany. Excellent low-light yield.',
+    notes: 'Korean engineering, German design heritage. Q CELLS lists up to 21.5% efficiency for the Q.PEAK DUO ML-G11+ family; confirm the exact model and wattage with your installer.',
     retailPrice: { currency: 'EUR', min: 295, max: 335, unit: 'per panel' },
   },
   {
@@ -230,7 +230,7 @@ export const INVERTERS: HybridInverter[] = [
     model: 'H1-5.0-E',
     ratedKw: 5.0,
     phase: 'single',
-    efficiencyPct: 97.6,
+    efficiencyPct: 97.8,
     warrantyYears: 10,
     batteryBrands: ['Fox ESS EP/EQ', 'Pylontech'],
     region: 'UK',
@@ -256,7 +256,7 @@ export const INVERTERS: HybridInverter[] = [
     model: 'Sunny Tripower Smart Energy 5.0',
     ratedKw: 5.0,
     phase: 'single',
-    efficiencyPct: 97.5,
+    efficiencyPct: 98.2,
     warrantyYears: 10,
     batteryBrands: ['BYD HVS/HVM', 'sonnenBatterie'],
     region: 'IE+UK',
