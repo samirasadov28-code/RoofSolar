@@ -14,22 +14,22 @@ interface ProGateProps {
   calculationId: string;
   children: React.ReactNode;
   preview?: React.ReactNode;
-  /** Localised price label, e.g. "€3.99" or "£3.99". Defaults to £3.99. */
+  /** Localised price label, e.g. "€3.99" or "£3.99". Defaults to €3.99. */
   priceLabel?: string;
 }
 
-export function ProGate({ calculationId, children, preview, priceLabel = '£3.99' }: ProGateProps) {
+export function ProGate({ calculationId, children, preview, priceLabel = '€3.99' }: ProGateProps) {
   const t = useT();
   const { isPro: detectedPro, loading } = useProStatus(calculationId);
   const [overrideIsPro, setOverrideIsPro] = useState(false);
-  // FREE_FOR_ALL: full report is free for everyone. To re-enable paid gating,
-  // remove this line and restore: const isPro = detectedPro || overrideIsPro;
-  const isPro = true;
-  void detectedPro; void overrideIsPro; void loading;
+  // Paid model (Sam, 4 Oct 2026): free = basic payback estimate; one-off purchase
+  // unlocks detailed cashflow, stress tests, sensitivity analysis and the PDF.
+  const isPro = detectedPro || overrideIsPro;
   const [viewMode, setViewMode] = useViewMode();
   const showFreeView = viewMode === 'free';
   const setShowFreeView = (v: boolean) => setViewMode(v ? 'free' : 'pro');
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [showEarlyAccessForm, setShowEarlyAccessForm] = useState(false);
   const [earlyAccessEmail, setEarlyAccessEmail] = useState('');
   const [earlyAccessError, setEarlyAccessError] = useState<string | null>(null);
@@ -42,9 +42,12 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ calculationId }),
       });
-      const { url } = await res.json();
+      const { url, error } = await res.json();
       if (url) window.location.href = url;
-    } catch {}
+      else setCheckoutError(error ?? 'Checkout is unavailable right now. Please try again later.');
+    } catch {
+      setCheckoutError('Checkout is unavailable right now. Please try again later.');
+    }
     setCheckoutLoading(false);
   }
 
@@ -179,6 +182,7 @@ export function ProGate({ calculationId, children, preview, priceLabel = '£3.99
               >
                 {checkoutLoading ? t.proGate.loadingBtn : fmt(t.proGate.unlockFor, { price: priceLabel })}
               </button>
+              {checkoutError && <p className="text-xs text-red-600 mt-2 text-center max-w-xs">{checkoutError}</p>}
               <button
                 onClick={() => setShowEarlyAccessForm(true)}
                 className="text-xs text-gray-500 hover:text-gray-700 underline mt-3"
