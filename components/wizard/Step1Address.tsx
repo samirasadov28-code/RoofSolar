@@ -87,7 +87,11 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
     try {
       const qs = `lat=${lat}&lon=${lon}${cc ? `&cc=${cc}` : ''}`;
       const res = await fetch(`/api/preview?${qs}`);
-      if (res.ok) setPreview(await res.json());
+      if (res.ok) {
+        const p = await res.json();
+        setPreview(p);
+        if (typeof p?.annualKwhPerKwp === 'number' && p.annualKwhPerKwp > 0) setInputs({ siteYieldKwhPerKwp: p.annualKwhPerKwp });
+      }
     } catch {}
     setPreviewLoading(false);
   }, []);
