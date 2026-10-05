@@ -32,7 +32,7 @@ export interface SolarPanel {
   model: string;
   watts: number;
   cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC' | 'HPBC' | 'Mono half-cell (Q.ANTUM DUO Z)';
-  efficiencyPct: number;
+  efficiencyPct: number | null;
   warrantyYears: number;
   /** Tier-1 bankable, Tier-2 reliable budget, Premium = top end. */
   tier: 'tier-1' | 'tier-2' | 'premium';
@@ -106,7 +106,7 @@ export const PANELS: SolarPanel[] = [
     efficiencyPct: 21.5,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Compact form factor (1.76 m × 1.13 m) — fits more panels on small roofs.',
+    notes: 'Compact form factor (1.76 m × 1.13 m) — fits more panels on small roofs. Efficiency is approximate, derived from the datasheet area (about 21.5% at 430 W); check the exact wattage table.',
     retailPrice: { currency: 'EUR', min: 270, max: 300, unit: 'per panel' },
   },
   {
@@ -151,10 +151,10 @@ export const PANELS: SolarPanel[] = [
     model: 'Q.PEAK DUO BLK ML-G11+ 435W',
     watts: 435,
     cellTech: 'Mono half-cell (Q.ANTUM DUO Z)',
-    efficiencyPct: 21.5,
+    efficiencyPct: null,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Korean engineering, German design heritage. Q CELLS lists up to 21.5% efficiency for the Q.PEAK DUO ML-G11+ family; confirm the exact model and wattage with your installer.',
+    notes: 'Efficiency for this exact wattage not verified. Q CELLS lists a family maximum of 21.5% for the Q.PEAK DUO ML-G11+ range, which not every wattage reaches. Confirm the exact model with your installer.',
     retailPrice: { currency: 'EUR', min: 295, max: 335, unit: 'per panel' },
   },
   {
@@ -227,7 +227,7 @@ export const INVERTERS: HybridInverter[] = [
   {
     id: 'fox-ess-h1-5kw',
     manufacturer: 'Fox ESS',
-    model: 'H1-5.0-E',
+    model: 'H1-5.0-E', // efficiency from a distributor-hosted FoxESS datasheet copy, not manufacturer-hosted
     ratedKw: 5.0,
     phase: 'single',
     efficiencyPct: 97.8,
