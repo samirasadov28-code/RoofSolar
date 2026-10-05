@@ -7,10 +7,10 @@ import { getGrantMechanism } from '@/lib/engine/grants';
  *
  * Env vars:
  *   - GROQ_API_KEY  (required)  — your key from https://console.groq.com/keys
- *   - GROQ_MODEL    (optional)  — defaults to llama-3.3-70b-versatile
+ *   - GROQ_MODEL    (optional)  — defaults to openai/gpt-oss-20b (llama-3.3-70b-versatile is no longer available on the Groq account)
  */
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 
 function getApiKey(): string | undefined {
   return process.env.GROQ_API_KEY;
