@@ -260,7 +260,7 @@ const id: Translations = {
     co2SavedYr: 'CO₂ dihemat/thn',
     kgCo2Year: 'kg CO₂/tahun',
     exportEarnings: 'Pendapatan ekspor/thn',
-    exportTaxNote: "In Ireland, only the first €400 a year of microgeneration (export) income is exempt from income tax, USC and PRSI (2024 to 2028). Export income above that is taxable. These results are before any tax on it.",
+    exportTaxNote: "Di Irlandia, keuntungan individu dari mikrogenerasi di tempat tinggal utamanya (untuk konsumsi sendiri) dibebaskan dari pajak penghasilan, USC, dan PRSI hingga €400 per tahun (2024 sampai 2028). Keuntungan di atas itu kena pajak. Hasil ini sebelum pajak tersebut.",
     year1Label: 'tahun 1',
     systemSummary: 'Ringkasan sistem',
     labelSystem: 'Sistem',
