@@ -75,7 +75,7 @@ function InverterCard({ inv, t }: { inv: HybridInverter; t: Translations }) {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.ratedLabel}</span> · <strong>{inv.ratedKw} kW</strong></div>
-        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{inv.efficiencyPct}%</strong></div>
+        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{inv.efficiencyPct != null ? `${inv.efficiencyPct}%` : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.phaseLabel}</span> · {inv.phase}</div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {inv.warrantyYears} yr</div>
         <div className="sm:col-span-2">
