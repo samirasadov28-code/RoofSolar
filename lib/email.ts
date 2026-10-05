@@ -28,7 +28,7 @@ export async function sendLeadConfirmation(to: string, name: string) {
           New analysis
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app · You are receiving this because you submitted a quote request.
+          RoofSolar · finmodeloop@gmail.com · You are receiving this because you submitted a quote request.
         </p>
       </div>
     `,
@@ -58,7 +58,7 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
           their solar investment.
         </p>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app
+          RoofSolar · finmodeloop@gmail.com
         </p>
       </div>
     `,
@@ -95,7 +95,7 @@ export async function sendProReportEmail(
           View &amp; download report
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app · This email was sent because you purchased a pro report.
+          RoofSolar · finmodeloop@gmail.com · This email was sent because you purchased a pro report.
         </p>
       </div>
     `,
