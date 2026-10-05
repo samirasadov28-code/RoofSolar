@@ -46,6 +46,8 @@ export interface HourlySimParams {
   exportPricePerKwh: number;
   nightPricePerKwh: number;
   performArbitrage: boolean;
+  /** Household load shape (24 values summing to 1). Defaults to the 'mixed' shape. */
+  loadShape?: number[];
 }
 
 // Standard IE/UK household load shape — normalised to sum to 1.0.
@@ -58,6 +60,36 @@ const RAW_SHAPE = [
 ];
 const RAW_SUM = RAW_SHAPE.reduce((a, b) => a + b, 0);
 const LOAD_SHAPE = RAW_SHAPE.map((v) => v / RAW_SUM);
+
+/**
+ * Modelling assumption, not a universal fact: 89% solar-to-battery-to-home efficiency, applied
+ * on discharge. The figure is one manufacturer's published value (Tesla Powerwall 3 datasheet,
+ * "solar shifting", 25C, beginning of life):
+ * https://energylibrary.tesla.com/docs/Public/EnergyStorage/Powerwall/3/Datasheet/en-us/Powerwall-3-Datasheet.pdf
+ * Other makes and conditions differ, capacity fade and cycle limits are not modelled, and it is
+ * currently a fixed constant (not yet a user input). Treat results with a battery accordingly.
+ */
+export const BATTERY_EFFICIENCY = 0.89;
+
+export type LoadProfile = 'daytime' | 'mixed' | 'evening';
+
+/**
+ * Load shape for the household's chosen profile. 'mixed' is the base shape above.
+ * 'daytime' and 'evening' tilt it by a fixed factor (modelling assumption, not a sourced
+ * dataset): daytime weights 09:00-16:59 x1.6, evening weights 17:00-22:59 x1.5 and
+ * 09:00-16:59 x0.6, then renormalises to sum 1.
+ */
+export function loadShapeFor(profile: LoadProfile | undefined): number[] {
+  if (!profile || profile === 'mixed') return LOAD_SHAPE;
+  const raw = LOAD_SHAPE.map((v, h) => {
+    const day = h >= 9 && h <= 16;
+    const eve = h >= 17 && h <= 22;
+    if (profile === 'daytime') return day ? v * 1.6 : v;
+    return day ? v * 0.6 : eve ? v * 1.5 : v;
+  });
+  const t = raw.reduce((a, b) => a + b, 0);
+  return raw.map((v) => v / t);
+}
 
 const DAYS_PER_MONTH = [31, 28.25, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const NIGHT_CHARGE_HOURS = [0, 1, 2, 3, 4, 5, 6]; // 00:00–06:59
@@ -76,6 +108,7 @@ function buildSolarShape(monthIndex: number): number[] {
 }
 
 function simulateDay(
+  LOAD_SHAPE: number[],
   solarShape: number[],
   dailySolarKwh: number,
   dailyLoadKwh: number,
@@ -83,6 +116,8 @@ function simulateDay(
   performArbitrage: boolean,
   importPricePerKwh: number,
   nightPricePerKwh: number,
+  initialSoc = 0,
+  efficiency = BATTERY_EFFICIENCY,
 ): HourlySlice[] {
   const isArbitrage = performArbitrage && batteryKwh > 0 && nightPricePerKwh < importPricePerKwh;
 
@@ -104,7 +139,7 @@ function simulateDay(
     : 0;
 
   const slices: HourlySlice[] = [];
-  let soc = 0;
+  let soc = Math.min(initialSoc, batteryKwh);
 
   for (let h = 0; h < 24; h++) {
     const solar = solarShape[h] * dailySolarKwh;
@@ -135,10 +170,11 @@ function simulateDay(
       gridExport = net - charged;
     } else if (net < 0) {
       const deficit = -net;
-      const discharged = Math.min(deficit, soc);
-      batteryDischarge = discharged;
-      soc -= discharged;
-      gridImport += deficit - discharged;
+      // Stored energy delivered = drawn x efficiency; the difference is lost as heat.
+      const delivered = Math.min(deficit, soc * efficiency);
+      batteryDischarge = delivered;
+      soc -= delivered / efficiency;
+      gridImport += deficit - delivered;
     }
 
     slices.push({
@@ -166,7 +202,9 @@ export function runHourlySimulator(params: HourlySimParams): HourlySimResult {
     exportPricePerKwh,
     nightPricePerKwh,
     performArbitrage,
+    loadShape,
   } = params;
+  const shape = loadShape ?? LOAD_SHAPE;
 
   const months: MonthlyHourlyProfile[] = [];
   let annualArbitrageSavings = 0;
@@ -177,15 +215,24 @@ export function runHourlySimulator(params: HourlySimParams): HourlySimResult {
     const dailyLoad = monthlyConsumptionKwh[m] / days;
     const solarShape = buildSolarShape(m);
 
-    const rday = simulateDay(
-      solarShape,
-      dailySolar,
-      dailyLoad,
-      batteryKwh,
-      performArbitrage,
-      importPricePerKwh,
-      nightPricePerKwh,
-    );
+    // Run repeated identical days so the battery starts each day at the charge it
+    // ended the previous one with (steady state). Otherwise leftover charge vanishes.
+    let rday: HourlySlice[] = [];
+    let startSoc = 0;
+    for (let pass = 0; pass < 4; pass++) {
+      rday = simulateDay(
+        shape,
+        solarShape,
+        dailySolar,
+        dailyLoad,
+        batteryKwh,
+        performArbitrage,
+        importPricePerKwh,
+        nightPricePerKwh,
+        startSoc,
+      );
+      startSoc = rday[23].batterySocKwh;
+    }
 
     // Arbitrage savings for the month: kWh shifted from night to day × price spread
     const nightCharged = rday
@@ -215,4 +262,34 @@ export function runHourlySimulator(params: HourlySimParams): HourlySimResult {
   }
 
   return { months, annualArbitrageSavings };
+}
+
+/**
+ * The single monthly energy balance used for the headline numbers and the cashflow.
+ * It runs the same hourly model as the hourly view (no grid pre-charging), so
+ * self-consumed, exported and imported kWh agree everywhere. A battery adds the solar
+ * it stores and discharges. `selfConsumedKwh` includes that discharge.
+ * Limitations: representative day per month, battery efficiency and cycle limits not modelled.
+ */
+export function monthlyEnergyBalance(
+  monthlyProductionKwh: number[],
+  monthlyConsumptionKwh: number[],
+  batteryKwh: number,
+  profile?: LoadProfile
+): { selfConsumedKwh: number[]; exportedKwh: number[]; gridImportKwh: number[] } {
+  const sim = runHourlySimulator({
+    monthlyProductionKwh,
+    monthlyConsumptionKwh,
+    batteryKwh,
+    importPricePerKwh: 0.3,
+    exportPricePerKwh: 0.1,
+    nightPricePerKwh: 0.3,
+    performArbitrage: false,
+    loadShape: loadShapeFor(profile),
+  });
+  return {
+    selfConsumedKwh: sim.months.map((m, i) => m.dailySelfConsumedKwh * DAYS_PER_MONTH[i]),
+    exportedKwh: sim.months.map((m, i) => m.dailyGridExportKwh * DAYS_PER_MONTH[i]),
+    gridImportKwh: sim.months.map((m, i) => m.dailyGridImportKwh * DAYS_PER_MONTH[i]),
+  };
 }
