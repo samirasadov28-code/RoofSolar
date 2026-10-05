@@ -31,8 +31,8 @@ export interface SolarPanel {
   manufacturer: string;
   model: string;
   watts: number;
-  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC';
-  efficiencyPct: number;
+  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC' | 'HPBC' | 'Mono half-cell (Q.ANTUM DUO Z)';
+  efficiencyPct: number | null;
   warrantyYears: number;
   /** Tier-1 bankable, Tier-2 reliable budget, Premium = top end. */
   tier: 'tier-1' | 'tier-2' | 'premium';
@@ -46,7 +46,7 @@ export interface HybridInverter {
   model: string;
   ratedKw: number;
   phase: 'single' | 'three';
-  efficiencyPct: number;
+  efficiencyPct: number | null;
   warrantyYears: number;
   /** Battery brands explicitly compatible. */
   batteryBrands: string[];
@@ -61,7 +61,7 @@ export interface HomeBattery {
   model: string;
   kwh: number;
   chemistry: 'LFP (LiFePO₄)' | 'NMC' | 'Sodium-ion';
-  cycles: number;            // rated full cycles
+  cycles: number | null;     // rated full cycles; null = not verified against a manufacturer datasheet
   warrantyYears: number;
   modular: boolean;
   /** Inverter brands explicitly compatible. */
@@ -103,10 +103,10 @@ export const PANELS: SolarPanel[] = [
     model: 'Vertex S+ 430W',
     watts: 430,
     cellTech: 'TOPCon (N-type)',
-    efficiencyPct: 22.0,
+    efficiencyPct: 21.5,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Compact form factor (1.76 m × 1.13 m) — fits more panels on small roofs.',
+    notes: 'Compact form factor (1.76 m × 1.13 m) — fits more panels on small roofs. Efficiency is approximate, derived from the datasheet area (about 21.5% at 430 W); check the exact wattage table.',
     retailPrice: { currency: 'EUR', min: 270, max: 300, unit: 'per panel' },
   },
   {
@@ -114,11 +114,11 @@ export const PANELS: SolarPanel[] = [
     manufacturer: 'LONGi',
     model: 'Hi-MO 6 425W',
     watts: 425,
-    cellTech: 'HJT',
-    efficiencyPct: 22.4,
+    cellTech: 'HPBC',
+    efficiencyPct: 21.8,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Hyper-efficient HPBC cell, low temperature coefficient — strong on warm sunny days.',
+    notes: 'HPBC back-contact cell, all-black. LONGi datasheet: 21.8% efficiency, 15-year product and 25-year linear power warranty, 1722 x 1134 mm.',
     retailPrice: { currency: 'EUR', min: 290, max: 330, unit: 'per panel' },
   },
   {
@@ -127,10 +127,10 @@ export const PANELS: SolarPanel[] = [
     model: 'Neostar 2S 450W',
     watts: 450,
     cellTech: 'IBC',
-    efficiencyPct: 23.2,
+    efficiencyPct: null,
     warrantyYears: 30,
     tier: 'premium',
-    notes: 'All-back-contact, no busbar shading. Industry-leading efficiency. 30-yr product warranty.',
+    notes: 'All-back-contact, no busbar shading. Efficiency for this exact model not verified (Aiko lists 22.6% for its 450 W Neostar 2P54). Aiko lists a 30-year performance warranty with a 15-year product warranty (extendable); confirm terms for the exact model.',
     retailPrice: { currency: 'EUR', min: 340, max: 380, unit: 'per panel' },
   },
   {
@@ -150,11 +150,11 @@ export const PANELS: SolarPanel[] = [
     manufacturer: 'Q.Cells',
     model: 'Q.PEAK DUO BLK ML-G11+ 435W',
     watts: 435,
-    cellTech: 'TOPCon (N-type)',
-    efficiencyPct: 22.0,
+    cellTech: 'Mono half-cell (Q.ANTUM DUO Z)',
+    efficiencyPct: null,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Korean engineering, German design heritage. Most-installed all-black panel in the US and Germany. Excellent low-light yield.',
+    notes: 'Efficiency for this exact wattage not verified. Q CELLS lists a family maximum of 21.5% for the Q.PEAK DUO ML-G11+ range, which not every wattage reaches. Confirm the exact model with your installer.',
     retailPrice: { currency: 'EUR', min: 295, max: 335, unit: 'per panel' },
   },
   {
@@ -163,10 +163,10 @@ export const PANELS: SolarPanel[] = [
     model: 'HiKu7 Mono PERC 455W',
     watts: 455,
     cellTech: 'PERC (P-type)',
-    efficiencyPct: 21.5,
+    efficiencyPct: null,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Bankable Tier-1, widely stocked across North America, EU and ANZ. Strong $/W value.',
+    notes: 'Bankable Tier-1. Model naming and efficiency not verified: Canadian Solar lists HiKu7 as 575-615 W, and its HiKu PERC range goes up to 455 W. Confirm the exact model with your installer.',
     retailPrice: { currency: 'EUR', min: 250, max: 285, unit: 'per panel' },
   },
 ];
@@ -191,11 +191,11 @@ export const INVERTERS: HybridInverter[] = [
     model: 'S6-EH1P5K-L',
     ratedKw: 5.0,
     phase: 'single',
-    efficiencyPct: 97.6,
+    efficiencyPct: null,
     warrantyYears: 10,
     batteryBrands: ['BYD', 'Pylontech', 'LG Chem', 'Solis'],
     region: 'IE+UK',
-    notes: 'Best-value 5 kW hybrid. Wide battery compatibility, easy commissioning.',
+    notes: 'Best-value 5 kW hybrid. Efficiency not verified. Wide battery compatibility, easy commissioning.',
     retailPrice: { currency: 'EUR', min: 1100, max: 1350, unit: 'unit only' },
   },
   {
@@ -227,10 +227,10 @@ export const INVERTERS: HybridInverter[] = [
   {
     id: 'fox-ess-h1-5kw',
     manufacturer: 'Fox ESS',
-    model: 'H1-5.0-E',
+    model: 'H1-5.0-E', // efficiency from a distributor-hosted FoxESS datasheet copy, not manufacturer-hosted
     ratedKw: 5.0,
     phase: 'single',
-    efficiencyPct: 97.6,
+    efficiencyPct: 97.8,
     warrantyYears: 10,
     batteryBrands: ['Fox ESS EP/EQ', 'Pylontech'],
     region: 'UK',
@@ -243,7 +243,7 @@ export const INVERTERS: HybridInverter[] = [
     model: 'Primo GEN24 Plus 6.0',
     ratedKw: 6.0,
     phase: 'single',
-    efficiencyPct: 98.2,
+    efficiencyPct: 97.6,
     warrantyYears: 10,
     batteryBrands: ['BYD HVS/HVM'],
     region: 'IE+UK',
@@ -256,7 +256,7 @@ export const INVERTERS: HybridInverter[] = [
     model: 'Sunny Tripower Smart Energy 5.0',
     ratedKw: 5.0,
     phase: 'single',
-    efficiencyPct: 97.5,
+    efficiencyPct: 98.2,
     warrantyYears: 10,
     batteryBrands: ['BYD HVS/HVM', 'sonnenBatterie'],
     region: 'IE+UK',
@@ -269,11 +269,11 @@ export const INVERTERS: HybridInverter[] = [
     model: 'IQ8M Microinverter (× n panels)',
     ratedKw: 0.330,
     phase: 'single',
-    efficiencyPct: 97.5,
+    efficiencyPct: 97.2,
     warrantyYears: 25,
     batteryBrands: ['Enphase IQ Battery 5P / 10T'],
     region: 'IE+UK',
-    notes: 'Per-panel microinverter — no single point of failure, panel-level monitoring, 25-year warranty. Dominant in the US, growing in EU/AU. Pair one per panel.',
+    notes: 'Per-panel microinverter — no single point of failure, panel-level monitoring, 25-year warranty. Dominant in the US, growing in EU/AU. Pair one per panel. Efficiency is the European weighted figure for the IQ8M-72-M-INT (230 V, 50 Hz); the US model differs.',
     retailPrice: { currency: 'EUR', min: 180, max: 230, unit: 'per microinverter (per panel)' },
   },
 ];
@@ -285,12 +285,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Force-H2 7.1 kWh',
     kwh: 7.1,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Sungrow', 'Solis', 'Fox ESS', 'GoodWe'],
     region: 'IE+UK',
-    notes: 'Best value-per-kWh. Stack up to 28.4 kWh. Industry-standard fit.',
+    notes: 'Best value-per-kWh. Stack up to 28.4 kWh. Industry-standard fit. The Pylontech warranty documents show 7 or 10 years depending on the document, so confirm the term for your market.',
     installedPrice: { currency: 'EUR', min: 4500, max: 5500, unit: 'installed' },
   },
   {
@@ -299,12 +299,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'LUNA2000 10 kWh',
     kwh: 10.0,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
-    warrantyYears: 10,
+    cycles: null,
+    warrantyYears: 15,
     modular: true,
     inverterBrands: ['Huawei SUN2000'],
     region: 'IE+UK',
-    notes: 'Modular in 5 kWh blocks (5/10/15). Tightly integrated with Huawei inverters.',
+    notes: 'Modular in 5 kWh blocks (5/10/15). Tightly integrated with Huawei inverters. Huawei Europe lists 15 years as 5 basic plus 10 advanced, conditional on its warranty letter.',
     installedPrice: { currency: 'EUR', min: 6500, max: 8000, unit: 'installed' },
   },
   {
@@ -313,12 +313,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Battery-Box Premium HVS 10.2',
     kwh: 10.24,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 10000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Fronius', 'SMA', 'Sungrow', 'Solis', 'GoodWe'],
     region: 'IE+UK',
-    notes: 'High-voltage LFP, 10,000-cycle life. Pairs with most premium inverters.',
+    notes: 'High-voltage LFP. Pairs with most premium inverters.',
     installedPrice: { currency: 'EUR', min: 6000, max: 7500, unit: 'installed' },
   },
   {
@@ -327,12 +327,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'All-in-One 9.5 kWh',
     kwh: 9.5,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 12,
     modular: false,
     inverterBrands: ['GivEnergy Gen3'],
     region: 'UK',
-    notes: 'Inverter + battery in one floor-standing unit. Plug-and-play install.',
+    notes: 'Inverter + battery in one floor-standing unit. Plug-and-play install. Model naming not verified: the 9.5 kWh GivEnergy datasheet found (12 years) is for the Giv-Bat 9.5 battery, so confirm what the All-in-One includes.',
     installedPrice: { currency: 'GBP', min: 5500, max: 7000, unit: 'installed' },
   },
   {
@@ -341,12 +341,12 @@ export const BATTERIES: HomeBattery[] = [
     model: 'Powerwall 3',
     kwh: 13.5,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 8000,
+    cycles: null,
     warrantyYears: 10,
     modular: false,
-    inverterBrands: ['Built-in 11.5 kW PV inverter'],
+    inverterBrands: ['Built-in PV inverter (rating varies by market)'],
     region: 'IE+UK',
-    notes: 'All-in-one — has its own PV inverter, no separate hybrid needed. Premium price, marquee brand.',
+    notes: 'All-in-one — has its own PV inverter, no separate hybrid needed. Premium price, marquee brand. Tesla publishes US and Australian datasheets; confirm local availability and the exact variant with an installer.',
     installedPrice: { currency: 'EUR', min: 12000, max: 15000, unit: 'installed' },
   },
   {
@@ -355,7 +355,7 @@ export const BATTERIES: HomeBattery[] = [
     model: 'SBR 096 (9.6 kWh)',
     kwh: 9.6,
     chemistry: 'LFP (LiFePO₄)',
-    cycles: 6000,
+    cycles: null,
     warrantyYears: 10,
     modular: true,
     inverterBrands: ['Sungrow SH-RS / SH-RT'],

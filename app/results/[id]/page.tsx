@@ -48,12 +48,12 @@ function PaybackCard({ data }: { data: any }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
       <p className="text-sm text-gray-500 mb-1">{t.results.paybackPeriod}</p>
-      <p className={`text-4xl font-extrabold ${color}`}>
+      <p className={`text-3xl sm:text-4xl font-extrabold ${color}`}>
         {years ? fmt(t.results.paybackYrs, { n: years.toFixed(1) }) : t.common.na}
       </p>
       {years && <p className="text-xs text-gray-400 mt-1">{years < 8 ? t.results.paybackExcellent : years < 12 ? t.results.paybackGood : t.results.paybackLong}</p>}
       <p className="text-xs text-gray-400 mt-1">Simple payback: net cost / year-1 savings</p>
-      {financed && breakeven && (
+      {financed && breakeven != null && breakeven > 0 && (
         <p className="text-xs text-gray-400 mt-1">Cash breakeven after loan repayments: {breakeven.toFixed(1)} yrs</p>
       )}
     </div>
@@ -65,6 +65,15 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   const [data, setData] = useState<any>(null);
   const [inputs, setInputs] = useState<any>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
+  const [proSessionId, setProSessionId] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      setProSessionId(
+        new URLSearchParams(window.location.search).get('session_id') ??
+          localStorage.getItem(`roofsolar_pro_session_${params.id}`)
+      );
+    } catch {}
+  }, [params.id]);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('roofsolar_results');
@@ -129,7 +138,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">{t.results.year1Savings}</p>
-            <p className="text-4xl font-extrabold text-gray-900">
+            <p className="text-3xl sm:text-4xl font-extrabold text-gray-900">
               {symbol}{Math.round(data.solarSavingsYear1 + (data.exportIncomeYear1 ?? 0)).toLocaleString()}
             </p>
             <p className="text-xs text-gray-400 mt-1">{t.results.solarPlusExport}</p>
@@ -137,7 +146,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">{t.results.co2SavedYr}</p>
-            <p className="text-4xl font-extrabold text-green-600">
+            <p className="text-3xl sm:text-4xl font-extrabold text-green-600">
               {fmtInt(data.annualCo2Saved)}
             </p>
             <p className="text-xs text-gray-400 mt-1">{t.results.kgCo2Year}</p>
@@ -145,12 +154,16 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
 
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
             <p className="text-sm text-gray-500 mb-1">{t.results.exportEarnings}</p>
-            <p className="text-4xl font-extrabold text-blue-600">
+            <p className="text-3xl sm:text-4xl font-extrabold text-blue-600">
               {symbol}{Math.round(data.exportIncomeYear1 ?? 0).toLocaleString()}
             </p>
             <p className="text-xs text-gray-400 mt-1">{t.results.year1Label}</p>
           </div>
         </div>
+
+        {(inputs.countryCode || '').toLowerCase() === 'ie' && (data.exportIncomeYear1 ?? 0) > 400 && (
+          <p className="text-xs text-gray-500 -mt-4">{t.results.exportTaxNote}</p>
+        )}
 
         <ResultsTipStrip />
 
@@ -285,6 +298,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                 year1ExportIncome={data.exportIncomeYear1 ?? 0}
                 year1BatteryValue={(data.batteryResult?.arbitrageProfit ?? []).reduce((a: number, b: number) => a + b, 0) / (data.horizonYears ?? 25)}
                 year1EvSavings={data.evCharging?.annualSavingVsGrid ?? 0}
+                baseIncomeByYear={cashflows.map((r) => (r.year > 0 ? r.solarSavings + r.exportIncome + r.batteryValue + r.evSavings : 0))}
                 inverterReplacementYear={data.inverterReplacementYear ?? 12}
                 inverterReplacementCost={data.inverterReplacementCost ?? 1200}
                 financingMode={inputs.financingMode ?? 'outright'}
@@ -352,7 +366,7 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
                 <p className="text-gray-400 text-sm">{t.results.pdfDesc}</p>
               </div>
               <a
-                href={`/api/report?id=${id}`}
+                href={`/api/report?id=${id}${proSessionId ? `&session_id=${encodeURIComponent(proSessionId)}` : ''}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-6 py-3 rounded-xl transition-colors whitespace-nowrap"

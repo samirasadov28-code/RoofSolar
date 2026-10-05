@@ -153,8 +153,8 @@ export function Step3Consumption({ onNext, onBack }: { onNext: () => void; onBac
         <p className="text-xs text-gray-500 mb-2">{t.step3.applianceTimingHint}</p>
         <div className="grid grid-cols-3 gap-2">
           {([
-            { value: 'daytime', title: t.step3.profileDaytime,  desc: t.step3.profileDaytimeDesc, pct: '~55%' },
-            { value: 'mixed',   title: t.step3.profileMixed,    desc: t.step3.profileMixedDesc,   pct: '~40%' },
+            { value: 'daytime', title: t.step3.profileDaytime,  desc: t.step3.profileDaytimeDesc, pct: '~65%' },
+            { value: 'mixed',   title: t.step3.profileMixed,    desc: t.step3.profileMixedDesc,   pct: '~45%' },
             { value: 'evening', title: t.step3.profileEvening,  desc: t.step3.profileEveningDesc, pct: '~25%' },
           ] as const).map((opt) => (
             <button

@@ -10,7 +10,7 @@ const EARLY_ACCESS_LS_KEY = 'roofsolar_early_access_email';
  * Shared Pro-unlock detection used by ProGate and by any UI element that
  * wants to react to Pro state (e.g. the view-mode toggle in the results
  * header). Resolves in this order:
- *   1. URL `?pro=true` (post-Stripe redirect)
+ *   1. URL `?session_id=` from Stripe, verified server-side via /api/pro-status
  *   2. localStorage early-access email
  *   3. Supabase session + early-access email or pro_purchases row
  */
@@ -20,9 +20,27 @@ export function useProStatus(calculationId: string) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('pro') === 'true') {
-      setIsPro(true);
-      setLoading(false);
+    const sessionId = params.get('session_id');
+    const paidKey = `roofsolar_pro_paid_${calculationId}`;
+    try {
+      if (localStorage.getItem(paidKey) === '1') {
+        setIsPro(true);
+        setLoading(false);
+        return;
+      }
+    } catch {}
+    if (sessionId) {
+      // Verified server-side against Stripe; a bare ?pro=true no longer unlocks anything.
+      fetch(`/api/pro-status?id=${encodeURIComponent(calculationId)}&session_id=${encodeURIComponent(sessionId)}`)
+        .then((r) => r.json())
+        .then((d) => {
+          if (d?.pro) {
+            try { localStorage.setItem(paidKey, '1'); localStorage.setItem(`roofsolar_pro_session_${calculationId}`, sessionId); } catch {}
+            setIsPro(true);
+          }
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
       return;
     }
 

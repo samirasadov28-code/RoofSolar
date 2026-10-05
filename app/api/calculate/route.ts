@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSolarYield } from '@/lib/engine/solarYield';
 import { distributeConsumption } from '@/lib/engine/consumption';
-import { calcSelfConsumption, profileCapFor } from '@/lib/engine/selfConsumption';
+import { profileCapFor } from '@/lib/engine/selfConsumption';
 import { calcBattery } from '@/lib/engine/battery';
 import { getGrant } from '@/lib/engine/grants';
 import { calcEvCharging } from '@/lib/engine/evCharging';
@@ -10,7 +10,7 @@ import { buildCashflow } from '@/lib/engine/cashflow';
 import { calcIRR, calcNPV, calcPaybackMonths, calcLifetimeSavings } from '@/lib/engine/metrics';
 import { runSensitivity } from '@/lib/engine/sensitivity';
 import { runExtendedSensitivity } from '@/lib/engine/extendedSensitivity';
-import { runHourlySimulator } from '@/lib/engine/hourlySimulator';
+import { runHourlySimulator, monthlyEnergyBalance, loadShapeFor } from '@/lib/engine/hourlySimulator';
 import { co2FactorFor } from '@/lib/co2';
 
 // CO2 grid factors live in lib/co2.ts and are shared with the preview route.
@@ -56,7 +56,11 @@ export async function POST(request: NextRequest) {
     const profileCap = hasBattery && batteryKwh > 0
       ? Math.min(1.0, baseProfileCap + 0.25)
       : baseProfileCap;
-    const sc = calcSelfConsumption(yieldResult.monthlyKwh, monthlyConsumption, profileCap);
+    // One energy balance for everything: the hourly model (profile load shape, battery stores solar).
+    const battKwhEff = hasBattery && batteryKwh > 0 ? batteryKwh : 0;
+    const profileKey = (consumptionProfile ?? 'mixed') as 'daytime' | 'mixed' | 'evening';
+    const energyBalance = (prod: number[]) => monthlyEnergyBalance(prod, monthlyConsumption, battKwhEff, profileKey);
+    const sc = energyBalance(yieldResult.monthlyKwh);
 
     // 4. Grant and net capex
     const grant = getGrant(countryCode, systemKwp, systemCostGross || 0);
@@ -92,7 +96,7 @@ export async function POST(request: NextRequest) {
       netCapex, monthlyProduction: yieldResult.monthlyKwh, monthlyConsumption,
       importPricePerKwh, exportPricePerKwh, battery: batteryResult, financing,
       loanTenorYears: tenorYears, evCharging: evResult, energyPriceEscalationPct,
-      batteryRuntimeParams, profileCap,
+      batteryRuntimeParams, profileCap, energyBalance,
       horizonYears: HORIZON_YEARS,
       inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
       inverterReplacementCost: INVERTER_REPLACEMENT_COST,
@@ -124,6 +128,7 @@ export async function POST(request: NextRequest) {
       exportPricePerKwh,
       nightPricePerKwh: nightPricePerKwh ?? importPricePerKwh,
       performArbitrage: !!(hasBattery && batteryKwh > 0 && performArbitrage),
+      loadShape: loadShapeFor(profileKey),
     });
 
     // 10a. Sensitivity
@@ -156,6 +161,7 @@ export async function POST(request: NextRequest) {
         energyPriceEscalationPct,
         batteryRuntimeParams,
         profileCap,
+        energyBalance,
         horizonYears: HORIZON_YEARS,
         inverterReplacementYear: INVERTER_REPLACEMENT_YEAR,
         inverterReplacementCost: INVERTER_REPLACEMENT_COST,
@@ -202,21 +208,30 @@ export async function POST(request: NextRequest) {
       hourlySimulation: hourlySimResult,
     };
 
-    // Save to Supabase (non-blocking; skip if DB not configured)
+    // Save to Supabase. The calculation is still returned if saving fails, but the failure is
+    // logged (never silent) and reported as saved:false so the app can say purchases are unavailable.
+    let saveError: string | null = null;
     try {
       const { createServiceClient } = await import('@/lib/supabase');
       const supabase = createServiceClient();
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('calculations')
         .insert({ inputs: body, results, address: body.displayName, system_kwp: systemKwp })
         .select('id')
         .single();
-      if (data?.id) {
-        return NextResponse.json({ ...results, calculationId: data.id });
+      if (error) {
+        saveError = `${error.code ?? ''} ${error.message}`.trim();
+      } else if (data?.id) {
+        return NextResponse.json({ ...results, calculationId: data.id, saved: true });
+      } else {
+        saveError = 'insert returned no id';
       }
-    } catch {}
+    } catch (e: any) {
+      saveError = e?.message ?? 'save threw';
+    }
+    console.error('Calculation save failed:', saveError);
 
-    return NextResponse.json(results);
+    return NextResponse.json({ ...results, saved: false });
   } catch (err: any) {
     console.error('Calculate error:', err);
     return NextResponse.json({ error: 'Calculation failed', details: err.message }, { status: 500 });

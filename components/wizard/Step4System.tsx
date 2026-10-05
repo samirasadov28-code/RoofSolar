@@ -15,13 +15,25 @@ const EV_VEHICLES = [
   { label: 'Other (manual)', efficiency: 0 },
 ];
 
+/**
+ * Default size = roof capacity, capped near the household's annual use.
+ * Uses the site-specific PVGIS yield from the address preview. If that has not
+ * loaded, falls back to a rough 900 kWh/kWp (an assumption, not a measurement).
+ */
+function suggestedPanels(roofAreaM2: number, annualKwh: number, siteYield: number | null): number {
+  const yieldPerKwp = siteYield && siteYield > 0 ? siteYield : 900;
+  const roofMax = Math.max(4, Math.floor(roofAreaM2 / 1.7));
+  const demandPanels = Math.ceil((annualKwh || 4200) / (0.4 * yieldPerKwp));
+  return Math.max(4, Math.min(roofMax, demandPanels));
+}
+
 export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
   const t = useT();
   const { inputs, setInputs } = useWizardStore();
 
   useEffect(() => {
     if (inputs.systemCostGross > 0) return;
-    const recommended = Math.max(4, Math.floor(inputs.roofAreaM2 / 1.7));
+    const recommended = suggestedPanels(inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp);
     setInputs({ panelCount: recommended, systemKwp: +(recommended * 0.4).toFixed(2) });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputs.roofAreaM2]);
@@ -40,7 +52,7 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
 
       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
         <p className="text-sm text-yellow-800 font-medium mb-3">
-          {fmt(t.step4.recommended, { panels: Math.floor(inputs.roofAreaM2 / 1.7), kwp: (Math.floor(inputs.roofAreaM2 / 1.7) * 0.4).toFixed(1) })}
+          {fmt(t.step4.recommended, { panels: suggestedPanels(inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp), kwp: (suggestedPanels(inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp) * 0.4).toFixed(1) })}
         </p>
         <div className="flex items-center gap-4">
           <button onClick={() => adjustPanels(-1)} className="w-10 h-10 bg-white border border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50">−</button>

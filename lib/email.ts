@@ -13,7 +13,7 @@ export async function sendLeadConfirmation(to: string, name: string) {
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
+          <img src="https://roofsolars.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Hi ${name},</h1>
@@ -24,11 +24,11 @@ export async function sendLeadConfirmation(to: string, name: string) {
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
           In the meantime, you can revisit your solar analysis or unlock your full pro report at the price shown on your results page.
         </p>
-        <a href="https://roofsolar.netlify.app/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
+        <a href="https://roofsolars.netlify.app/calculator" style="display:inline-block;background:#FACC15;color:#111827;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           New analysis
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app · You are receiving this because you submitted a quote request.
+          RoofSolar · finmodeloop@gmail.com · You are receiving this because you submitted a quote request.
         </p>
       </div>
     `,
@@ -45,7 +45,7 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
+          <img src="https://roofsolars.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Thanks, ${companyName}!</h1>
@@ -58,7 +58,7 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
           their solar investment.
         </p>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app
+          RoofSolar · finmodeloop@gmail.com
         </p>
       </div>
     `,
@@ -68,7 +68,8 @@ export async function sendInstallerWaitlistConfirmation(to: string, companyName:
 export async function sendProReportEmail(
   to: string,
   calculationId: string,
-  address: string
+  address: string,
+  stripeSessionId?: string
 ) {
   if (!process.env.RESEND_API_KEY) return;
 
@@ -79,7 +80,7 @@ export async function sendProReportEmail(
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
+          <img src="https://roofsolars.netlify.app/logo-192.png" alt="RoofSolar" width="32" height="32" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:18px">RoofSolar</span>
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Your pro report is ready</h1>
@@ -89,12 +90,12 @@ export async function sendProReportEmail(
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
           Your full 25-year solar investment analysis is ready to download. Click below to access it.
         </p>
-        <a href="https://roofsolar.netlify.app/results/${calculationId}?pro=true"
+        <a href="https://roofsolars.netlify.app/results/${calculationId}${stripeSessionId ? `?session_id=${encodeURIComponent(stripeSessionId)}` : ''}"
            style="display:inline-block;background:#111827;color:#FACC15;font-weight:700;padding:12px 24px;border-radius:12px;text-decoration:none;font-size:15px">
           View &amp; download report
         </a>
         <p style="color:#9CA3AF;font-size:12px;margin-top:32px">
-          RoofSolar · contact@roofsolar.netlify.app · This email was sent because you purchased a pro report.
+          RoofSolar · finmodeloop@gmail.com · This email was sent because you purchased a pro report.
         </p>
       </div>
     `,
@@ -113,7 +114,7 @@ export async function sendFeedbackNotification(rating: number, message: string |
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
-          <img src="https://roofsolar.netlify.app/logo-192.png" alt="RoofSolar" width="28" height="28" style="border-radius:50%;object-fit:cover" />
+          <img src="https://roofsolars.netlify.app/logo-192.png" alt="RoofSolar" width="28" height="28" style="border-radius:50%;object-fit:cover" />
           <span style="font-weight:700;font-size:16px">RoofSolar — User Feedback</span>
         </div>
         <table style="border-collapse:collapse;width:100%">

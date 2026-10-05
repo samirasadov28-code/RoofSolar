@@ -13,20 +13,26 @@ function pmt(annualRate: number, months: number, principal: number): number {
 
 function buildCashflows({
   upfront, year1Savings, annualDebtService, tenorYears, horizonYears,
-  escalation, degradation, inverterYear, inverterCost,
+  escalation, degradation, inverterYear, inverterCost, baseIncomeByYear, incomeScale,
 }: {
   upfront: number; year1Savings: number; annualDebtService: number;
   tenorYears: number; horizonYears: number; escalation: number;
   degradation: number; inverterYear: number; inverterCost: number;
-}): number[] {
+  /** Engine's gross income per year (index 1..horizon). When given, the base case reproduces the results exactly. */
+  baseIncomeByYear?: number[]; incomeScale: number;
+}): { cfs: number[]; grossIncome: number } {
   const cfs = [-upfront];
+  let grossIncome = 0;
   for (let y = 1; y <= horizonYears; y++) {
-    const savings = year1Savings * Math.pow(1 + escalation, y - 1) * Math.pow(1 - degradation, y - 1);
+    const savings = baseIncomeByYear && baseIncomeByYear[y] != null
+      ? baseIncomeByYear[y] * incomeScale
+      : year1Savings * Math.pow(1 + escalation, y - 1) * Math.pow(1 - degradation, y - 1);
+    grossIncome += savings;
     const debt = y <= tenorYears ? annualDebtService : 0;
     const replacement = y === inverterYear ? -inverterCost : 0;
     cfs.push(savings - debt + replacement);
   }
-  return cfs;
+  return { cfs, grossIncome };
 }
 
 function npv(cfs: number[], rate: number): number {
@@ -51,10 +57,6 @@ function irr(cfs: number[]): number | null {
   return Number.isFinite(r) && r > -0.999 && r < 10 ? r : null;
 }
 
-function lifetime(cfs: number[]): number {
-  return cfs.slice(1).reduce((a, b) => a + b, 0);
-}
-
 interface Props {
   netCapex: number;
   currentEquityPct: number;
@@ -65,6 +67,7 @@ interface Props {
   year1ExportIncome: number;
   year1BatteryValue: number;
   year1EvSavings: number;
+  baseIncomeByYear?: number[];
   inverterReplacementYear: number;
   inverterReplacementCost: number;
   financingMode: string;
@@ -132,11 +135,11 @@ function MetricPill({
 
 export function LiveStressTester({
   netCapex, currentEquityPct, currentAnnualRate, tenorYears, horizonYears,
-  year1SolarSavings, year1ExportIncome, year1BatteryValue, year1EvSavings,
+  year1SolarSavings, year1ExportIncome, year1BatteryValue, year1EvSavings, baseIncomeByYear,
   inverterReplacementYear, inverterReplacementCost, financingMode, symbol,
 }: Props) {
   const t = useT();
-  const initialEquity = financingMode === 'outright' ? 1.0 : Math.max(0.05, currentEquityPct ?? 0.5);
+  const initialEquity = financingMode === 'outright' ? 1.0 : Math.min(1, Math.max(0, currentEquityPct ?? 0.5));
 
   const [equityPct, setEquityPct] = useState(initialEquity);
   const [annualRate, setAnnualRate] = useState(currentAnnualRate ?? 0.07);
@@ -150,19 +153,21 @@ export function LiveStressTester({
     const loanAmt = scaledCapex * (1 - equityPct);
     const monthlyPmt = pmt(annualRate, tenorYears * 12, loanAmt);
     const annualDebtService = monthlyPmt * 12;
-    const cfs = buildCashflows({
+    const { cfs, grossIncome } = buildCashflows({
       upfront, year1Savings: scaledSavings, annualDebtService, tenorYears, horizonYears,
       escalation: 0.03, degradation: 0.005, inverterYear: inverterReplacementYear,
       inverterCost: inverterReplacementCost * panelMult,
+      baseIncomeByYear, incomeScale: energyMult * panelMult,
     });
     const irrVal = upfront > 0 ? irr(cfs) : null;
     const npvVal = npv(cfs, 0.08);
     // Headline payback = simple payback (net cost / year-1 benefits), matching the results card.
     const paybackVal = scaledSavings > 0 && scaledCapex > 0 ? scaledCapex / scaledSavings : null;
-    const lifetimeVal = lifetime(cfs);
+    // Gross savings over the horizon, same definition as the results summary (before loan repayments).
+    const lifetimeVal = grossIncome;
     const year1Net = cfs[1] ?? 0;
     return { irrVal, npvVal, paybackVal, lifetimeVal, year1Net, upfront, annualDebtService };
-  }, [equityPct, annualRate, energyMult, panelMult, netCapex, tenorYears, horizonYears, year1SolarSavings, year1ExportIncome, year1BatteryValue, year1EvSavings, inverterReplacementYear, inverterReplacementCost]);
+  }, [equityPct, annualRate, energyMult, panelMult, netCapex, tenorYears, horizonYears, year1SolarSavings, year1ExportIncome, year1BatteryValue, year1EvSavings, baseIncomeByYear, inverterReplacementYear, inverterReplacementCost]);
 
   const { irrVal, npvVal, paybackVal, lifetimeVal, year1Net } = metrics;
 

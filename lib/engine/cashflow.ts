@@ -27,6 +27,11 @@ export interface CashflowParams {
   batteryRuntimeParams?: BatteryRuntimeParams;
   /** Optional time-of-day cap on self-consumption. 1.0 = no cap. */
   profileCap?: number;
+  /**
+   * Single energy balance (from monthlyEnergyBalance). When given it replaces the
+   * profileCap monthly model, and battery self-use is already inside selfConsumedKwh.
+   */
+  energyBalance?: (monthlyProduction: number[]) => { selfConsumedKwh: number[]; exportedKwh: number[]; gridImportKwh: number[] };
   /** Project horizon in years. Defaults to 10 to keep historic
    *  unit-tests stable; production callers pass 25. */
   horizonYears?: number;
@@ -62,6 +67,7 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     energyPriceEscalationPct,
     batteryRuntimeParams,
     profileCap = 1.0,
+    energyBalance,
     horizonYears = 10,
     inverterReplacementYear = 0,
     inverterReplacementCost = 0,
@@ -91,13 +97,24 @@ export function buildCashflow(params: CashflowParams): AnnualCashflow[] {
     const exportPrice = exportPricePerKwh * priceScale;
 
     const degradedProduction = applyDegradation(monthlyProduction, yr);
-    const sc = calcSelfConsumption(degradedProduction, monthlyConsumption, profileCap);
+    const sc = energyBalance ? energyBalance(degradedProduction) : calcSelfConsumption(degradedProduction, monthlyConsumption, profileCap);
 
     const solarSavings = sc.selfConsumedKwh.reduce((a, b) => a + b, 0) * importPrice;
     const exportIncome = sc.exportedKwh.reduce((a, b) => a + b, 0) * exportPrice;
 
     let batteryValue = 0;
-    if (batteryRuntimeParams && batteryRuntimeParams.batteryKwh > 0) {
+    if (energyBalance) {
+      // Battery self-use is inside the balance; only grid arbitrage is extra.
+      batteryValue = batteryRuntimeParams && batteryRuntimeParams.performArbitrage
+        ? calcBattery({
+            ...batteryRuntimeParams,
+            nightPricePerKwh: batteryRuntimeParams.nightPricePerKwh * priceScale,
+            dayPricePerKwh: batteryRuntimeParams.dayPricePerKwh * priceScale,
+            exportedKwh: sc.exportedKwh,
+            gridImportKwh: sc.gridImportKwh,
+          }).arbitrageProfit.reduce((a, b) => a + b, 0)
+        : 0;
+    } else if (batteryRuntimeParams && batteryRuntimeParams.batteryKwh > 0) {
       const nightPrice = batteryRuntimeParams.nightPricePerKwh * priceScale;
       const bResult = calcBattery({
         ...batteryRuntimeParams,

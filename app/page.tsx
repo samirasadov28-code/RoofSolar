@@ -368,7 +368,7 @@ export default function HomePage() {
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            ModeLoop
+            Asadov Stack
           </a>
           <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap">
             {t.nav.signIn}
@@ -551,14 +551,15 @@ export default function HomePage() {
               <div className="space-y-3">
                 <div className="flex justify-end">
                   <div className="bg-amber-100 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[80%] text-gray-900">
-                    Is 9.4 years a good payback?
+                    Is an 8.1 year payback good?
                   </div>
                 </div>
                 <div className="flex">
                   <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[85%] text-gray-800">
-                    For Ireland at €0.43/kWh import + SEAI grant, yes — 9 years is right in the
-                    good-but-not-amazing band (8–11 yrs is typical). Adding a 5 kWh battery
-                    would shave ~1.8 years off it. Want me to model that?
+                    For Ireland at about €0.43/kWh import plus the SEAI grant, 8.1 years is a
+                    reasonable payback. A battery adds upfront cost, so it can lengthen the
+                    payback even though more of your solar is used at home. Want me to model it
+                    for your numbers?
                   </div>
                 </div>
                 <div className="flex justify-end">
@@ -649,7 +650,7 @@ export default function HomePage() {
           <p>{t.home.footerRights} · v{APP_VERSION}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Link href="/installers" className="hover:text-gray-700 transition-colors">{t.nav.forInstallers}</Link>
-            <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
+            <a href="mailto:finmodeloop@gmail.com" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
             <Link href="/privacy" className="hover:text-gray-700 transition-colors">Privacy Policy</Link>
           </div>
         </div>

@@ -61,9 +61,9 @@ export async function GET(request: NextRequest) {
 
   // ── Country-aware money & climate context ──────────────────────────
   const cd = getCountryDefaults(countryCode);
-  // Reference savings assumption: ~35% self-consumption (no battery),
-  // 65% exported. Conservative-mixed for a 4 kWp system.
-  const selfConsumedFraction = 0.35;
+  // Reference savings assumption: the same 'mixed' time-of-day cap the calculator uses
+  // (~45% of production self-consumed, no battery), the rest exported.
+  const selfConsumedFraction = 0.45;
   const exportedFraction = 1 - selfConsumedFraction;
   const annualSavings =
     yieldResult.annualKwh * selfConsumedFraction * cd.importPricePerKwh

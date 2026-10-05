@@ -45,7 +45,7 @@ const GENERIC_GRANT = 'Local incentives may apply';
 // `country_code` field).
 const COUNTRY_DEFAULTS: Record<string, CountryDefaults> = {
   // ── Western Europe (Eurozone + neighbours) ─────────────────────────
-  ie: { countryCode: 'ie', countryName: 'Ireland',         currencyCode: 'EUR', symbol: '€',     importPricePerKwh: 0.433, exportPricePerKwh: 0.21,  dayPricePerKwh: 0.433, nightPricePerKwh: 0.15,  annualKwh: 4200,  grant: 1800, grantSchemeName: 'SEAI grant',                    typicalTiltDeg: 35, touTariffExamples: 'Smart Meter, EcoTracker, Night Saver' },
+  ie: { countryCode: 'ie', countryName: 'Ireland',         currencyCode: 'EUR', symbol: '€',     importPricePerKwh: 0.433, exportPricePerKwh: 0.195, dayPricePerKwh: 0.433, nightPricePerKwh: 0.15,  annualKwh: 4200,  grant: 1800, grantSchemeName: 'SEAI grant',                    typicalTiltDeg: 35, touTariffExamples: 'Smart Meter, EcoTracker, Night Saver' },
   gb: { countryCode: 'gb', countryName: 'United Kingdom',  currencyCode: 'GBP', symbol: '£',     importPricePerKwh: 0.245, exportPricePerKwh: 0.15,  dayPricePerKwh: 0.245, nightPricePerKwh: 0.10,  annualKwh: 3100,  grant: 0,    grantSchemeName: 'Smart Export Guarantee',        typicalTiltDeg: 35, touTariffExamples: 'Octopus Agile, Economy 7, Cosy' },
   fr: { countryCode: 'fr', countryName: 'France',          currencyCode: 'EUR', symbol: '€',     importPricePerKwh: 0.252, exportPricePerKwh: 0.13,  dayPricePerKwh: 0.252, nightPricePerKwh: 0.18,  annualKwh: 4500,  grant: 0,    grantSchemeName: "MaPrimeRénov' / EDF OA",        typicalTiltDeg: 35, touTariffExamples: 'Heures Creuses, Tempo' },
   de: { countryCode: 'de', countryName: 'Germany',         currencyCode: 'EUR', symbol: '€',     importPricePerKwh: 0.402, exportPricePerKwh: 0.082, dayPricePerKwh: 0.402, nightPricePerKwh: 0.25,  annualKwh: 3500,  grant: 0,    grantSchemeName: 'KfW 270 / EEG Einspeisevergütung', typicalTiltDeg: 32, touTariffExamples: 'HT/NT, Tibber dynamisch' },
@@ -253,4 +253,4 @@ export function listSupportedCountries(): { code: string; name: string }[] {
   return Object.values(COUNTRY_DEFAULTS)
     .map((c) => ({ code: c.countryCode, name: c.countryName }))
     .sort((a, b) => a.name.localeCompare(b.name));
-       }
+}

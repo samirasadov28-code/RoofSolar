@@ -258,6 +258,7 @@ export interface Translations {
     co2SavedYr: string;
     kgCo2Year: string;
     exportEarnings: string;
+    exportTaxNote: string;
     year1Label: string;
     systemSummary: string;
     labelSystem: string;
@@ -520,6 +521,9 @@ export interface Translations {
     batterySection: string;
     forPanels: string;
     pricesNote: string;
+    stringInverterNote: string;
+    panelWattNote: string;
+    undersizedInverterNote: string;
   };
   viewMode: {
     ariaLabel: string;

@@ -50,7 +50,7 @@ function PanelCard({ p, count, t }: { p: SolarPanel; count: number; t: Translati
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.powerLabel}</span> · <strong>{p.watts}W</strong></div>
-        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{p.efficiencyPct}%</strong></div>
+        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{p.efficiencyPct != null ? `${p.efficiencyPct}%` : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.techLabel}</span> · {p.cellTech}</div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {p.warrantyYears} yr</div>
       </div>
@@ -75,7 +75,7 @@ function InverterCard({ inv, t }: { inv: HybridInverter; t: Translations }) {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.ratedLabel}</span> · <strong>{inv.ratedKw} kW</strong></div>
-        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{inv.efficiencyPct}%</strong></div>
+        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{inv.efficiencyPct != null ? `${inv.efficiencyPct}%` : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.phaseLabel}</span> · {inv.phase}</div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {inv.warrantyYears} yr</div>
         <div className="sm:col-span-2">
@@ -100,7 +100,7 @@ function BatteryCard({ b, t }: { b: HomeBattery; t: Translations }) {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.capacityLabel}</span> · <strong>{b.kwh} kWh</strong></div>
-        <div><span className="text-gray-500">{t.equipment.cyclesLabel}</span> · <strong>{b.cycles.toLocaleString()}</strong></div>
+        <div><span className="text-gray-500">{t.equipment.cyclesLabel}</span> · <strong>{b.cycles != null ? b.cycles.toLocaleString() : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.chemistryLabel}</span> · {b.chemistry}</div>
         <div className="sm:col-span-2">
           <span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {b.warrantyYears} yr ·{' '}
@@ -142,6 +142,7 @@ export function EquipmentShortlist({ inputs }: Props) {
         <h3 className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">
           {fmt(t.equipment.panelsSection, { n: inputs.panelCount })}
         </h3>
+        <p className="text-[11px] text-gray-500 mb-2">{t.equipment.panelWattNote}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {panels.map((p) => (
             <PanelCard key={p.id} p={p} count={inputs.panelCount || 12} t={t} />
@@ -155,11 +156,20 @@ export function EquipmentShortlist({ inputs }: Props) {
           {fmt(t.equipment.inverterSection, { kwp: (inputs.systemKwp || 4.8).toFixed(1) })}
           {isHybrid ? t.equipment.inverterHybrid : t.equipment.inverterStandard}
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-          {inverters.map((i) => (
-            <InverterCard key={i.id} inv={i} t={t} />
-          ))}
-        </div>
+        {!isHybrid ? (
+          <p className="text-xs text-gray-600 leading-relaxed">{t.equipment.stringInverterNote}</p>
+        ) : (
+          <>
+            {inverters.length > 0 && Math.max(...inverters.map((i) => i.ratedKw)) < 0.7 * (inputs.systemKwp || 0) && (
+              <p className="text-[11px] text-amber-700 mb-2">{t.equipment.undersizedInverterNote}</p>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {inverters.map((i) => (
+                <InverterCard key={i.id} inv={i} t={t} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Batteries — only when the user picked one */}
