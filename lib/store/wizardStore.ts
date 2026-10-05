@@ -31,6 +31,8 @@ export interface WizardInputs {
   // Step 4 — System
   panelCount: number;
   systemKwp: number;
+  /** Site-specific PVGIS yield (kWh per kWp per year) from the address preview; null until fetched. */
+  siteYieldKwhPerKwp: number | null;
   inverterType: 'standard' | 'hybrid';
   hasBattery: boolean;
   batteryKwh: number;
@@ -89,6 +91,7 @@ const defaultInputs: WizardInputs = {
 
   panelCount: 12,
   systemKwp: 4.8,
+  siteYieldKwhPerKwp: null,
   inverterType: 'standard',
   hasBattery: false,
   batteryKwh: 5,
@@ -100,7 +103,7 @@ const defaultInputs: WizardInputs = {
 
   tariffType: 'fixed',
   importPricePerKwh: 0.433,
-  exportPricePerKwh: 0.21,
+  exportPricePerKwh: 0.195,
   grant: 3000,
   systemCostGross: 0,  // 0 = use auto-estimate (panelCount × 900 + battery)
   dayPricePerKwh: 0.433,
