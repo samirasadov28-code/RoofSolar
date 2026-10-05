@@ -31,7 +31,7 @@ export interface SolarPanel {
   manufacturer: string;
   model: string;
   watts: number;
-  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC';
+  cellTech: 'TOPCon (N-type)' | 'PERC (P-type)' | 'HJT' | 'IBC' | 'HPBC';
   efficiencyPct: number;
   warrantyYears: number;
   /** Tier-1 bankable, Tier-2 reliable budget, Premium = top end. */
@@ -114,11 +114,11 @@ export const PANELS: SolarPanel[] = [
     manufacturer: 'LONGi',
     model: 'Hi-MO 6 425W',
     watts: 425,
-    cellTech: 'HJT',
-    efficiencyPct: 22.4,
+    cellTech: 'HPBC',
+    efficiencyPct: 21.8,
     warrantyYears: 25,
     tier: 'tier-1',
-    notes: 'Hyper-efficient HPBC cell, low temperature coefficient — strong on warm sunny days.',
+    notes: 'HPBC back-contact cell, all-black. LONGi datasheet: 21.8% efficiency, 15-year product and 25-year linear power warranty, 1722 x 1134 mm.',
     retailPrice: { currency: 'EUR', min: 290, max: 330, unit: 'per panel' },
   },
   {
