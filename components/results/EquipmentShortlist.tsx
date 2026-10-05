@@ -100,7 +100,7 @@ function BatteryCard({ b, t }: { b: HomeBattery; t: Translations }) {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.capacityLabel}</span> · <strong>{b.kwh} kWh</strong></div>
-        <div><span className="text-gray-500">{t.equipment.cyclesLabel}</span> · <strong>{b.cycles.toLocaleString()}</strong></div>
+        <div><span className="text-gray-500">{t.equipment.cyclesLabel}</span> · <strong>{b.cycles != null ? b.cycles.toLocaleString() : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.chemistryLabel}</span> · {b.chemistry}</div>
         <div className="sm:col-span-2">
           <span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {b.warrantyYears} yr ·{' '}
