@@ -650,7 +650,7 @@ export default function HomePage() {
           <p>{t.home.footerRights} · v{APP_VERSION}</p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Link href="/installers" className="hover:text-gray-700 transition-colors">{t.nav.forInstallers}</Link>
-            <a href="mailto:contact@roofsolar.netlify.app" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
+            <a href="mailto:finmodeloop@gmail.com" className="hover:text-gray-700 transition-colors">{t.home.footerContact}</a>
             <Link href="/privacy" className="hover:text-gray-700 transition-colors">Privacy Policy</Link>
           </div>
         </div>
