@@ -50,7 +50,7 @@ function PanelCard({ p, count, t }: { p: SolarPanel; count: number; t: Translati
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1 text-xs text-gray-700 mt-2">
         <div><span className="text-gray-500">{t.equipment.powerLabel}</span> · <strong>{p.watts}W</strong></div>
-        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{p.efficiencyPct}%</strong></div>
+        <div><span className="text-gray-500">{t.equipment.effLabel}</span> · <strong>{p.efficiencyPct != null ? `${p.efficiencyPct}%` : "n/a"}</strong></div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.techLabel}</span> · {p.cellTech}</div>
         <div className="sm:col-span-2"><span className="text-gray-500">{t.equipment.warrantyLabel}</span> · {p.warrantyYears} yr</div>
       </div>
