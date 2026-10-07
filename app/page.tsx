@@ -352,7 +352,7 @@ export default function HomePage() {
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
           <span className="font-bold text-base sm:text-xl text-gray-900 whitespace-nowrap shrink-0">RoofSolar</span>
           <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 rounded-full px-2 py-0.5">
-            <span aria-hidden>🤖</span> AI
+            <svg aria-hidden="true" className="inline-block w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M8 12h1M15 12h1M9 16h6"/></svg> AI
           </span>
         </Link>
         <div className="flex items-center gap-2 sm:gap-5 flex-shrink-0">
@@ -393,7 +393,7 @@ export default function HomePage() {
           {/* Left — copy */}
           <div className="flex-1 lg:flex-[0.95] text-center lg:text-left">
             <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
-              <span aria-hidden>🤖</span> {t.home.aiBadge}
+              <svg aria-hidden="true" className="inline-block w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M8 12h1M15 12h1M9 16h6"/></svg> {t.home.aiBadge}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
               {t.home.heroHeadline}
@@ -519,7 +519,7 @@ export default function HomePage() {
           <div className="relative grid lg:grid-cols-2 gap-10 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 rounded-full px-3 py-1 text-xs font-semibold text-amber-200 mb-5">
-                <span aria-hidden>🤖</span> {t.home.aiSectionBadge}
+                <svg aria-hidden="true" className="inline-block w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M8 12h1M15 12h1M9 16h6"/></svg> {t.home.aiSectionBadge}
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-5 leading-tight">
                 {t.home.aiHeadline}
