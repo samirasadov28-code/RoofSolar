@@ -32,6 +32,8 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
   const { inputs, setInputs } = useWizardStore();
 
   useEffect(() => {
+    const roofMax = Math.max(4, Math.floor(inputs.roofAreaM2 / 1.7));
+    if (inputs.panelCount > roofMax) { setInputs({ panelCount: roofMax, systemKwp: +(roofMax * 0.4).toFixed(2) }); return; }
     if (inputs.systemCostGross > 0) return;
     const recommended = suggestedPanels(inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp);
     setInputs({ panelCount: recommended, systemKwp: +(recommended * 0.4).toFixed(2) });
