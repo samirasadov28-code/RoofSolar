@@ -63,6 +63,7 @@ function PaybackCard({ data }: { data: any }) {
 export default function ResultsPage({ params }: { params: { id: string } }) {
   const t = useT();
   const [data, setData] = useState<any>(null);
+  const [loadError, setLoadError] = useState(false);
   const [inputs, setInputs] = useState<any>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
   const [proSessionId, setProSessionId] = useState<string | null>(null);
@@ -76,20 +77,31 @@ export default function ResultsPage({ params }: { params: { id: string } }) {
   }, [params.id]);
 
   useEffect(() => {
-    const stored = sessionStorage.getItem('roofsolar_results');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setData(parsed.results);
-      setInputs(parsed.inputs);
-    }
-  }, []);
+    let active = true;
+    let sessionId: string | null = null;
+    try {
+      const stored = sessionStorage.getItem('roofsolar_results');
+      const parsed = stored ? JSON.parse(stored) : null;
+      // Storage is a same-tab preview, never a substitute for a paid link's calculation.
+      sessionId = new URLSearchParams(window.location.search).get('session_id') ??
+        localStorage.getItem(`roofsolar_pro_session_${params.id}`);
+      if (!sessionId && (parsed?.results?.calculationId ?? 'local') === params.id) {
+        setData(parsed.results); setInputs(parsed.inputs); return;
+      }
+    } catch {}
+    fetch(`/api/calculation?id=${encodeURIComponent(params.id)}${sessionId ? `&session_id=${encodeURIComponent(sessionId)}` : ''}`)
+      .then(async r => { if (!r.ok) throw new Error('load'); return r.json(); })
+      .then(d => { if (active) { setData(d.results); setInputs(d.inputs); } })
+      .catch(() => { if (active) setLoadError(true); });
+    return () => { active = false; };
+  }, [params.id]);
 
   if (!data || !inputs) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">{t.results.loadingText}</p>
+          <div className={`${loadError ? "hidden" : ""} w-10 h-10 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4`} />
+          <p className="text-gray-600">{loadError ? t.common.na : t.results.loadingText}</p>
           <p className="text-xs text-gray-400 mt-2">
             {t.results.loadingNote} <Link href="/calculator" className="underline">{t.results.loadingLink}</Link>
           </p>

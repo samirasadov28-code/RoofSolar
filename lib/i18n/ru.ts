@@ -85,6 +85,7 @@ const ru: Translations = {
     stepReview: 'Проверка',
   },
   step1: {
+    locationButton: "Использовать моё местоположение",
     title: 'Ваш адрес',
     subtitle: 'Используем его для получения данных об инсоляции в реальном времени.',
     addressLabel: 'Адрес',

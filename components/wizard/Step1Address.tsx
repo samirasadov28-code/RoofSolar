@@ -210,7 +210,7 @@ export function Step1Address({ onNext }: { onNext: () => void }) {
               <circle cx="12" cy="9" r="2.5" fill="currentColor" className="text-amber-500" />
             </svg>
           )}
-          {locating ? 'Detecting location…' : 'Use my location'}
+          {locating ? t.common.loading : t.step1.locationButton}
         </button>
         {locateError && (
           <p className="text-xs text-red-600">{locateError}</p>

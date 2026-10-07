@@ -83,6 +83,7 @@ export interface Translations {
     stepReview: string;
   };
   step1: {
+    locationButton: string;
     title: string;
     subtitle: string;
     addressLabel: string;

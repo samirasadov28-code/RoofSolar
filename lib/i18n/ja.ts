@@ -85,6 +85,7 @@ const ja: Translations = {
     stepReview: '確認',
   },
   step1: {
+    locationButton: "現在地を使用",
     title: '住所',
     subtitle: 'リアルタイムの日射量データを取得するために使用します。',
     addressLabel: '住所',

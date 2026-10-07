@@ -70,9 +70,7 @@ create policy "Users can read own pro_purchases"
 
 -- Service role can insert leads and pro_purchases (via API routes)
 -- No direct client access to leads needed
-create policy "Service role manages leads"
-  on leads for all
-  using (true); -- enforced via server-side service role key only
+-- No public policy: service_role bypasses RLS. Never install a USING(true) policy here.
 
 create table if not exists feedback (
   id uuid primary key default gen_random_uuid(),
@@ -84,6 +82,4 @@ create table if not exists feedback (
 
 alter table feedback enable row level security;
 
-create policy "Service role manages feedback"
-  on feedback for all
-  using (true);
+-- No public policy: feedback is handled only by server-side service_role.

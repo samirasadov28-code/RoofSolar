@@ -350,7 +350,7 @@ export default function HomePage() {
       <nav className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-5 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
-          <span className="font-bold text-base sm:text-xl text-gray-900 truncate">RoofSolar</span>
+          <span className="font-bold text-base sm:text-xl text-gray-900 whitespace-nowrap shrink-0">RoofSolar</span>
           <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 rounded-full px-2 py-0.5">
             <span aria-hidden>🤖</span> AI
           </span>
@@ -370,8 +370,9 @@ export default function HomePage() {
             </svg>
             Asadov Stack
           </a>
-          <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap">
-            {t.nav.signIn}
+          <Link href="/auth/login" className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 transition-colors whitespace-nowrap" aria-label={t.nav.signIn}>
+            <span className="hidden sm:inline">{t.nav.signIn}</span>
+            <svg className="sm:hidden w-5 h-5" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 17l5-5-5-5M15 12H3M14 3h6v18h-6" /></svg>
           </Link>
           <LanguageSwitcher />
           <Link

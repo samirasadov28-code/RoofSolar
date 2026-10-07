@@ -20,22 +20,15 @@ export function useProStatus(calculationId: string) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get('session_id');
-    const paidKey = `roofsolar_pro_paid_${calculationId}`;
-    try {
-      if (localStorage.getItem(paidKey) === '1') {
-        setIsPro(true);
-        setLoading(false);
-        return;
-      }
-    } catch {}
+    let sessionId = params.get('session_id');
+    try { sessionId = sessionId ?? localStorage.getItem(`roofsolar_pro_session_${calculationId}`); } catch {}
     if (sessionId) {
       // Verified server-side against Stripe; a bare ?pro=true no longer unlocks anything.
       fetch(`/api/pro-status?id=${encodeURIComponent(calculationId)}&session_id=${encodeURIComponent(sessionId)}`)
         .then((r) => r.json())
         .then((d) => {
           if (d?.pro) {
-            try { localStorage.setItem(paidKey, '1'); localStorage.setItem(`roofsolar_pro_session_${calculationId}`, sessionId); } catch {}
+            try { localStorage.setItem(`roofsolar_pro_session_${calculationId}`, sessionId); } catch {}
             setIsPro(true);
           }
         })

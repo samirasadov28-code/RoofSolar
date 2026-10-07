@@ -26,7 +26,7 @@ export function LanguageSwitcher() {
         className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
         aria-label="Select language"
       >
-        <span>{current.flag}</span>
+        <span className="font-semibold text-xs" aria-hidden="true">{current.code.toUpperCase()}</span>
         <span className="hidden sm:inline">{current.nativeName}</span>
         <svg className="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />

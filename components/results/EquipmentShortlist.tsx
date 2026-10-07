@@ -133,6 +133,7 @@ export function EquipmentShortlist({ inputs }: Props) {
 
   return (
     <div className="space-y-6">
+      <p className="text-xs text-gray-600">{t.equipment.panelWattNote}</p>
       <p className="text-sm text-gray-600 leading-relaxed">
         {fmt(t.equipment.intro, { region })}
       </p>

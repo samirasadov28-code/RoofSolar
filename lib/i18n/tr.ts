@@ -85,6 +85,7 @@ const tr: Translations = {
     stepReview: 'İnceleme',
   },
   step1: {
+    locationButton: "Konumumu kullan",
     title: 'Adresiniz',
     subtitle: 'Bunu canlı güneş ışınımı verilerini almak için kullanıyoruz.',
     addressLabel: 'Adres',

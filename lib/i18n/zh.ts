@@ -85,6 +85,7 @@ const zh: Translations = {
     stepReview: '审核',
   },
   step1: {
+    locationButton: "使用我的位置",
     title: '您的地址',
     subtitle: '我们用它来获取实时太阳辐射数据。',
     addressLabel: '地址',

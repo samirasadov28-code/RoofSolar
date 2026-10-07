@@ -36,10 +36,10 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
     const recommended = suggestedPanels(inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp);
     setInputs({ panelCount: recommended, systemKwp: +(recommended * 0.4).toFixed(2) });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputs.roofAreaM2]);
+  }, [inputs.roofAreaM2, inputs.annualKwh, inputs.siteYieldKwhPerKwp]);
 
   function adjustPanels(delta: number) {
-    const newCount = Math.max(4, inputs.panelCount + delta);
+    const newCount = Math.min(Math.floor(inputs.roofAreaM2 / 1.7), Math.max(4, inputs.panelCount + delta));
     setInputs({ panelCount: newCount, systemKwp: newCount * 0.4 });
   }
 
@@ -60,7 +60,7 @@ export function Step4System({ onNext, onBack }: { onNext: () => void; onBack: ()
             <p className="text-3xl font-bold text-gray-900">{inputs.panelCount}</p>
             <p className="text-sm text-gray-500">{t.step4.panelsSuffix} <strong>{inputs.systemKwp.toFixed(1)} kWp</strong></p>
           </div>
-          <button onClick={() => adjustPanels(1)} className="w-10 h-10 bg-white border border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50">+</button>
+          <button disabled={inputs.panelCount >= Math.floor(inputs.roofAreaM2 / 1.7)} onClick={() => adjustPanels(1)} className="w-10 h-10 bg-white border border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50">+</button>
         </div>
       </div>
 

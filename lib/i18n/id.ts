@@ -85,6 +85,7 @@ const id: Translations = {
     stepReview: 'Tinjau',
   },
   step1: {
+    locationButton: "Gunakan lokasi saya",
     title: 'Alamat Anda',
     subtitle: 'Kami menggunakan ini untuk mengambil data iradiasi surya langsung.',
     addressLabel: 'Alamat',

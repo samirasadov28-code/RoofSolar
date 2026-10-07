@@ -85,6 +85,7 @@ const nl: Translations = {
     stepReview: 'Overzicht',
   },
   step1: {
+    locationButton: "Gebruik mijn locatie",
     title: 'Uw adres',
     subtitle: 'We gebruiken dit om live zonnestralingsgegeven op te halen.',
     addressLabel: 'Adres',

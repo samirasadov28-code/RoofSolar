@@ -85,6 +85,7 @@ const bn: Translations = {
     stepReview: 'পর্যালোচনা',
   },
   step1: {
+    locationButton: "আমার অবস্থান ব্যবহার করুন",
     title: 'আপনার ঠিকানা',
     subtitle: 'আমরা এটি লাইভ সোলার বিকিরণ তথ্য আনতে ব্যবহার করি।',
     addressLabel: 'ঠিকানা',

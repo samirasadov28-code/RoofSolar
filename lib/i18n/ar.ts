@@ -85,6 +85,7 @@ const ar: Translations = {
     stepReview: 'المراجعة',
   },
   step1: {
+    locationButton: "استخدم موقعي",
     title: 'عنوانك',
     subtitle: 'نستخدمه لجلب بيانات الإشعاع الشمسي المباشر.',
     addressLabel: 'العنوان',
@@ -523,9 +524,9 @@ const ar: Translations = {
     batterySection: 'البطارية — الأقرب إلى هدفك {kwh} كيلوواط ساعة',
     forPanels: 'لـ {n} ألواح',
     pricesNote: "الأسعار هي نطاقات تجزئة / تركيب نموذجية (شاملة ضريبة القيمة المضافة) جُمعت في مايو 2026. تتفاوت العروض الدقيقة حسب المركِّب وتعقيد السقف والمخزون. لا نكسب شيئاً من هذه الاختيارات — فهي تحريرية.",
-    stringInverterNote: 'You chose a standard string inverter. The hybrid models in typical shortlists are for battery systems, so none are listed here. Ask your installer for a string inverter sized to your array.',
-    panelWattNote: 'The calculation assumes 400 W panels. Higher-watt panels like the ones below would need fewer panels for the same kWp.',
-    undersizedInverterNote: 'These inverters are smaller than your array. Output lost to inverter clipping is not modelled in your results.',
+    stringInverterNote: "استخدم عاكسًا قياسيًا مناسبًا لنظام بدون بطارية. الأمثلة الهجينة والبطاريات ليست أزواجًا متوافقة مؤكدة؛ يجب تأكيد الطراز والجهد والطور محليًا.",
+    panelWattNote: "نمذجة الطاقة تفترض 400 واط لكل لوح. قدرة المنتجات أدناه تختلف؛ يجب تأكيد عدد الألواح وأبعادها والتصميم مع المُركِّب.",
+    undersizedInverterNote: "قد تكون قدرة العاكس المعروض صغيرة مقارنة بالنظام. هذه قائمة أمثلة وليست تحققًا من ملاءمة الحجم أو توافق البطارية.",
   },
   viewMode: {
     ariaLabel: 'وضع العرض',

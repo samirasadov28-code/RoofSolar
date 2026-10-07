@@ -85,6 +85,7 @@ const hi: Translations = {
     stepReview: 'समीक्षा',
   },
   step1: {
+    locationButton: "मेरा स्थान इस्तेमाल करें",
     title: 'आपका पता',
     subtitle: 'हम इसका उपयोग लाइव सौर विकिरण डेटा प्राप्त करने के लिए करते हैं।',
     addressLabel: 'पता',

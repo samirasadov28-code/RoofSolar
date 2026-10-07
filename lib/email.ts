@@ -2,6 +2,9 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 const FROM = 'RoofSolar <onboarding@resend.dev>';
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));
+}
 
 export async function sendLeadConfirmation(to: string, name: string) {
   if (!process.env.RESEND_API_KEY) return;
@@ -71,9 +74,10 @@ export async function sendProReportEmail(
   address: string,
   stripeSessionId?: string
 ) {
-  if (!process.env.RESEND_API_KEY) return;
+  if (!process.env.RESEND_API_KEY) throw new Error('Email is not configured');
 
-  await resend.emails.send({
+  const { error } = await resend.emails.send({
+    // Resend deduplicates webhook retries for the same checkout session.
     from: FROM,
     to,
     subject: 'Your RoofSolar pro report is ready',
@@ -85,7 +89,7 @@ export async function sendProReportEmail(
         </div>
         <h1 style="font-size:22px;color:#111827;margin:0 0 8px">Your pro report is ready</h1>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 8px">
-          <strong>Property:</strong> ${address}
+          <strong>Property:</strong> ${escapeHtml(address)}
         </p>
         <p style="color:#374151;font-size:15px;line-height:1.6;margin:0 0 24px">
           Your full 25-year solar investment analysis is ready to download. Click below to access it.
@@ -99,7 +103,8 @@ export async function sendProReportEmail(
         </p>
       </div>
     `,
-  });
+  }, stripeSessionId ? { idempotencyKey: `roofsolar-report/${stripeSessionId}` } : undefined);
+  if (error) throw new Error('Report email failed');
 }
 
 const STARS = ['😞', '😕', '😐', '😊', '😍'];
