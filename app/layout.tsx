@@ -8,7 +8,7 @@ import { ServiceWorkerRegistrar } from '@/components/ServiceWorkerRegistrar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-const SITE = 'https://roofsolar.netlify.app';
+const SITE = 'https://roofsolars.netlify.app';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

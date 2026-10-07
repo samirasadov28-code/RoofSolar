@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
 
           <p>
             This Privacy Policy explains how RoofSolar (&ldquo;RoofSolar,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) collects, uses, and protects your information when you use the RoofSolar application and website at{' '}
-            <a href="https://roofsolar.netlify.app" className="text-amber-600 hover:underline">https://roofsolar.netlify.app</a>{' '}
+            <a href="https://roofsolars.netlify.app" className="text-amber-600 hover:underline">https://roofsolars.netlify.app</a>{' '}
             (the &ldquo;Service&rdquo;). By using the Service, you agree to the practices described here.
           </p>
 
