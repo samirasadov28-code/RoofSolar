@@ -85,6 +85,7 @@ const pt: Translations = {
     stepReview: 'Revisão',
   },
   step1: {
+    locationButton: "Usar a minha localização",
     title: 'O seu endereço',
     subtitle: 'Utilizamo-lo para obter dados em tempo real sobre a irradiância solar.',
     addressLabel: 'Endereço',

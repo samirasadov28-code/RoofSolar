@@ -85,6 +85,7 @@ const fr: Translations = {
     stepReview: 'Vérification',
   },
   step1: {
+    locationButton: "Utiliser ma position",
     title: 'Votre adresse',
     subtitle: "Nous l'utilisons pour récupérer les données d'ensoleillement en direct.",
     addressLabel: 'Adresse',
@@ -523,9 +524,9 @@ const fr: Translations = {
     batterySection: 'Batterie — la plus proche de votre objectif de {kwh} kWh',
     forPanels: 'pour {n} panneaux',
     pricesNote: "Les prix sont des fourchettes typiques de vente au détail / installé (TVA incluse) relevées en mai 2026. Les devis exacts varient selon l'installateur, la complexité de la toiture et le stock. Nous ne tirons aucun bénéfice de ces recommandations — elles sont éditoriales.",
-    stringInverterNote: 'You chose a standard string inverter. The hybrid models in typical shortlists are for battery systems, so none are listed here. Ask your installer for a string inverter sized to your array.',
-    panelWattNote: 'The calculation assumes 400 W panels. Higher-watt panels like the ones below would need fewer panels for the same kWp.',
-    undersizedInverterNote: 'These inverters are smaller than your array. Output lost to inverter clipping is not modelled in your results.',
+    stringInverterNote: "Sans batterie, choisissez un onduleur standard adapté. Les onduleurs hybrides et batteries ne sont pas des paires validées; faites vérifier modèle, tension et phase.",
+    panelWattNote: "Le modèle utilise 400 W par panneau. Les produits ci-dessous ont des puissances différentes. Faites vérifier le nombre, les dimensions et la conception par un installateur.",
+    undersizedInverterNote: "Ces onduleurs peuvent être trop petits pour le système. Ce sont des exemples, pas une validation du dimensionnement ou de la compatibilité batterie.",
   },
   viewMode: {
     ariaLabel: 'Mode d\'affichage',

@@ -351,7 +351,7 @@ export function ReportTemplate({ inputs, results }: Props) {
           </View>
         ))}
         <Text style={{ ...styles.small, marginTop: 6 }}>
-          Energy price escalation: 3%/yr · Panel degradation: 0.5%/yr · Inverter replacement at year {results.inverterReplacementYear ?? 12}
+          Energy price escalation: {((inputs.energyPriceEscalationPct ?? 0.03) * 100).toFixed(1)}%/yr · Panel degradation: 0.5%/yr · Inverter replacement at year {results.inverterReplacementYear ?? 12}
         </Text>
         <Footer page={3} total={7} />
       </Page>
@@ -519,7 +519,7 @@ export function ReportTemplate({ inputs, results }: Props) {
         <Text style={styles.h3}>Modelling Assumptions</Text>
         {[
           ['Panel degradation', '0.5%/yr linear'],
-          ['Energy price escalation', '3%/yr'],
+          ['Energy price escalation', `${((inputs.energyPriceEscalationPct ?? 0.03) * 100).toFixed(1)}%/yr`],
           ['System losses (inverter + wiring)', '14% (baked into PVGIS/NREL request)'],
           ['Self-consumption model', 'Hourly representative-day balance per month (same model as the hourly view)'],
           ['Battery efficiency (if a battery is included)', 'Modelling assumption: 89% solar-to-battery-to-home, one manufacturer\'s published figure (Tesla Powerwall 3 datasheet, solar shifting, 25C, new). Other products and ageing differ; capacity fade and cycle limits are not modelled'],

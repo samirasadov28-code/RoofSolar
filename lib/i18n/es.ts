@@ -85,6 +85,7 @@ const es: Translations = {
     stepReview: 'Revisión',
   },
   step1: {
+    locationButton: "Usar mi ubicación",
     title: 'Tu dirección',
     subtitle: 'La usamos para obtener datos en vivo sobre la irradiación solar.',
     addressLabel: 'Dirección',
@@ -523,9 +524,9 @@ const es: Translations = {
     batterySection: 'Batería — la más cercana a tu objetivo de {kwh} kWh',
     forPanels: 'para {n} paneles',
     pricesNote: "Los precios son rangos típicos de venta al público / instalado (IVA incluido) recopilados en mayo de 2026. Los presupuestos exactos varían según el instalador, la complejidad del tejado y el stock disponible. No obtenemos nada de estas recomendaciones — son editoriales.",
-    stringInverterNote: 'You chose a standard string inverter. The hybrid models in typical shortlists are for battery systems, so none are listed here. Ask your installer for a string inverter sized to your array.',
-    panelWattNote: 'The calculation assumes 400 W panels. Higher-watt panels like the ones below would need fewer panels for the same kWp.',
-    undersizedInverterNote: 'These inverters are smaller than your array. Output lost to inverter clipping is not modelled in your results.',
+    stringInverterNote: "Sin batería, use un inversor estándar adecuado. Los inversores híbridos y baterías no son parejas verificadas; confirme modelo, tensión y fase con el instalador.",
+    panelWattNote: "El modelo usa 400 W por panel. Los productos siguientes tienen potencias distintas. Un instalador debe verificar cantidad, dimensiones y diseño.",
+    undersizedInverterNote: "Estos inversores pueden ser pequeños para el sistema. Son ejemplos, no una validación del tamaño ni de la compatibilidad de la batería.",
   },
   viewMode: {
     ariaLabel: 'Modo de visualización',

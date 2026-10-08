@@ -85,6 +85,7 @@ const uk: Translations = {
     stepReview: 'Перегляд',
   },
   step1: {
+    locationButton: "Використати моє місце",
     title: 'Ваша адреса',
     subtitle: 'Ми використовуємо це для отримання даних про сонячне опромінення.',
     addressLabel: 'Адреса',
@@ -523,9 +524,9 @@ const uk: Translations = {
     batterySection: 'Батарея — найближча до вашої цілі {kwh} кВт·год',
     forPanels: 'для {n} панелей',
     pricesNote: "Ціни — типові роздрібні / встановлені діапазони (включно з ПДВ), зібрані у травні 2026. Точні пропозиції варіюються залежно від монтажника, складності даху та наявності товару. Ми нічого не отримуємо з цих рекомендацій — вони є редакційними.",
-    stringInverterNote: 'You chose a standard string inverter. The hybrid models in typical shortlists are for battery systems, so none are listed here. Ask your installer for a string inverter sized to your array.',
-    panelWattNote: 'The calculation assumes 400 W panels. Higher-watt panels like the ones below would need fewer panels for the same kWp.',
-    undersizedInverterNote: 'These inverters are smaller than your array. Output lost to inverter clipping is not modelled in your results.',
+    stringInverterNote: "Без батареї оберіть відповідний стандартний інвертор. Гібридні інвертори та батареї не є перевіреними парами; модель, напругу й фазу має перевірити монтажник.",
+    panelWattNote: "Модель використовує 400 Вт на панель. Потужність виробів нижче відрізняється. Кількість, розміри панелей і проєкт має перевірити монтажник.",
+    undersizedInverterNote: "Ці інвертори можуть бути замалі для системи. Це приклади, а не перевірка розміру чи сумісності батареї.",
   },
   viewMode: {
     ariaLabel: 'Режим перегляду',

@@ -255,7 +255,7 @@ export const INVERTERS: HybridInverter[] = [
     manufacturer: 'SMA',
     model: 'Sunny Tripower Smart Energy 5.0',
     ratedKw: 5.0,
-    phase: 'single',
+    phase: 'three',
     efficiencyPct: 98.2,
     warrantyYears: 10,
     batteryBrands: ['BYD HVS/HVM', 'sonnenBatterie'],

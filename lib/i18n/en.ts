@@ -85,6 +85,7 @@ const en: Translations = {
     stepReview: 'Review',
   },
   step1: {
+    locationButton: "Use my location",
     title: 'Your address',
     subtitle: 'We use this to fetch live solar irradiance data.',
     addressLabel: 'Address',
@@ -523,9 +524,9 @@ const en: Translations = {
     batterySection: 'Battery — closest to your {kwh} kWh target',
     forPanels: 'for {n} panels',
     pricesNote: "Prices are typical retail / installed ranges (incl. VAT) gathered May 2026. Exact quotes vary by installer, roof complexity and stock. We earn nothing from these picks — they're editorial.",
-    stringInverterNote: 'You chose a standard string inverter. The hybrid models in typical shortlists are for battery systems, so none are listed here. Ask your installer for a string inverter sized to your array.',
-    panelWattNote: 'The calculation assumes 400 W panels. Higher-watt panels like the ones below would need fewer panels for the same kWp.',
-    undersizedInverterNote: 'These inverters are smaller than your array. Output lost to inverter clipping is not modelled in your results.',
+    stringInverterNote: "For a system without a battery, choose a suitable standard inverter. Hybrid inverters and batteries are not verified pairs; confirm model, voltage and phase with an installer.",
+    panelWattNote: "The energy model assumes 400 W per panel. Products below have different ratings. An installer must confirm panel count, dimensions and design.",
+    undersizedInverterNote: "These inverters may be too small for this system. These are examples, not a sizing or battery-compatibility check.",
   },
   viewMode: {
     ariaLabel: 'View mode',
