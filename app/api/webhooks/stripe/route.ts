@@ -62,5 +62,40 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  if (event.type === 'charge.refunded') {
+    // Full refunds revoke Pro: remove the purchase rows tied to this payment.
+    // Anonymous buyers (session_id in the browser) are covered separately —
+    // /api/pro-status re-checks the charge with Stripe on every call.
+    const charge = event.data.object as Stripe.Charge;
+    const fullyRefunded =
+      charge.refunded === true || (charge.amount_refunded ?? 0) >= (charge.amount ?? Infinity);
+    if (!fullyRefunded || !charge.payment_intent) {
+      return NextResponse.json({ received: true });
+    }
+    const piId =
+      typeof charge.payment_intent === 'string' ? charge.payment_intent : charge.payment_intent.id;
+
+    let sessionIds: string[] = [];
+    try {
+      const sessions = await stripe.checkout.sessions.list({ payment_intent: piId, limit: 10 });
+      sessionIds = sessions.data.map((sess) => sess.id);
+    } catch (err: any) {
+      return NextResponse.json({ error: `Session lookup failed: ${err.message}` }, { status: 503 });
+    }
+    if (!sessionIds.length) {
+      return NextResponse.json({ received: true });
+    }
+
+    const supabase = createServiceClient();
+    const { error: deleteError } = await supabase
+      .from('pro_purchases')
+      .delete()
+      .in('stripe_session_id', sessionIds);
+    if (deleteError) {
+      return NextResponse.json({ error: 'Refund revocation failed' }, { status: 503 });
+    }
+    return NextResponse.json({ received: true, revoked: sessionIds.length });
+  }
+
   return NextResponse.json({ received: true });
 }
