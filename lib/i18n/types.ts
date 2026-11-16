@@ -66,6 +66,12 @@ export interface Translations {
     aiFeature4: string;
     aiChatName: string;
     aiChatOnline: string;
+    aiChatQuestion: string;
+    aiChatAnswer: string;
+    aiChatFollowup: string;
+    aiTariffNote: string;
+    aiGrantLink: string;
+    aiReviewNote: string;
     aiChatTyping: string;
     ctaTitle: string;
     ctaBody: string;
@@ -644,4 +650,4 @@ export interface Translations {
 /** Replace {key} placeholders in a string */
 export function fmt(str: string, vars: Record<string, string | number>): string {
   return str.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? `{${k}}`));
-}
+  }

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: '%s | RoofSolar',
   },
   description:
-    'Free solar panel calculator powered by AI. Get a 25-year cashflow model, payback period, export earnings, battery & EV savings in under 3 minutes. Works worldwide.',
+    'Free solar panel calculator powered by AI. Get a 25-year cashflow model, payback period, export earnings, battery & EV savings using your assumptions. Works worldwide.',
   keywords: [
     'solar calculator', 'solar panel calculator', 'solar payback calculator',
     'solar ROI', 'solar investment', 'solar savings calculator',
@@ -36,14 +36,14 @@ export const metadata: Metadata = {
     siteName: 'RoofSolar',
     title: 'RoofSolar — Free AI Solar Calculator',
     description:
-      'Free solar panel calculator. 25-year cashflow, payback period, battery & EV savings. Instant results, works worldwide.',
+      'Free solar panel calculator. 25-year cashflow, payback period, battery & EV savings. Estimates based on your assumptions, works worldwide.',
     images: [{ url: '/logo-512.png', width: 512, height: 512, alt: 'RoofSolar logo' }],
     locale: 'en_US',
   },
   twitter: {
     card: 'summary',
     title: 'RoofSolar — Free AI Solar Calculator',
-    description: 'Free solar panel calculator. 25-year cashflow, payback, battery & EV savings. Instant results.',
+    description: 'Free solar panel calculator. 25-year cashflow, payback, battery & EV savings using your assumptions.',
     images: ['/logo-512.png'],
   },
   robots: { index: true, follow: true },
@@ -54,7 +54,7 @@ const jsonLd = {
   '@type': 'WebApplication',
   name: 'RoofSolar',
   url: SITE,
-  description: 'Free AI-powered solar panel investment calculator. Get payback period, 25-year cashflow, export earnings, battery and EV economics in under 3 minutes.',
+  description: 'Free AI-powered solar panel investment calculator. Get payback period, 25-year cashflow, export earnings, battery and EV economics using your assumptions.',
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Any',
   offers: {
@@ -120,4 +120,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
     </html>
   );
-}
+                                    }
