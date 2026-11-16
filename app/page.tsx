@@ -347,7 +347,7 @@ export default function HomePage() {
 
       {/* Nav */}
       <div className="sticky top-0 z-30 bg-amber-50/95 backdrop-blur-sm border-b border-amber-100/60">
-      <nav className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-5 max-w-7xl mx-auto">
+      <nav className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 sm:py-5 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2 min-w-0 flex-shrink">
           <img src="/logo-192.png" alt="RoofSolar" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-amber-400/60 flex-shrink-0" />
           <span className="font-bold text-base sm:text-xl text-gray-900 whitespace-nowrap shrink-0">RoofSolar</span>
@@ -391,8 +391,8 @@ export default function HomePage() {
         <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-10">
 
           {/* Left — copy */}
-          <div className="flex-1 lg:flex-[0.95] text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
+          <div className="flex-1 lg:flex-[0.95] min-w-0 w-full [overflow-wrap:anywhere] text-center lg:text-left">
+            <div className="inline-flex max-w-full items-center gap-2 bg-amber-100 border border-amber-300 rounded-full px-4 py-1.5 text-sm text-amber-700 font-medium mb-6">
               <svg aria-hidden="true" className="inline-block w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="7" width="14" height="12" rx="3"/><path d="M12 3v4M8 12h1M15 12h1M9 16h6"/></svg> {t.home.aiBadge}
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
@@ -464,9 +464,9 @@ export default function HomePage() {
             { value: t.home.stat2Value, label: t.home.stat2Label },
             { value: t.home.stat3Value, label: t.home.stat3Label },
           ].map((s) => (
-            <div key={s.label} className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6">
-              <p className="text-2xl sm:text-3xl font-extrabold text-amber-500">{s.value}</p>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">{s.label}</p>
+            <div key={s.label} className="bg-white border border-gray-200 shadow-sm rounded-2xl p-3 sm:p-6">
+              <p className="text-base sm:text-3xl font-extrabold text-amber-500">{s.value}</p>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 [overflow-wrap:anywhere]">{s.label}</p>
             </div>
           ))}
         </div>
@@ -552,20 +552,17 @@ export default function HomePage() {
               <div className="space-y-3">
                 <div className="flex justify-end">
                   <div className="bg-amber-100 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[80%] text-gray-900">
-                    Is an 8.1 year payback good?
+                    {t.home.aiChatQuestion}
                   </div>
                 </div>
                 <div className="flex">
                   <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[85%] text-gray-800">
-                    For Ireland at about €0.43/kWh import plus the SEAI grant, 8.1 years is a
-                    reasonable payback. A battery adds upfront cost, so it can lengthen the
-                    payback even though more of your solar is used at home. Want me to model it
-                    for your numbers?
+                    {t.home.aiChatAnswer}
                   </div>
                 </div>
                 <div className="flex justify-end">
                   <div className="bg-amber-100 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[80%] text-gray-900">
-                    Yes, and what&apos;s my year-1 grid bill?
+                    {t.home.aiChatFollowup}
                   </div>
                 </div>
                 <div className="flex">
@@ -574,6 +571,11 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+              <p className="mt-4 border-t border-gray-200 pt-3 text-xs leading-relaxed text-gray-600">
+                {t.home.aiTariffNote}{' '}
+                <a className="underline text-amber-800" href="https://www.seai.ie/grants/home-energy-grants/individual-grants/solar-electricity-grant" target="_blank" rel="noopener noreferrer">{t.home.aiGrantLink}</a>.
+                {' '}{t.home.aiReviewNote}
+              </p>
             </div>
           </div>
         </div>
@@ -661,4 +663,4 @@ export default function HomePage() {
       <ForceUpdateButton />
     </main>
   );
-}
+                                                                                                                                                 }
